@@ -21,9 +21,10 @@ import {
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
 import SessionDocument from "../../interface/session";
+import UserData from "@/interface/userData";
 
 export default function TopBar() {
-  const [dataUser, setDataUser] = useState<any>();
+
   const { data: session, status } = useSession({
     required: true,
   })
@@ -36,6 +37,8 @@ export default function TopBar() {
 
   // const dataUserProfile = session.user.profile;
   // const dataUser = session.user?.user;
+
+  const dataUser = session?.user as UserData;
 
   return (
     <div className="bg-gray-100 w-full h-16 flex justify-between items-center transition-all z-10">
@@ -91,99 +94,99 @@ export default function TopBar() {
 
 
 
-              {dataUser?.type === 'admin' && ( 
-              <>
-              <div className="p-1" >
-                <Menu.Item>
-                  <Link
-                    href="/partner"
-                    className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
-                  >
-                    <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                      <div className="mr-2">
-                        <UserIcon className="h-5 w-5" />
-                      </div>
-                      <h1>Parceiros</h1>
-                    </div>
-                  </Link>
-                </Menu.Item>
-              </div>
-              <div className="p-1" >
-                <Menu.Item>
-                  <Link
-                    href="/townhouse"
-                    className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
-                  >
-                    <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                      <div className="mr-2">
-                        <BuildingOfficeIcon className="h-5 w-5" />
-                      </div>
-                      <h1>Condomínios</h1>
-                    </div>
-                  </Link>
-                </Menu.Item>
-              </div>
-              
+              {dataUser?.user.type === 'admin' && (
+                <>
+                  <div className="p-1" >
+                    <Menu.Item>
+                      <Link
+                        href="/partner"
+                        className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                      >
+                        <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                          <div className="mr-2">
+                            <UserIcon className="h-5 w-5" />
+                          </div>
+                          <h1>Parceiros</h1>
+                        </div>
+                      </Link>
+                    </Menu.Item>
+                  </div>
+                  <div className="p-1" >
+                    <Menu.Item>
+                      <Link
+                        href="/townhouse"
+                        className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                      >
+                        <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                          <div className="mr-2">
+                            <BuildingOfficeIcon className="h-5 w-5" />
+                          </div>
+                          <h1>Condomínios</h1>
+                        </div>
+                      </Link>
+                    </Menu.Item>
+                  </div>
 
-              <button className="rounded-lg text-center cursor-pointer flex items-center transition-colors text-blue-400">
-                <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                  <div className="mr-2 flex justify-center items-center">
-                    <div>
-                      <Cog6ToothIcon className="h-5 w-5" />
-                    </div>
-                    <h6 className="text-xs">
-                      Configurações
-                    </h6>
-                  </div>
-                </div>
-              </button>
 
-              <div className="p-1" >
-                <Link
-                  href="/user"
-                  className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
-                >
-                  <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                    <div className="mr-2">
-                      <UserGroupIcon className="h-5 w-5" />
+                  <button className="rounded-lg text-center cursor-pointer flex items-center transition-colors text-blue-400">
+                    <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                      <div className="mr-2 flex justify-center items-center">
+                        <div>
+                          <Cog6ToothIcon className="h-5 w-5" />
+                        </div>
+                        <h6 className="text-xs">
+                          Configurações
+                        </h6>
+                      </div>
                     </div>
-                    <h1>Usuários</h1>
+                  </button>
+
+                  <div className="p-1" >
+                    <Link
+                      href="/user"
+                      className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                    >
+                      <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                        <div className="mr-2">
+                          <UserGroupIcon className="h-5 w-5" />
+                        </div>
+                        <h1>Usuários</h1>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className="p-1" >
-                <Link
-                  href="/area"
-                  className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
-                >
-                  <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                    <div className="mr-2">
-                      <WrenchScrewdriverIcon className="h-5 w-5" />
-                    </div>
-                    <h1>Áreas de Serviço</h1>
+                  <div className="p-1" >
+                    <Link
+                      href="/area"
+                      className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                    >
+                      <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                        <div className="mr-2">
+                          <WrenchScrewdriverIcon className="h-5 w-5" />
+                        </div>
+                        <h1>Áreas de Serviço</h1>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className="p-1" >
-                <Link
-                  href="/statusorder"
-                  className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
-                >
-                  <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                    <div className="mr-2">
-                      <ExclamationTriangleIcon className="h-5 w-5" />
-                    </div>
-                    <h1>Status Chamado</h1>
+                  <div className="p-1" >
+                    <Link
+                      href="/statusorder"
+                      className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                    >
+                      <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                        <div className="mr-2">
+                          <ExclamationTriangleIcon className="h-5 w-5" />
+                        </div>
+                        <h1>Status Chamado</h1>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              </>   
-            )}
+                </>
+              )}
             </Menu.Items>
           </Transition>
         </Menu>
       </div>
-      
+
 
 
       <div className="flex items-center">
@@ -199,7 +202,7 @@ export default function TopBar() {
               </picture>
 
               <span className=" md:block font-medium text-gray-700 ml-2 uppercase">
-                 {dataUser?.name} 
+                {dataUser?.user.name}
               </span>
 
               <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
@@ -220,12 +223,12 @@ export default function TopBar() {
                   <Link
                     href={
                       dataUser?.type === 'partner'
-                        ? `/partner/${dataUser?.profile.id}`
-                        : dataUser?.type === 'admin'
-                        ? `/user/${dataUser?.id}`
-                        : dataUser?.type === 'condominium'
-                        ? `/townhouse/${dataUser?.profile.id}`
-                        : '#'
+                        ? `/partner/${dataUser.user.profile.id}`
+                        : dataUser?.user.type === 'admin'
+                          ? `/user/${dataUser?.user.id}`
+                          : dataUser?.type === 'condominium'
+                            ? `/townhouse/${dataUser?.user.profile.id}`
+                            : '#'
                     }
                     className="flex hover:bg-blue-700 hover:text-white text-gray-700 rounded-[12px] p-2 text-sm group transition-colors items-center"
                   >

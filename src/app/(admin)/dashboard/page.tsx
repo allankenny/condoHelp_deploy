@@ -6,7 +6,7 @@ import { ArrowPathIcon, CameraIcon, PlusIcon, StarIcon } from "@heroicons/react/
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { environment } from "@/environment/environment";
-
+import UserData from "@/interface/userData";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,8 +17,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
-
-
 
 ChartJS.register(
   CategoryScale,
@@ -37,8 +35,8 @@ export default function Dashboard() {
   const { data: session, status } = useSession({
     required: true,
   })
-  
-  const data:any = {
+
+  const data: any = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
@@ -63,9 +61,9 @@ export default function Dashboard() {
         data: [65, 59, 80, 81, 66, 65, 90]
       }
     ]
-  };  
+  };
 
-  const [dataUser, setDataUser] = useState<any>();
+  const dataUser = session?.user as UserData;
   // if(session){
   //    setDataUser(session?.user);
   // }
@@ -78,16 +76,16 @@ export default function Dashboard() {
       console.log(session);
       try {
         let response;
-  
+
         if (dataUser.user.type === 'condominium') {
-          response = await axios(`${environment.apiUrl}/dashboard/condominium/${dataUser.profile.id}`);
+          response = await axios(`${environment.apiUrl}/dashboard/condominium/${dataUser.user.profile.id}`);
         } else if (dataUser.user.type === 'partner') {
-          response = await axios(`${environment.apiUrl}/dashboard/partner/${dataUser.profile.id}`);
+          response = await axios(`${environment.apiUrl}/dashboard/partner/${dataUser.user.profile.id}`);
         } else {
           response = await axios(`${environment.apiUrl}/dashboard/data`)
         }
-  
-    
+
+
         setTotalChamados(response.data.totalChamados);
         setTotalValue(response.data.totalValue);
         setTotalEvaluation(response.data.totalEvaluation);
@@ -96,20 +94,20 @@ export default function Dashboard() {
         // Handle the error as needed, such as displaying a message to the user.
       }
     };
-  
+
 
     fetchData();
   }, [dataUser]);
-  
+
 
   function formatCurrency(value: number, currency: string = 'BRL'): string {
     return value.toLocaleString('pt-BR', { style: 'currency', currency });
   }
 
-  if( status === "loading"){
+  if (status === "loading") {
     return <></>
   }
-  
+
   return (
     <>
       <div className="flex w-full justify-between items-center h-20 mb-5" >
@@ -126,9 +124,9 @@ export default function Dashboard() {
         <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
           <span className="block mt-3">Satisfação</span>
           <div className="flex items-center mt-3">
-          <span className="text-7xl mr-2">
-            {totalEvaluation === 0 ? "100%" : `% ${totalEvaluation.toFixed(1)}`}
-          </span>
+            <span className="text-7xl mr-2">
+              {totalEvaluation === 0 ? "100%" : `% ${totalEvaluation.toFixed(1)}`}
+            </span>
 
 
 
