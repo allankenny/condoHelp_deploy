@@ -17,6 +17,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
+import UserData from "@/interface/userData";
 
 
 
@@ -65,7 +66,7 @@ export default function Dashboard() {
     ]
   };  
 
-  const [dataUser, setDataUser] = useState<any>();
+  const dataUser = session?.user as UserData;
   // if(session){
   //    setDataUser(session?.user);
   // }
@@ -80,9 +81,9 @@ export default function Dashboard() {
         let response;
   
         if (dataUser.user.type === 'condominium') {
-          response = await axios(`${environment.apiUrl}/dashboard/condominium/${dataUser.profile.id}`);
+          response = await axios(`${environment.apiUrl}/dashboard/condominium/${dataUser.user.profile.id}`);
         } else if (dataUser.user.type === 'partner') {
-          response = await axios(`${environment.apiUrl}/dashboard/partner/${dataUser.profile.id}`);
+          response = await axios(`${environment.apiUrl}/dashboard/partner/${dataUser.user.profile.id}`);
         } else {
           response = await axios(`${environment.apiUrl}/dashboard/data`)
         }

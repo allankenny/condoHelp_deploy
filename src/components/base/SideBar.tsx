@@ -10,6 +10,7 @@ import { BsFillClipboard2CheckFill } from "react-icons/bs"
 import { FiCheckSquare, FiFileText } from "react-icons/fi"
 import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
+import UserData from "@/interface/userData";
 import {
   BuildingOfficeIcon,
   MegaphoneIcon,
@@ -20,21 +21,24 @@ import {
   Cog6ToothIcon,
   WrenchScrewdriverIcon,
 } from "@heroicons/react/24/solid";
+
+
+
+
 export default function Sidebar() {
-  const [dataUser, setDataUser] = useState<any>();
   const [open, setOpen] = useState(true);
   const { data: session, status } = useSession({
     required: true,
   })
-  //  if(session){
-    //     setDataUser(session?.user);
-    //  }
-    // const dataUser = session.user?.user;
-    
+  
     
   if (status === "loading") {
     return <></>
   }
+
+  const dataUser = session?.user as UserData;
+  
+
   return (
     <>
       {/* menu large screen */}
@@ -102,7 +106,7 @@ export default function Sidebar() {
             </h2>
           </Link>
           
-          {dataUser?.type === 'admin' && ( 
+          {dataUser.user.type === 'admin' && (
             <>
             <Link
               href="/partner"
@@ -243,4 +247,5 @@ export default function Sidebar() {
 
   );
 }
+
 

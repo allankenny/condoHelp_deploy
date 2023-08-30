@@ -13,6 +13,7 @@ import { authOptions } from "../../../utils/authOptions";
 import { redirect } from "next/navigation";
 import { useSession } from 'next-auth/react';
 import Pagination from '@/components/Paginate';
+import UserData from '@/interface/userData';
 
 
 export default function Orders() {
@@ -21,14 +22,14 @@ export default function Orders() {
   })
  
   const [orderData, setOrderData] = useState<OrderDocument[]>([]);
-  const [dataUser, setDataUser] = useState<any>();
-   if(session){
-      setDataUser(session?.user);
-   }
+ 
+  //  if(session){
+  //     setDataUser(session?.user);
+  //  }
 
   // const dataUser = session?.user?.user;
   // const dataUserProfile = session?.user?.profile;
-
+  const dataUser = session?.user as UserData;
 
 
 
@@ -37,9 +38,9 @@ export default function Orders() {
       let url;
   
       if (dataUser.user.type === 'condominium') {
-        url = `${environment.apiUrl}/search/condominium/order/${dataUser.profile.id}`;
+        url = `${environment.apiUrl}/search/condominium/order/${dataUser.user.profile.id}`;
       } else if (dataUser.user.type === 'partner') {
-        url = `${environment.apiUrl}/search/partner/order/${dataUser.profile.id}`;
+        url = `${environment.apiUrl}/search/partner/order/${dataUser.user.profile.id}`;
       } else {
         url = `${environment.apiUrl}/search/admin/order`;
       }
@@ -58,8 +59,8 @@ export default function Orders() {
       try {
         let url = `${environment.apiUrl}/order/list/${dataUser.user.id}`;
 
-        if (dataUser.profile?.id) {
-          url += `/${dataUser.profile.id}`;
+        if (dataUser.user.profile?.id) {
+          url += `/${dataUser.user.profile.id}`;
         }
 
         const response = await axios.get(url);

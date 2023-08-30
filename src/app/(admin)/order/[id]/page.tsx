@@ -14,6 +14,7 @@ import { authOptions } from "../../../../utils/authOptions";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import UserData from "@/interface/userData";
 interface ParamsProps {
    params: {
       id: string;
@@ -37,13 +38,13 @@ export default function Order({ params }: ParamsProps) {
 
    const [orderData, setOrderData] = useState<OrderDocument>();
    const [areasData, setAreas] = useState<AreaDocument[]>([]);
-   const [dataUser, setDataUser] = useState<any>();
-   if(session){
-      setDataUser(session?.user);
-   }
+   // const [dataUser, setDataUser] = useState<any>();
+   // if(session){
+   //    setDataUser(session?.user);
+   // }
    // const dataUser = session?.user?.user;
    // const dataUserProfile = session?.user?.profile;
-
+   const dataUser = session?.user as UserData;
 
 
    const handleChange = (event: any) => {
@@ -94,7 +95,7 @@ export default function Order({ params }: ParamsProps) {
          if (params.id === 'new') {
             const data = {
                ...formData,
-               condominium_id: dataUser.profile.id,
+               condominium_id: dataUser.user.profile.id,
             };
             console.log(data);
             const response = await axios.post(`${environment.apiUrl}/order/save`, data);
@@ -109,7 +110,7 @@ export default function Order({ params }: ParamsProps) {
             if (orderStatusId === 4) {
                data = { ...data, score: rating };
             } else {
-               data = { ...data, partner_id: dataUser.profile.id };
+               data = { ...data, partner_id: dataUser.user.profile.id };
             }
 
             console.log(data);
@@ -220,7 +221,7 @@ export default function Order({ params }: ParamsProps) {
             <div className="lg:col-span-2">
                <div className=" mb-3 text-center font-bold">
                   {dataUser.user.type === 'condominium' ? (
-                     <PageSubTitle subtitle={`Olá, ${dataUser.profile.name.toUpperCase()} selecione a área de interesse para receber um orçamento!`} />
+                     <PageSubTitle subtitle={`Olá, ${dataUser.user.profile.name.toUpperCase()} selecione a área de interesse para receber um orçamento!`} />
                   ) : dataUser.user.type === 'partner' ? (
                      <PageSubTitle subtitle={`Olá, ${orderData && orderData.condominium ? orderData.condominium.name.toUpperCase() : ''} solicitou serviços na área abaixo!`} />
                   ) : null}
