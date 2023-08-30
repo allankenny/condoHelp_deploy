@@ -6,7 +6,7 @@ const nextConfig = {
     appDir: true,
   },
 	// output: 'export',
-	distDir: 'public_html',
+	// distDir: 'public_html',
 	images: {
 		unoptimized: true
 	}
