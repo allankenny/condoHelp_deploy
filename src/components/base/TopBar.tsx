@@ -29,13 +29,13 @@ export default function TopBar() {
   if (status === "loading") {
     return <></>
   }
-  const [dataUser, setDataUser] = useState<any>();
-  if(session){
-     setDataUser(session?.user);
-  }
+  // const [dataUser, setDataUser] = useState<any>();
+  // if(session){
+  //    setDataUser(session?.user);
+  // }
 
   // const dataUserProfile = session.user.profile;
-  // const dataUser = session.user.user;
+  const dataUser = session.user?.user;
 
   return (
     <div className="bg-gray-100 w-full h-16 flex justify-between items-center transition-all z-10">
