@@ -232,12 +232,12 @@ export default function Townhouse({params}:ParamsProps) {
             </div>
             <div className="md:col-span-1">
               <label htmlFor="password">Senha</label>
-              <input type={showPassword ? "text" : "password"} maxLength={10} name="password" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" autoComplete="off" value={formData.password} onChange={handleChange}
+              <input type={showPassword ? "text" : "password"} maxLength={10} minLength={8} name="password" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" autoComplete="off" value={formData.password} onChange={handleChange}
               />
             </div>
             <div className="md:col-span-1 relative">
               <label htmlFor="password2">Confirmação da Senha</label>
-              <input type={showPassword ? "text" : "password"} name="password2" id="password2" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 pr-10" maxLength={10} autoComplete="off" value={formData.password2}
+              <input type={showPassword ? "text" : "password"} name="password2" id="password2" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 pr-10" maxLength={10} minLength={8} autoComplete="off" value={formData.password2}
                 onChange={handleChange}
               />
               <div
