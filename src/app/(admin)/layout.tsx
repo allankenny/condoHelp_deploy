@@ -21,9 +21,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthSessionProvider>
           <section className='flex'>
-            {/* <Sidebar /> */}
+            <Sidebar />
             <main className='w-full p-3'>
-              {/* <TopBar /> */}
+              <TopBar />
               <div className='pl-2 pr-2'>
                 {children}
               </div>

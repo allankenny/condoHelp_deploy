@@ -66,9 +66,9 @@ export default function Dashboard() {
   };  
 
   const [dataUser, setDataUser] = useState<any>();
-  if(session){
-     setDataUser(session?.user);
-  }
+  // if(session){
+  //    setDataUser(session?.user);
+  // }
 
   // const dataUser = session?.user?.user;
   // const dataUserProfile = session?.user?.profile;
@@ -101,9 +101,6 @@ export default function Dashboard() {
     fetchData();
   }, [dataUser]);
   
-
-  
-
 
   function formatCurrency(value: number, currency: string = 'BRL'): string {
     return value.toLocaleString('pt-BR', { style: 'currency', currency });

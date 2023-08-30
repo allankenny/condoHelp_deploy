@@ -13,7 +13,6 @@ export const authOptions:NextAuthOptions = {
       credentials: {},
       async authorize(credentials, req) {
         const { email, password } = credentials as ICredentials;
-        console.log(environment.apiUrl)
         const res = await fetch(`${environment.apiUrl}/auth/login`, {
           method: "POST",
           headers: {
@@ -24,11 +23,12 @@ export const authOptions:NextAuthOptions = {
             password,
           }),
         });
-
+        
         const user = await res.json();
+        console.log(user)
         if (res.ok && user ) {
-             return user ;
-           } else return null;
+          return user ;
+        } else return null;
       },
     }),
   ],

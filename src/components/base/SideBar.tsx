@@ -21,20 +21,20 @@ import {
   WrenchScrewdriverIcon,
 } from "@heroicons/react/24/solid";
 export default function Sidebar() {
+  const [dataUser, setDataUser] = useState<any>();
   const [open, setOpen] = useState(true);
   const { data: session, status } = useSession({
     required: true,
   })
+  //  if(session){
+    //     setDataUser(session?.user);
+    //  }
+    // const dataUser = session.user?.user;
+    
+    
   if (status === "loading") {
     return <></>
   }
-  const [dataUser, setDataUser] = useState<any>();
-   if(session){
-      setDataUser(session?.user);
-   }
-  // const dataUser = session.user?.user;
-
-
   return (
     <>
       {/* menu large screen */}
@@ -102,7 +102,7 @@ export default function Sidebar() {
             </h2>
           </Link>
           
-          {dataUser?.user?.type === 'admin' && ( 
+          {dataUser?.type === 'admin' && ( 
             <>
             <Link
               href="/partner"

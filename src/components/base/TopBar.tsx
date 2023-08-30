@@ -23,19 +23,19 @@ import { Menu, Transition, Popover } from "@headlessui/react";
 import SessionDocument from "../../interface/session";
 
 export default function TopBar() {
+  const [dataUser, setDataUser] = useState<any>();
   const { data: session, status } = useSession({
     required: true,
   })
   if (status === "loading") {
     return <></>
   }
-  const [dataUser, setDataUser] = useState<any>();
-  if(session){
-     setDataUser(session?.user);
-  }
+  // if(session){
+  //    setDataUser(session?.user);
+  // }
 
   // const dataUserProfile = session.user.profile;
-  //const dataUser = session.user?.user;
+  // const dataUser = session.user?.user;
 
   return (
     <div className="bg-gray-100 w-full h-16 flex justify-between items-center transition-all z-10">
@@ -91,7 +91,7 @@ export default function TopBar() {
 
 
 
-              {dataUser.user.type === 'admin' && ( 
+              {dataUser?.type === 'admin' && ( 
               <>
               <div className="p-1" >
                 <Menu.Item>
@@ -199,7 +199,7 @@ export default function TopBar() {
               </picture>
 
               <span className=" md:block font-medium text-gray-700 ml-2 uppercase">
-                 {dataUser.user.name} 
+                 {dataUser?.name} 
               </span>
 
               <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
@@ -219,12 +219,12 @@ export default function TopBar() {
                 <Menu.Item>
                   <Link
                     href={
-                      dataUser.user.type === 'partner'
-                        ? `/partner/${dataUser.profile.id}`
-                        : dataUser.user.type === 'admin'
-                        ? `/user/${dataUser.user.id}`
-                        : dataUser.user.type === 'condominium'
-                        ? `/townhouse/${dataUser.profile.id}`
+                      dataUser?.type === 'partner'
+                        ? `/partner/${dataUser?.profile.id}`
+                        : dataUser?.type === 'admin'
+                        ? `/user/${dataUser?.id}`
+                        : dataUser?.type === 'condominium'
+                        ? `/townhouse/${dataUser?.profile.id}`
                         : '#'
                     }
                     className="flex hover:bg-blue-700 hover:text-white text-gray-700 rounded-[12px] p-2 text-sm group transition-colors items-center"
