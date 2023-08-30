@@ -28,11 +28,11 @@ export default function Sidebar() {
   if (status === "loading") {
     return <></>
   }
-  // const [dataUser, setDataUser] = useState<any>();
-  //  if(session){
-  //     setDataUser(session?.user);
-  //  }
-  const dataUser = session.user?.user;
+  const [dataUser, setDataUser] = useState<any>();
+   if(session){
+      setDataUser(session?.user);
+   }
+  // const dataUser = session.user?.user;
 
 
   return (

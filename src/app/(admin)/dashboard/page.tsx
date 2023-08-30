@@ -65,16 +65,17 @@ export default function Dashboard() {
     ]
   };  
 
-  // const [dataUser, setDataUser] = useState<any>();
-  // if(session){
-  //    setDataUser(session?.user);
-  // }
+  const [dataUser, setDataUser] = useState<any>();
+  if(session){
+     setDataUser(session?.user);
+  }
 
-  const dataUser = session?.user?.user;
+  // const dataUser = session?.user?.user;
   // const dataUserProfile = session?.user?.profile;
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(session);
       try {
         let response;
   
