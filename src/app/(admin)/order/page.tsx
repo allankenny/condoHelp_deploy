@@ -32,7 +32,7 @@ export default function Orders() {
   const dataUser = session?.user as UserData;
 
 
-  console.log('testeee',dataUser.profile.id);
+  
   const handleSearch = async (query: any) => {
     try {
       let url;

@@ -82,7 +82,8 @@ export default function Order({ params }: ParamsProps) {
 	};
 
 
-	const handleSubmit = async (event: any, orderStatusId: number) => {
+	const handleSubmit = async (event: any, orderStatusId: Number) => {
+		console.log('chegouuuuuu');
 		event.preventDefault();
 		if (
 			formData.service_area_id === "" ||
@@ -93,9 +94,11 @@ export default function Order({ params }: ParamsProps) {
 		}
 		try {
 			if (params.id === 'new') {
+				const { comment, score, ...formDataWithoutCommentAndScore } = formData;
+
 				const data = {
-					...formData,
-					condominium_id: dataUser.user.profile.id,
+				...formDataWithoutCommentAndScore,
+				condominium_id: dataUser.profile.id,
 				};
 				console.log(data);
 				const response = await axios.post(`${environment.apiUrl}/order/save`, data);
@@ -110,7 +113,7 @@ export default function Order({ params }: ParamsProps) {
 				if (orderStatusId === 4) {
 					data = { ...data, score: rating };
 				} else {
-					data = { ...data, partner_id: dataUser.user.profile.id };
+					data = { ...data, partner_id: dataUser.profile.id };
 				}
 
 				console.log(data);
@@ -152,7 +155,7 @@ export default function Order({ params }: ParamsProps) {
 
 
 	useEffect(() => {
-		if (dataUser.user.type == 'partner') {
+		if (dataUser?.user?.type === 'partner') {
 			setPictureInput(false);
 			setValueButton(false);
 			setPartnerInput(false);
@@ -221,7 +224,7 @@ export default function Order({ params }: ParamsProps) {
 				<div className="lg:col-span-2">
 					<div className=" mb-3 text-center font-bold">
 						{dataUser.user.type === 'condominium' ? (
-							<PageSubTitle subtitle={`Olá, ${dataUser.user.profile.name.toUpperCase()} selecione a área de interesse para receber um orçamento!`} />
+							<PageSubTitle subtitle={`Olá, ${dataUser.profile.name.toUpperCase()} selecione a área de interesse para receber um orçamento!`} />
 						) : dataUser.user.type === 'partner' ? (
 							<PageSubTitle subtitle={`Olá, ${orderData && orderData.condominium ? orderData.condominium.name.toUpperCase() : ''} solicitou serviços na área abaixo!`} />
 						) : null}
@@ -294,9 +297,11 @@ export default function Order({ params }: ParamsProps) {
 						<div className={`md:col-span-5 text-right  ${showSubmitButton ? 'block' : 'hidden'}`} >
 							<div className="flex w-full flex-row max-[600px]:flex-col items-end max-[600px]:items-center gap-3 mt-5">
 								<div className="flex w-auto max-[600px]:w-full">
-									<Link href={''} className="w-full">
-										<button className="rounded-full w-full bg-blue-500 px-10 py-3 text-white hover:bg-blue-600" onClick={() => handleSubmit}>Solicitar Orçamento</button>
-									</Link>
+									
+									{/* <Link href={''} className="w-full"> */}
+										<button className="rounded-full w-full bg-blue-500 px-10 py-3 text-white hover:bg-blue-600" onClick={(event) => handleSubmit(event, 1)}>Solicitar Orçamento</button>
+									{/* </Link> */}
+									
 								</div>
 								{/* <ButtonAddLink route="" label='Solicitar Orçamento' onClick={()=>handleSubmit} /> */}
 								<ButtonCancel route="order" label="Cancelar" />
