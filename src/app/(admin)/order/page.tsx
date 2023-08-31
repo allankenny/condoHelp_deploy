@@ -2,14 +2,14 @@
 import axios from 'axios';
 import Link from 'next/link'
 import { useState, useEffect } from "react";
-import BarSearch from "../../../../components/BarSearch"
+import BarSearch from "../../../components/BarSearch"
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { PageTitleDefault } from "../../../../components/PageTitle";
-import { ButtonAddLink } from "../../../../components/Buttons";
-import { environment } from "../../../../environment/environment";
-import OrderDocument from "../../../../interface/order";
+import { PageTitleDefault } from "../../../components/PageTitle";
+import { ButtonAddLink } from "../../../components/Buttons";
+import { environment } from "../../../environment/environment";
+import OrderDocument from "../../../interface/order";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../utils/authOptions";
+import { authOptions } from "../../../utils/authOptions";
 import { redirect } from "next/navigation";
 import { useSession } from 'next-auth/react';
 import Pagination from '@/components/Paginate';
@@ -32,7 +32,7 @@ export default function Orders() {
   const dataUser = session?.user as UserData;
 
 
-  console.log('testeee',dataUser.profile.id);
+  
   const handleSearch = async (query: any) => {
     try {
       let url;

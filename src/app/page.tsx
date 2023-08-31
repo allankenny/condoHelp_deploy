@@ -301,7 +301,7 @@ export default function Login() {
                 </picture>
               </div>
 
-              <h1 className="text-gray-800 font-bold text-2xl mb-1">Cadastro de Condomínio</h1>
+              <h1 className="text-gray-800 font-bold text-2xl mb-1">Cadastro de Parceiro</h1>
               <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
 
               <div className="grid col-1 rounded-[16px] bg-white drop-shadow-md p-10">
@@ -419,7 +419,7 @@ export default function Login() {
 
                     <div className="md:col-span-5 text-right">
                       <div className="inline-flex items-end gap-3 mt-5">
-                        <ButtonCancel route="dashboard" label="Cancelar" />
+                        <ButtonCancel route="" label="Cancelar" />
                         <ButtonAddLink route="partner" label='Cadastrar' onClick={handleSubmitPartner} />
                       </div>
                     </div>
