@@ -103,7 +103,7 @@ export default function Orders() {
       <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         <PageTitleDefault title="Chamados" />
         <BarSearch onSearch={handleSearch} />
-        {dataUser?.user.type === 'condominium' || dataUser?.user?.type === 'admin' && (
+        {dataUser?.user?.type === 'condominium'  && (
           <ButtonAddLink route="order/new" label="Novo Chamado" />
         )}
       </div>
