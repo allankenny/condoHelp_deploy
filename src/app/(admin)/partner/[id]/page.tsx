@@ -44,7 +44,7 @@ export default function Partner({ params }: ParamsProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [partnerData, setPartnerData] = useState<PartnerDocument>();
   const [areasData, setAreas] = useState<AreaDocument[]>([]);
-
+  const [showServiceArea, setServiceArea] = useState(false);
 
 
   const fetchAreas = async () => {
@@ -176,21 +176,25 @@ export default function Partner({ params }: ParamsProps) {
     }
   }
 
+  const [serviceAreasData, setServiceAreasData] = useState<AreaDocument>();
   useEffect(() => {
-    if (params.id !== 'new') {
+    if(params.id !== 'new'){
+      setServiceArea(true)
       const fetchData = async () => {
         try {
-
-          const response = await axios.get(`${environment.apiUrl}/partner/${params.id}`);
-          setPartnerData(response.data);
-          console.log(response.data);
+          
+          const response = await axios.get(`${environment.apiUrl}/partner/${params.id}`); 
+          const { service_areas, ...restData } = response.data;
+          setPartnerData(restData);
+          setServiceAreasData(service_areas);
+          console.log('retornooooo',service_areas);  
         } catch (error) {
           console.log(error);
         }
       };
       fetchData();
     }
-  }, [])
+  },[])
 
 
   useEffect(() => {
@@ -328,7 +332,30 @@ export default function Partner({ params }: ParamsProps) {
                 ))}
               </div>
             </div>
-
+            <div className={`mt-5 md:col-span-5 ${showServiceArea ? 'block' : 'hidden'}`}>
+              <label  className=" text-gray-400" >Seus Serviços Cadastrados</label>
+              <div className="flex flex-wrap items-center">
+                {serviceAreasData?.map((area) => (
+                  <div key={area.id} className="flex items-center mb-2 mr-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-6 h-6 mr-2 text-gray-400"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12 6.75a5.25 5.25 0 016.775-5.025.75.75 0 01.313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 011.248.313 5.25 5.25 0 01-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 112.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0112 6.75zM4.117 19.125a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <label htmlFor={`area_${area.id}`} className="text-gray-400 uppercase">
+                      {area.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="md:col-span-5 text-right">
               <div className="inline-flex items-end gap-3 mt-5">
                 <ButtonCancel route="dashboard" label="Cancelar" />
