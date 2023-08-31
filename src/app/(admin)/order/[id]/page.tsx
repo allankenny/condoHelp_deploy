@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import UserData from "@/interface/userData";
+import PartnerDocument from "@/interface/partner";
 interface ParamsProps {
 	params: {
 		id: string;
@@ -38,6 +39,7 @@ export default function Order({ params }: ParamsProps) {
 
 	const [orderData, setOrderData] = useState<OrderDocument>();
 	const [areasData, setAreas] = useState<AreaDocument[]>([]);
+	const [partnersData, setPartners] = useState<PartnerDocument[]>([]);
 	// const [dataUser, setDataUser] = useState<any>();
 	// if(session){
 	//    setDataUser(session?.user);
@@ -65,9 +67,23 @@ export default function Order({ params }: ParamsProps) {
 
 
 
-	useEffect(() => {
+	const fetchPartners = async () => {
+		try {
+		   const response = await axios.get(`${environment.apiUrl}/partner/list`);
+		   setPartners(response.data);
+		   console.log('dadosParceiross',response.data)
+		} catch (error) {
+		   console.error(error);
+		}
+	 };
+  
+  
+  
+  
+	 useEffect(() => {
 		fetchAreas();
-	}, []);
+		fetchPartners();
+	 }, []);
 
 	const resetForm = () => {
 		setFormData({
@@ -202,7 +218,10 @@ export default function Order({ params }: ParamsProps) {
 	};
 
 
-
+	const handlePartnersChange = (event: any) => {
+		handleChange(event);
+	 };
+  
 
 
 	const handleDescriptionChange = (event: any) => {
@@ -319,6 +338,25 @@ export default function Order({ params }: ParamsProps) {
 			</div>
 
 			<div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showPartnerInput ? 'block' : 'hidden'}`}>
+			<div className="md:col-span-5 text-center mb-3">
+               <label htmlFor="selectPartner" className="font-bold text-lg text-gray-400">
+                  Selecione o parceiro
+               </label>
+               <select
+                        name="selectPartner"
+                        id="selectPartner"
+                        className="h-10 border mt-3 rounded px-4 w-full bg-gray-50"
+                        // value={formData.selectPartner}
+                        onChange={handlePartnersChange}
+                     >
+                        <option value="">Selecione...</option>
+                        {partnersData.map((partner) => (
+    <option key={partner.id} value={partner.id}>
+      {partner.name}
+    </option>
+  ))}
+                     </select>
+            </div>
 				<div className="md:col-span-5 text-center mt-3">
 					<label htmlFor="obs" className="font-bold text-lg text-gray-400">
 						Detalhe os serviços prestados.
