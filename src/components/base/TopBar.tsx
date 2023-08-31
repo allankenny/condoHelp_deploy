@@ -222,12 +222,12 @@ export default function TopBar() {
                 <Menu.Item>
                   <Link
                     href={
-                      dataUser?.type === 'partner'
-                        ? `/partner/${dataUser.user.profile.id}`
+                      dataUser?.user.type === 'partner'
+                        ? `/partner/${dataUser.profile.id}`
                         : dataUser?.user.type === 'admin'
                           ? `/user/${dataUser?.user.id}`
-                          : dataUser?.type === 'condominium'
-                            ? `/townhouse/${dataUser?.user.profile.id}`
+                          : dataUser?.user.type === 'condominium'
+                            ? `/townhouse/${dataUser.profile.id}`
                             : '#'
                     }
                     className="flex hover:bg-blue-700 hover:text-white text-gray-700 rounded-[12px] p-2 text-sm group transition-colors items-center"

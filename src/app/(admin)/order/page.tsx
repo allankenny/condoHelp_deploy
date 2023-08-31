@@ -32,15 +32,15 @@ export default function Orders() {
   const dataUser = session?.user as UserData;
 
 
-
+  console.log('testeee',dataUser.profile.id);
   const handleSearch = async (query: any) => {
     try {
       let url;
 
       if (dataUser.user.type === 'condominium') {
-        url = `${environment.apiUrl}/search/condominium/order/${dataUser.user.profile.id}`;
+        url = `${environment.apiUrl}/search/condominium/order/${dataUser.profile.id}`;
       } else if (dataUser.user.type === 'partner') {
-        url = `${environment.apiUrl}/search/partner/order/${dataUser.user.profile.id}`;
+        url = `${environment.apiUrl}/search/partner/order/${dataUser.profile.id}`;
       } else {
         url = `${environment.apiUrl}/search/admin/order`;
       }
@@ -59,8 +59,8 @@ export default function Orders() {
       try {
         let url = `${environment.apiUrl}/order/list/${dataUser.user.id}`;
 
-        if (dataUser.user.profile?.id) {
-          url += `/${dataUser.user.profile.id}`;
+        if (dataUser.profile?.id) {
+          url += `/${dataUser.profile.id}`;
         }
 
         const response = await axios.get(url);

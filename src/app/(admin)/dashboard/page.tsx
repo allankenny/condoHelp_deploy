@@ -78,9 +78,9 @@ export default function Dashboard() {
         let response;
 
         if (dataUser.user.type === 'condominium') {
-          response = await axios(`${environment.apiUrl}/dashboard/condominium/${dataUser.user.profile.id}`);
+          response = await axios(`${environment.apiUrl}/dashboard/condominium/${dataUser.profile.id}`);
         } else if (dataUser.user.type === 'partner') {
-          response = await axios(`${environment.apiUrl}/dashboard/partner/${dataUser.user.profile.id}`);
+          response = await axios(`${environment.apiUrl}/dashboard/partner/${dataUser.profile.id}`);
         } else {
           response = await axios(`${environment.apiUrl}/dashboard/data`)
         }
