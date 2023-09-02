@@ -17,6 +17,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
+import { PageSubTitle } from "@/components/PageSubTitle";
 
 ChartJS.register(
   CategoryScale,
@@ -32,6 +33,8 @@ export default function Dashboard() {
   const [totalChamados, setTotalChamados] = useState(0);
   const [totalValue, setTotalValue] = useState(0);
   const [totalEvaluation, setTotalEvaluation] = useState(0);
+  const [showMsgButton, setShowMsgButton] = useState(false);
+  const [showDashboard, setDashboard] = useState(true);
   const { data: session, status } = useSession({
     required: true,
   })
@@ -64,6 +67,18 @@ export default function Dashboard() {
   };
 
   const dataUser = session?.user as UserData;
+
+  useEffect(() => {
+    // Sua lógica existente para buscar dados de dashboard...
+
+    // Verificar se o status é 'pendente' e definir showMsgButton e dashboard
+    if (dataUser?.user.status === 'pendente') {
+      setShowMsgButton(true);
+      setDashboard(false);
+    }
+  }, [dataUser]);
+
+
   // if(session){
   //    setDataUser(session?.user);
   // }
@@ -99,6 +114,8 @@ export default function Dashboard() {
     fetchData();
   }, [dataUser]);
 
+  
+
 
   function formatCurrency(value: number, currency: string = 'BRL'): string {
     return value.toLocaleString('pt-BR', { style: 'currency', currency });
@@ -108,44 +125,51 @@ export default function Dashboard() {
     return <></>
   }
 
+  
+
   return (
     <>
-      <div className="flex w-full justify-between items-center h-20 mb-5" >
-        <PageTitleDefault title="Dashboard" />
-      </div>
-      <div className="grid w-full lg:grid-cols-3 gap-5 mb-16">
-        <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
-          <span className="block  mt-3">Chamados</span>
-          <div className="flex items-center mt-3">
-            <PlusIcon className="h-16 w-16 inline-block text-white mr-2" />
-            <span className="  text-7xl mr-2">{totalChamados}</span>
-          </div>
+    
+
+     <div className={`grid col-1 rounded-[ 16px] bg-white drop-shadow-md p-5 mt-5 mb-5 transition-all duration-700 ${showMsgButton ? 'block' : 'hidden'}`}>
+        <div className="flex justify-center items-center m-2 text-center font-bold">
+          <PageSubTitle subtitle="Aguarde, seu cadastro está aguardando aprovação." />
         </div>
-        <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
-          <span className="block mt-3">Satisfação</span>
-          <div className="flex items-center mt-3">
-            <span className="text-7xl mr-2">
-              {totalEvaluation === 0 ? "100%" : `% ${totalEvaluation.toFixed(1)}`}
+      </div>
+
+      <div className={`grid col-1 rounded-[ 16px] bg-white drop-shadow-md p-5 mt-5 mb-5 transition-all duration-700 ${showDashboard ? 'block' : 'hidden'}`}>
+        <div className="flex w-full justify-between items-center h-20 mb-5" >
+          <PageTitleDefault title="Dashboard" />
+        </div>
+        <div className="grid w-full lg:grid-cols-3 gap-5 mb-16">
+          <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
+            <span className="block  mt-3">Chamados</span>
+            <div className="flex items-center mt-3">
+              <PlusIcon className="h-16 w-16 inline-block text-white mr-2" />
+              <span className="  text-7xl mr-2">{totalChamados}</span>
+            </div>
+          </div>
+          <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
+            <span className="block mt-3">Satisfação</span>
+            <div className="flex items-center mt-3">
+              <span className="text-7xl mr-2">
+                {totalEvaluation === 0 ? "100%" : `% ${totalEvaluation.toFixed(1)}`}
+              </span>
+            </div>
+          </div>
+          <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
+            <span className="block">Valores Transacionados</span>
+            <span className="text-5xl mr-2">
+              {totalValue !== undefined ? formatCurrency(totalValue) : formatCurrency(0)}
             </span>
-
-
-
           </div>
         </div>
-        <div className="rounded-[16px] bg-blue-500 h-40 drop-shadow-lg text-white font-bold flex flex-col justify-center text-xl items-center">
-          <span className="block">Valores Transacionados</span>
-          <span className="text-5xl mr-2">
-            {totalValue !== undefined ? formatCurrency(totalValue) : formatCurrency(0)}
-          </span>
-
+        <div className="grid col-1 rounded-[16px] bg-white h-100 drop-shadow-md p-10">
+          <Line
+            data={data}
+            height={60}
+          />
         </div>
-
-      </div>
-      <div className="grid col-1 rounded-[16px] bg-white h-100 drop-shadow-md p-10">
-        <Line
-          data={data}
-          height={60}
-        />
       </div>
 
 

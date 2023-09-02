@@ -69,21 +69,21 @@ export default function Order({ params }: ParamsProps) {
 
 	const fetchPartners = async () => {
 		try {
-		   const response = await axios.get(`${environment.apiUrl}/partner/list`);
-		   setPartners(response.data);
-		   console.log('dadosParceiross',response.data)
+			const response = await axios.get(`${environment.apiUrl}/order/show/showPartnerOrder`);
+			setPartners(response.data);
+			console.log('dadosParceiross', response.data)
 		} catch (error) {
-		   console.error(error);
+			console.error(error);
 		}
-	 };
-  
-  
-  
-  
-	 useEffect(() => {
+	};
+
+
+
+
+	useEffect(() => {
 		fetchAreas();
 		fetchPartners();
-	 }, []);
+	}, []);
 
 	const resetForm = () => {
 		setFormData({
@@ -113,8 +113,8 @@ export default function Order({ params }: ParamsProps) {
 				const { comment, score, ...formDataWithoutCommentAndScore } = formData;
 
 				const data = {
-				...formDataWithoutCommentAndScore,
-				condominium_id: dataUser.profile.id,
+					...formDataWithoutCommentAndScore,
+					condominium_id: dataUser.profile.id,
 				};
 				console.log(data);
 				const response = await axios.post(`${environment.apiUrl}/order/save`, data);
@@ -220,14 +220,15 @@ export default function Order({ params }: ParamsProps) {
 
 	const handlePartnersChange = (event: any) => {
 		handleChange(event);
-	 };
-  
+	};
+
 
 
 	const handleDescriptionChange = (event: any) => {
 		handleChange(event);
 		setShowSubmitButton(event.target.value.length >= 5);
 	};
+	
 
 	if (status === "loading") {
 		return <></>
@@ -316,11 +317,11 @@ export default function Order({ params }: ParamsProps) {
 						<div className={`md:col-span-5 text-right  ${showSubmitButton ? 'block' : 'hidden'}`} >
 							<div className="flex w-full flex-row max-[600px]:flex-col items-end max-[600px]:items-center gap-3 mt-5">
 								<div className="flex w-auto max-[600px]:w-full">
-									
+
 									{/* <Link href={''} className="w-full"> */}
-										<button className="rounded-full w-full bg-blue-500 px-10 py-3 text-white hover:bg-blue-600" onClick={(event) => handleSubmit(event, 1)}>Solicitar Orçamento</button>
+									<button className="rounded-full w-full bg-blue-500 px-10 py-3 text-white hover:bg-blue-600" onClick={(event) => handleSubmit(event, 1)}>Solicitar Orçamento</button>
 									{/* </Link> */}
-									
+
 								</div>
 								{/* <ButtonAddLink route="" label='Solicitar Orçamento' onClick={()=>handleSubmit} /> */}
 								<ButtonCancel route="order" label="Cancelar" />
@@ -338,25 +339,29 @@ export default function Order({ params }: ParamsProps) {
 			</div>
 
 			<div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showPartnerInput ? 'block' : 'hidden'}`}>
-			<div className="md:col-span-5 text-center mb-3">
-               <label htmlFor="selectPartner" className="font-bold text-lg text-gray-400">
-                  Selecione o parceiro
-               </label>
-               <select
-                        name="selectPartner"
-                        id="selectPartner"
-                        className="h-10 border mt-3 rounded px-4 w-full bg-gray-50"
-                        // value={formData.selectPartner}
-                        onChange={handlePartnersChange}
-                     >
-                        <option value="">Selecione...</option>
-                        {partnersData.map((partner) => (
-    <option key={partner.id} value={partner.id}>
-      {partner.name}
-    </option>
-  ))}
-                     </select>
-            </div>
+				<div className="md:col-span-5 text-center mb-3">
+					<label htmlFor="selectPartner" className="font-bold text-lg text-gray-400">
+						Selecione o parceiro
+					</label>
+					<select
+						name="selectPartner"
+						id="selectPartner"
+						className="h-10 border mt-3 rounded px-4 w-full bg-gray-50"
+						onChange={handlePartnersChange}
+						>
+						<option value="">Selecione...</option>
+						{partnersData
+							.filter((partner) =>
+							partner.service_areas.some((area:any) => area.id === formData.service_area_id)
+							)
+							.map((partner) => (
+							<option key={partner.id} value={partner.id}>
+								{partner.name}
+							</option>
+							))}
+						</select>
+
+				</div>
 				<div className="md:col-span-5 text-center mt-3">
 					<label htmlFor="obs" className="font-bold text-lg text-gray-400">
 						Detalhe os serviços prestados.

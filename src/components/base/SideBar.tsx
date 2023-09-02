@@ -81,6 +81,9 @@ export default function Sidebar() {
               Home
             </h2>
           </Link>
+
+          {dataUser.user.status !== 'pendente' && (
+            <>
           <Link
             href="/order"
             className={'group flex items-center text-sm  gap-3.5 font-medium p-2 text-white hover:bg-blue-100 hover:text-blue-500 rounded-md'}
@@ -102,6 +105,8 @@ export default function Sidebar() {
               Chamados
             </h2>
           </Link>
+          </>
+          )}
 
           {dataUser.user.type === 'admin' && (
             <>
