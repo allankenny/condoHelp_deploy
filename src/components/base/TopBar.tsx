@@ -74,23 +74,29 @@ export default function TopBar() {
                   </Link>
                 </Menu.Item>
               </div>
-              <div className="p-1" >
-                <Menu.Item>
-                  <Link
-                    href="/order"
-                    className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
-                  >
-                    <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
-                      <div className="mr-2">
-                        <MegaphoneIcon className="h-5 w-5" />
+
+
+              {dataUser?.user.status !== 'pendente' && (
+                <> 
+                <div className="p-1" >
+                  <Menu.Item>
+                    <Link
+                      href="/order"
+                      className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                    >
+                      <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                        <div className="mr-2">
+                          <MegaphoneIcon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h1>Chamados</h1>
+                        </div>
                       </div>
-                      <h1>Chamados</h1>
-                    </div>
-                  </Link>
-                </Menu.Item>
-              </div>
-
-
+                    </Link>
+                  </Menu.Item>
+                </div>
+              </>
+              )}
 
 
 

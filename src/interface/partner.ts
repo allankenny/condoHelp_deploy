@@ -1,6 +1,7 @@
 import UserDocument from './user';
 
 interface PartnerDocument{
+	service_areas: any;
     id:string;
     legal_name: string;
     name: string;
