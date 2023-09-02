@@ -47,8 +47,7 @@ export default function User({params}:ParamsProps) {
     event.preventDefault();
     if (
       formData.name === "" ||
-      formData.email === ""||
-      formData.password === ""
+      formData.email === ""
     ) {
       alert("Por favor, preencha todos os campos !");
       return;
@@ -63,6 +62,12 @@ export default function User({params}:ParamsProps) {
       };
      
       if ( params.id === 'new'){
+        if (
+          formData.password === ""
+        ) {
+          alert("Por favor, preencha todos os campos !");
+          return;
+        }
        await axios.post(`${environment.apiUrl}/user/save`, data);
       } else {
        await axios.put(`${environment.apiUrl}/user/update/${params.id}`, data);
@@ -127,7 +132,7 @@ export default function User({params}:ParamsProps) {
 
             <div className="md:col-span-3">
               <label htmlFor="email">Email</label>
-              <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="email@email.com" value={formData.email} onChange={handleChange} />
+              <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} onChange={handleChange} />
             </div>
             <div className="md:col-span-1">
               <label htmlFor="password">Senha</label>

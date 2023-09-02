@@ -153,6 +153,26 @@ export default function Login() {
     }
   };
 
+
+  useEffect(() => {
+    const fetchCepData = async (cep: any) => {
+      try {
+        const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+        setFormDataPartner((prevState) => ({
+          ...prevState,
+          address: response.data.logradouro,
+          address_neighborhood: response.data.bairro,
+          address_city: response.data.localidade,
+          address_state: response.data.uf
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (formDataPartner.zip.length === 9) {
+      fetchCepData(formDataPartner.zip);
+    }
+  }, [formDataPartner.zip]);
   
   const handleChange = (event: any) => {
     const { name, value, type } = event.target;
@@ -333,7 +353,7 @@ export default function Login() {
                     </div>
                     <div className="md:col-span-3">
                       <label htmlFor="email">Email</label>
-                      <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="email@email.com" value={formDataPartner.email} onChange={handleChange} />
+                      <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formDataPartner.email} onChange={handleChange} />
                     </div>
                     <div className="md:col-span-1">
                       <label htmlFor="password">Senha</label>

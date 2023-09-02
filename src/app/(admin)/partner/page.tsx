@@ -127,7 +127,7 @@ return (
                     className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
                     <td className="whitespace-nowrap px-6 py-2 uppercase">{item.name}</td>
                     <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">{item.admin_name}</td>
-                    <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">{item.email}</td>
+                    <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1 lowercase">{item.email}</td>
                     <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
                     <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">
                             {renderStarRating(item.average_score)}

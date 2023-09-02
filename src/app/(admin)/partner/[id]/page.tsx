@@ -131,12 +131,10 @@ export default function Partner({ params }: ParamsProps) {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (
-      formData.contact_name === "" ||
+      formData.legal_name === "" ||
       formData.name === "" ||
       formData.cnpj === "" ||
-      formData.email === "" ||
-      formData.password === "" ||
-      (formData.service_area_id || []).length === 0
+      formData.email === "" 
     ) {
       alert("Por favor, preencha todos os campos !");
       return;
@@ -162,6 +160,13 @@ export default function Partner({ params }: ParamsProps) {
       };
       console.log('dados enviados', data);
       if (params.id === 'new') {
+        if (
+          formData.password === "" ||
+          (formData.service_area_id || []).length === 0
+        ) {
+          alert("Por favor, preencha todos os campos !");
+          return;
+        }
         await axios.post(`${environment.apiUrl}/partner/save`, data);
       } else {
         await axios.put(`${environment.apiUrl}/partner/update/${params.id}`, data);
@@ -249,16 +254,16 @@ export default function Partner({ params }: ParamsProps) {
             </div>
             <div className="md:col-span-3">
               <label htmlFor="email">Email</label>
-              <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="email@email.com" value={formData.email} onChange={handleChange} />
+              <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} onChange={handleChange} />
             </div>
             <div className="md:col-span-1">
               <label htmlFor="password">Senha</label>
-              <input type={showPassword ? "text" : "password"} maxLength={10} minLength={8} name="password" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" autoComplete="off" value={formData.password} onChange={handleChange}
+              <input type={showPassword ? "text" : "password"}  name="password" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" autoComplete="off" value={formData.password} onChange={handleChange}
               />
             </div>
             <div className="md:col-span-1 relative">
               <label htmlFor="password2">Confirmação da Senha</label>
-              <input type={showPassword ? "text" : "password"} name="password2" id="password2" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 pr-10" maxLength={10} minLength={8} autoComplete="off" value={formData.password2}
+              <input type={showPassword ? "text" : "password"} name="password2" id="password2" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 pr-10" autoComplete="off" value={formData.password2}
                 onChange={handleChange}
               />
               <div
