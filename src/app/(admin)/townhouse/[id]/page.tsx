@@ -115,8 +115,7 @@ export default function Townhouse({params}:ParamsProps) {
     formData.address_neighborhood === ""||
     formData.address_state === ""||
     formData.address_city === ""||
-    formData.address_number === ""||
-    formData.password === ""
+    formData.address_number === ""
   ) {
     alert("Por favor, preencha todos os campos !");
     return;
@@ -143,6 +142,10 @@ export default function Townhouse({params}:ParamsProps) {
    
     console.log(data);
     if ( params.id === 'new'){
+      if (formData.password === "" ) {
+        alert("Por favor, preencha todos os campos !");
+        return;
+      }
      await axios.post(`${environment.apiUrl}/townhouse/save`, data);
     } else {
      await axios.put(`${environment.apiUrl}/townhouse/update/${params.id}`, data);
@@ -228,7 +231,7 @@ export default function Townhouse({params}:ParamsProps) {
             </div>
             <div className="md:col-span-3">
               <label htmlFor="email">Email</label>
-              <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="email@email.com" value={formData.email} autoComplete="off" onChange={handleChange} />
+              <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} autoComplete="off" onChange={handleChange} />
             </div>
             <div className="md:col-span-1">
               <label htmlFor="password">Senha</label>
