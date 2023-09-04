@@ -40,6 +40,7 @@ export default function Order({ params }: ParamsProps) {
 	const [orderData, setOrderData] = useState<OrderDocument>();
 	const [areasData, setAreas] = useState<AreaDocument[]>([]);
 	const [partnersData, setPartners] = useState<PartnerDocument[]>([]);
+	const [selectPartner, setSelectPartner] = useState('');
 	// const [dataUser, setDataUser] = useState<any>();
 	// if(session){
 	//    setDataUser(session?.user);
@@ -71,7 +72,6 @@ export default function Order({ params }: ParamsProps) {
 		try {
 			const response = await axios.get(`${environment.apiUrl}/order/show/showPartnerOrder`);
 			setPartners(response.data);
-			console.log('dadosParceiross', response.data)
 		} catch (error) {
 			console.error(error);
 		}
@@ -116,7 +116,6 @@ export default function Order({ params }: ParamsProps) {
 					...formDataWithoutCommentAndScore,
 					condominium_id: dataUser.profile.id,
 				};
-				console.log(data);
 				const response = await axios.post(`${environment.apiUrl}/order/save`, data);
 				setShowMsgButton(true);
 			} else {
@@ -125,14 +124,15 @@ export default function Order({ params }: ParamsProps) {
 					order_status_id: orderStatusId,
 				};
 
+				
+
 				// Adiciona a propriedade score somente se o order_status_id for igual a 4
 				if (orderStatusId === 4) {
 					data = { ...data, score: rating };
 				} else {
-					data = { ...data, partner_id: dataUser.profile.id };
+					data = { ...data, partner_id: selectPartner };
+					console.log('dados envados par o back',data);
 				}
-
-				console.log(data);
 
 				await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
 				console.log(data);
@@ -159,7 +159,6 @@ export default function Order({ params }: ParamsProps) {
 					setPartnerInput(true);
 					const response = await axios.get(`${environment.apiUrl}/order/${params.id}`);
 					setOrderData(response.data);
-					console.log('respostaaaa', response.data.condominium.name);
 
 				} catch (error) {
 					console.log(error);
@@ -228,7 +227,7 @@ export default function Order({ params }: ParamsProps) {
 		handleChange(event);
 		setShowSubmitButton(event.target.value.length >= 5);
 	};
-	
+
 
 	if (status === "loading") {
 		return <></>
@@ -347,19 +346,19 @@ export default function Order({ params }: ParamsProps) {
 						name="selectPartner"
 						id="selectPartner"
 						className="h-10 border mt-3 rounded px-4 w-full bg-gray-50"
-						onChange={handlePartnersChange}
-						>
+						onChange={(e) => setSelectPartner(e.target.value)} 
+						value={formData.partner_id} // Define o valor selecionado no <select>
+					>
 						<option value="">Selecione...</option>
-						{partnersData
-							.filter((partner) =>
-							partner.service_areas.some((area:any) => area.id === formData.service_area_id)
-							)
+						{partnersData.filter((partner) =>
+							partner.service_areas.some((area: any) => area.id === formData.service_area_id )
+						)
 							.map((partner) => (
-							<option key={partner.id} value={partner.id}>
-								{partner.name}
-							</option>
+								<option key={partner.id} value={partner.id}>
+									{partner.name}
+								</option>
 							))}
-						</select>
+					</select>
 
 				</div>
 				<div className="md:col-span-5 text-center mt-3">
