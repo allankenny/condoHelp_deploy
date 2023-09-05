@@ -35,6 +35,10 @@ export default function Order({ params }: ParamsProps) {
 		comment: "",
 		score: 0,
 		partner_id: "",
+		evaluation: {
+			comment: "",
+			score: 0, // Aqui você define a propriedade 'score'
+		},
 	});
 
 	const [orderData, setOrderData] = useState<OrderDocument>();
@@ -94,12 +98,15 @@ export default function Order({ params }: ParamsProps) {
 			comment: "",
 			score: 0,
 			partner_id: "",
+			evaluation: {
+				comment: "",
+				score: 0, // Aqui você define a propriedade 'score'
+			},
 		});
 	};
 
 
 	const handleSubmit = async (event: any, orderStatusId: Number) => {
-		console.log('chegouuuuuu');
 		event.preventDefault();
 		if (
 			formData.service_area_id === "" ||
@@ -110,7 +117,7 @@ export default function Order({ params }: ParamsProps) {
 		}
 		try {
 			if (params.id === 'new') {
-				const { comment, score, ...formDataWithoutCommentAndScore } = formData;
+				const { comment, score, evaluation, ...formDataWithoutCommentAndScore } = formData;
 
 				const data = {
 					...formDataWithoutCommentAndScore,
@@ -124,23 +131,49 @@ export default function Order({ params }: ParamsProps) {
 					order_status_id: orderStatusId,
 				};
 
-				
 
 				// Adiciona a propriedade score somente se o order_status_id for igual a 4
 				if (orderStatusId === 4) {
 					data = { ...data, score: rating };
 				} else {
 					data = { ...data, partner_id: selectPartner };
-					console.log('dados envados par o back',data);
-				}
 
+				}
+				console.log('dados do backend', data);
 				await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
 				console.log(data);
 				window.history.back();
 			}
 			resetForm();
 		} catch (error) {
-			// Tratar erros
+			alert('Ocorreu um erro!');
+			console.error(error);
+		}
+
+	}
+
+
+	const handleSubmitImage = async (event: any, orderStatusId: Number) => {
+		console.log('chegouuuuuu', orderStatusId);
+		event.preventDefault();
+
+		try {
+
+			let data = {
+				...formData,
+				order_status_id: orderStatusId,
+			};
+
+
+
+			console.log('dados do backend', data);
+			await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
+			console.log(data);
+			window.history.back();
+
+			resetForm();
+		} catch (error) {
+			alert('Ocorreu um erro!');
 			console.error(error);
 		}
 
@@ -159,7 +192,7 @@ export default function Order({ params }: ParamsProps) {
 					setPartnerInput(true);
 					const response = await axios.get(`${environment.apiUrl}/order/${params.id}`);
 					setOrderData(response.data);
-
+					console.log('retornoooo', response.data)
 				} catch (error) {
 					console.log(error);
 				}
@@ -346,12 +379,12 @@ export default function Order({ params }: ParamsProps) {
 						name="selectPartner"
 						id="selectPartner"
 						className="h-10 border mt-3 rounded px-4 w-full bg-gray-50"
-						onChange={(e) => setSelectPartner(e.target.value)} 
+						onChange={(e) => setSelectPartner(e.target.value)}
 						value={formData.partner_id} // Define o valor selecionado no <select>
 					>
 						<option value="">Selecione...</option>
 						{partnersData.filter((partner) =>
-							partner.service_areas.some((area: any) => area.id === formData.service_area_id )
+							partner.service_areas.some((area: any) => area.id === formData.service_area_id)
 						)
 							.map((partner) => (
 								<option key={partner.id} value={partner.id}>
@@ -439,7 +472,7 @@ export default function Order({ params }: ParamsProps) {
 				<div className={`md:col-span-5 text-right mt-5  ${showValueButton ? 'block' : 'hidden'}`} >
 					<div className="inline-flex items-end gap-3 ">
 						<ButtonCancel route="order" label="Cancelar" />
-						<ButtonAddLink route="" label='Enviar Imagens' onClick={(event) => handleSubmit(event, 3)} />
+						<ButtonAddLink route="" label='Enviar Imagens' onClick={(event) => handleSubmitImage(event, 3)} />
 
 					</div>
 				</div>
@@ -460,6 +493,7 @@ export default function Order({ params }: ParamsProps) {
 							/>
 						))}
 					</div>
+
 					<label htmlFor="comment" className=" text-lg text-gray-400">
 						Deixe aqui um comentário
 					</label>
@@ -467,7 +501,7 @@ export default function Order({ params }: ParamsProps) {
 						name="comment"
 						id="comment"
 						className="h-24 border mt-3 rounded p-2 px-4 w-full bg-gray-50 uppercase"
-						value={formData.comment}
+						value={formData.evaluation?.comment}
 						onChange={handleChange}
 					/>
 				</div>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import Link from 'next/link'
 import { useState, useEffect } from "react";
 import BarSearch from "../../../components/BarSearch"
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, StarIcon } from "@heroicons/react/24/solid";
 import { PageTitleDefault } from "../../../components/PageTitle";
 import { ButtonAddLink } from "../../../components/Buttons";
 import { environment } from "../../../environment/environment";
@@ -32,7 +32,7 @@ export default function Orders() {
   const dataUser = session?.user as UserData;
 
 
-  
+
   const handleSearch = async (query: any) => {
     try {
       let url;
@@ -65,6 +65,8 @@ export default function Orders() {
 
         const response = await axios.get(url);
         setOrderData(response.data);
+
+        console.log('retorno', response.data);
       } catch (error) {
         console.error('Error fetching order data:', error);
         // Handle the error as needed, such as displaying a message to the user.
@@ -87,6 +89,7 @@ export default function Orders() {
 
 
 
+
   // let filteredData = orderData;
   // if (dataUser.type === 'parceiro') {
   //   filteredData = orderData.filter(item => (item.partner_id === dataUserProfile.id || item.partner_id === null) && item.service_area_id === dataUserProfile.service_area_id);
@@ -103,7 +106,7 @@ export default function Orders() {
       <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         <PageTitleDefault title="Chamados" />
         <BarSearch onSearch={handleSearch} />
-        {(dataUser?.user?.type === 'condominium' || dataUser?.user?.type === 'admin') && (
+        {dataUser?.user?.type === 'condominium'  && (
           <ButtonAddLink route="order/new" label="Novo Chamado" />
         )}
 
@@ -120,6 +123,7 @@ export default function Orders() {
                     <th scope="col" className="px-6 py-2  max-[600px]:hidden max-[600px]:px-1">Prestador</th>
                     <th scope="col" className="px-6 py-2 text-center  max-[600px]:hidden max-[600px]:px-1">Progresso</th>
                     <th scope="col" className="px-6 py-2 text-center">Status</th>
+                    <th scope="col" className="px-6 py-2 text-center">Av. Chamado</th>
                     <th scope="col" className="px-6 py-2 text-center">Ações</th>
                   </tr>
                 </thead>
@@ -156,21 +160,39 @@ export default function Orders() {
                         <td className="whitespace-nowrap w-32 p-12 max-[600px]:px-1  py-2  ">
                           <div
                             className={`whitespace-nowrap px-5 py-1 rounded  uppercase text-center text-white font-bold ${item.order_status.id == '1'
-                                ? "bg-orange-300"
-                                : item.order_status.id == '2'
-                                  ? "bg-blue-300"
-                                  : item.order_status.id == '3'
-                                    ? "bg-green-300"
-                                    : item.order_status.id == '4'
-                                      ? "bg-gray-300"
-                                      : item.order_status.id == '5'
-                                        ? "bg-red-300"
-                                        : ""
+                              ? "bg-orange-300"
+                              : item.order_status.id == '2'
+                                ? "bg-blue-300"
+                                : item.order_status.id == '3'
+                                  ? "bg-green-300"
+                                  : item.order_status.id == '4'
+                                    ? "bg-gray-300"
+                                    : item.order_status.id == '5'
+                                      ? "bg-red-300"
+                                      : ""
                               }`}
                           >
                             {item.order_status.name}
                           </div>
                         </td>
+                        <td className="whitespace-nowrap px-6 py-2  max-[600px]:px-1">
+                          <div className="text-center text-gray-300">
+                            {item.evaluation ? (
+                              [1, 2, 3, 4, 5].map((value) => (
+                                <StarIcon
+                                  key={value}
+                                  className={`h-5 w-5 inline-block ${value <= parseFloat(item.evaluation?.score || 0)
+                                      ? 'text-yellow-400'
+                                      : 'text-gray-300'
+                                    }`}
+                                />
+                              ))
+                            ) : (
+                              <span className='text-gray-400'>Não Avaliado</span>
+                            )}
+                          </div>
+                        </td>
+
                         <td className="py-3 text-right gap-4 pr-6">
                           <div className="flex justify-end items-center align-middle gap-3">
                             <Link href={`/order/${item.id}`}>

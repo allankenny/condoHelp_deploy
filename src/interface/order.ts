@@ -3,6 +3,7 @@ import StatusDocument from './statusOrder';
 import TownhouseDocument from './townhouse';
 
 interface OrderDocument{
+    evaluation: any;
     id: string;
     description: string;
     obs: string;
