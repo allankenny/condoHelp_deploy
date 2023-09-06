@@ -210,14 +210,7 @@ export default function Order({ params }: ParamsProps) {
 	}, [])
 
 
-	useEffect(() => {
-		if (dataUser?.user?.type === 'partner') {
-			setPictureInput(false);
-			setValueButton(false);
-			setPartnerInput(false);
-			setShowUpBudget(true);
-		}
-	}, [])
+	
 
 	useEffect(() => {
 		if (orderData) {
@@ -246,17 +239,17 @@ export default function Order({ params }: ParamsProps) {
 	useEffect(() => {
 		const orderStatusId = parseInt(formData.order_status_id);
 
-		if (!isNaN(orderStatusId) && orderStatusId == 1) {
+		if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type === 'condominium' ) {
 			setPartnerInput(true);
 
-		} else if (!isNaN(orderStatusId) && orderStatusId == 2) {
+		} else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type === 'condominium') {
 			setPartnerInput(true);
 			setShowValueInit(false);
 			setShowValueFinal(true);
 			setPictureInput(true);
 			setValueButton(false);
 
-		} else if (!isNaN(orderStatusId) && orderStatusId >= 3) {
+		} else if (!isNaN(orderStatusId) && orderStatusId >= 3 && dataUser?.user?.type === 'condominium') {
 			setPartnerInput(true);
 			setShowValueInit(false);
 			setShowValueFinal(true);
@@ -267,6 +260,16 @@ export default function Order({ params }: ParamsProps) {
 		}
 		
 	}, [formData.order_status_id]);
+
+
+	useEffect(() => {
+		if (dataUser?.user?.type === 'partner') {
+			setPictureInput(false);
+			setValueButton(false);
+			setPartnerInput(false);
+			setShowUpBudget(true);
+		}
+	}, [])
 
 	function handleImageChange(event: any) {
 		if (event.target.files) {
