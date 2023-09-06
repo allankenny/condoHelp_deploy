@@ -31,8 +31,9 @@ export default function Order({ params }: ParamsProps) {
 		service_area_id: "",
 		description: "",
 		obs: "",
-		value: "",
+		value: "0,00",
 		comment: "",
+		order_status_id: "",
 		score: 0,
 		partner_id: "",
 		evaluation: {
@@ -45,6 +46,9 @@ export default function Order({ params }: ParamsProps) {
 	const [areasData, setAreas] = useState<AreaDocument[]>([]);
 	const [partnersData, setPartners] = useState<PartnerDocument[]>([]);
 	const [selectPartner, setSelectPartner] = useState('');
+	
+	const [images, setImages] = useState<File[]>([]);
+	const [rating, setRating] = useState(0);
 	// const [dataUser, setDataUser] = useState<any>();
 	// if(session){
 	//    setDataUser(session?.user);
@@ -95,6 +99,7 @@ export default function Order({ params }: ParamsProps) {
 			description: "",
 			obs: "",
 			value: "",
+			order_status_id: "",
 			comment: "",
 			score: 0,
 			partner_id: "",
@@ -117,7 +122,7 @@ export default function Order({ params }: ParamsProps) {
 		}
 		try {
 			if (params.id === 'new') {
-				const { comment, score, evaluation, ...formDataWithoutCommentAndScore } = formData;
+				const { comment, score, evaluation, value, ...formDataWithoutCommentAndScore } = formData;
 
 				const data = {
 					...formDataWithoutCommentAndScore,
@@ -126,9 +131,14 @@ export default function Order({ params }: ParamsProps) {
 				const response = await axios.post(`${environment.apiUrl}/order/save`, data);
 				setShowMsgButton(true);
 			} else {
+				const formattedValue = formData.value.replace('.', '').replace(',', '.'); // Remove a vírgula
+
+				const numericValue = parseFloat(formattedValue);
+
 				let data = {
 					...formData,
 					order_status_id: orderStatusId,
+					value: numericValue
 				};
 
 
@@ -137,9 +147,7 @@ export default function Order({ params }: ParamsProps) {
 					data = { ...data, score: rating };
 				} else {
 					data = { ...data, partner_id: selectPartner };
-
 				}
-				console.log('dados do backend', data);
 				await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
 				console.log(data);
 				window.history.back();
@@ -154,7 +162,7 @@ export default function Order({ params }: ParamsProps) {
 
 
 	const handleSubmitImage = async (event: any, orderStatusId: Number) => {
-		console.log('chegouuuuuu', orderStatusId);
+
 		event.preventDefault();
 
 		try {
@@ -186,10 +194,10 @@ export default function Order({ params }: ParamsProps) {
 		if (params.id !== 'new') {
 			const fetchData = async () => {
 				try {
-					setPictureInput(true);
+
 					setValueButton(true);
 					setShowDescription(true);
-					setPartnerInput(true);
+
 					const response = await axios.get(`${environment.apiUrl}/order/${params.id}`);
 					setOrderData(response.data);
 					console.log('retornoooo', response.data)
@@ -220,7 +228,6 @@ export default function Order({ params }: ParamsProps) {
 		}
 	}, [orderData]);
 
-
 	const [showUpBudget, setShowUpBudget] = useState(false);
 	const [showDescription, setShowDescription] = useState(true);
 	const [showSubmitButton, setShowSubmitButton] = useState(false);
@@ -228,9 +235,38 @@ export default function Order({ params }: ParamsProps) {
 	const [showPartnerInput, setPartnerInput] = useState(false);
 	const [showValueButton, setValueButton] = useState(false);
 	const [showPictureInput, setPictureInput] = useState(false);
-	const [images, setImages] = useState<File[]>([]);
-	const [rating, setRating] = useState(0);
+	const [showValueInit, setShowValueInit] = useState(true);
+	const [showValueFinal, setShowValueFinal] = useState(false);
+	const [showDivAvaluation, setDivAvaluation] = useState(false);
+	const [showPictureButton, setShowPictureButton] = useState(true);
+	
+	
 
+
+	useEffect(() => {
+		const orderStatusId = parseInt(formData.order_status_id);
+
+		if (!isNaN(orderStatusId) && orderStatusId == 1) {
+			setPartnerInput(true);
+
+		} else if (!isNaN(orderStatusId) && orderStatusId == 2) {
+			setPartnerInput(true);
+			setShowValueInit(false);
+			setShowValueFinal(true);
+			setPictureInput(true);
+			setValueButton(false);
+
+		} else if (!isNaN(orderStatusId) && orderStatusId >= 3) {
+			setPartnerInput(true);
+			setShowValueInit(false);
+			setShowValueFinal(true);
+			setPictureInput(true);
+			setDivAvaluation(true);
+			setShowPictureButton(false);
+			setValueButton(false);
+		}
+		
+	}, [formData.order_status_id]);
 
 	function handleImageChange(event: any) {
 		if (event.target.files) {
@@ -244,16 +280,45 @@ export default function Order({ params }: ParamsProps) {
 		setImages([]);
 	};
 
+
+	const handleChangeValue = (event: any) => {
+		const { name, value } = event.target;
+
+		// Remove todos os caracteres não numéricos
+		const numericValue = value.replace(/[^0-9]/g, '');
+
+		// Formata o valor como um valor monetário
+		const formattedValue = formatCurrency(numericValue);
+
+		setFormData({
+			...formData,
+			[name]: formattedValue,
+		});
+	};
+
+
 	const handleServiceChange = (event: any) => {
 		handleChange(event);
 		setShowDescription(true);
 	};
 
 
-	const handlePartnersChange = (event: any) => {
-		handleChange(event);
+
+
+	const formatCurrency = (value: any) => {
+		// Converte o valor numérico para uma string formatada em moeda
+		const numericValue = parseFloat(value) / 100; // Assume que o valor está em centavos
+		return numericValue.toLocaleString('pt-BR', {
+			style: 'currency',
+			currency: 'BRL',
+		}).replace('R$', ''); // Remove o "R$" da string formatada
 	};
 
+	const formattedValue = parseFloat(formData.value).toLocaleString('pt-BR', {
+		style: 'currency',
+		currency: 'BRL',
+		minimumFractionDigits: 2
+	}).replace('R$', '');
 
 
 	const handleDescriptionChange = (event: any) => {
@@ -406,11 +471,17 @@ export default function Order({ params }: ParamsProps) {
 						onChange={handleChange}
 					/>
 				</div>
-				<div className="md:col-span-5 text-center mt-5">
+				<div className={`md:col-span-5 text-center  ${showValueInit ? 'block' : 'hidden'}`} >
 					<label htmlFor="value" className="font-bold text-lg text-gray-400">
-						Valor
+						Valor (R$)
 					</label>
-					<input type="number" name="value" id="value" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" value={formData.value} onChange={handleChange} />
+					<input type="text" name="value" id="value" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50  " value={formData.value} onChange={handleChangeValue} />
+				</div>
+				<div className={`md:col-span-5 text-center  ${showValueFinal ? 'block' : 'hidden'}`} >
+					<label htmlFor="value" className="font-bold text-lg text-gray-400">
+						Valor (R$)
+					</label>
+					<input type="text" name="value" id="value" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50  " value={formattedValue} onChange={handleChangeValue} disabled />
 				</div>
 				<div className={`md:col-span-5 text-right  ${showValueButton ? 'block' : 'hidden'}`} >
 					<div className="inline-flex items-end gap-3 mt-5">
@@ -469,7 +540,7 @@ export default function Order({ params }: ParamsProps) {
 
 
 				</div>
-				<div className={`md:col-span-5 text-right mt-5  ${showValueButton ? 'block' : 'hidden'}`} >
+				<div className={`md:col-span-5 text-right mt-5  ${showPictureButton ? 'block' : 'hidden'}`} >
 					<div className="inline-flex items-end gap-3 ">
 						<ButtonCancel route="order" label="Cancelar" />
 						<ButtonAddLink route="" label='Enviar Imagens' onClick={(event) => handleSubmitImage(event, 3)} />
@@ -478,7 +549,7 @@ export default function Order({ params }: ParamsProps) {
 				</div>
 			</div>
 
-			<div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showPartnerInput ? 'block' : 'hidden'}`}>
+			<div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showDivAvaluation ? 'block' : 'hidden'}`}>
 				<div className="md:col-span-5 text-center mt-3">
 					<label htmlFor="comment" className="font-bold text-lg text-gray-400">
 						Avalie o prestador
@@ -506,7 +577,7 @@ export default function Order({ params }: ParamsProps) {
 					/>
 				</div>
 
-				<div className={`md:col-span-5 text-right  ${showValueButton ? 'block' : 'hidden'}`} >
+				<div className="md:col-span-5 text-right " >
 					<div className="inline-flex items-end gap-3 mt-5">
 						<ButtonCancel route="order" label="Cancelar" />
 						<ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />

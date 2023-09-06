@@ -16,12 +16,15 @@ import Pagination from '@/components/Paginate';
 import UserData from '@/interface/userData';
 
 
+
+
 export default function Orders() {
   const { data: session, status } = useSession({
     required: true,
   })
 
   const [orderData, setOrderData] = useState<OrderDocument[]>([]);
+  const [statusData, setStatus] = useState<OrderDocument[]>([]);
 
   //  if(session){
   //     setDataUser(session?.user);
@@ -45,6 +48,7 @@ export default function Orders() {
         url = `${environment.apiUrl}/search/admin/order`;
       }
 
+      console.log('dados pesquisa', query);
       const response = await axios.post(url, { query });
       setOrderData(response.data);
     } catch (error) {
@@ -62,11 +66,11 @@ export default function Orders() {
         if (dataUser.profile?.id) {
           url += `/${dataUser.profile.id}`;
         }
-
+        
         const response = await axios.get(url);
         setOrderData(response.data);
 
-        console.log('retorno', response.data);
+        
       } catch (error) {
         console.error('Error fetching order data:', error);
         // Handle the error as needed, such as displaying a message to the user.
@@ -76,8 +80,18 @@ export default function Orders() {
     fetchData();
   }, [dataUser]);
 
+  const fetchStatus = async () => {
+		try {
+			const response = await axios.get(`${environment.apiUrl}/statusOrder/list`);
+			setStatus(response.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-
+  useEffect(() => {
+		fetchStatus();
+	}, []);
 
   function getWidth(status: any) {
     if (status === 5) return 0;
@@ -87,6 +101,17 @@ export default function Orders() {
     if (status.id === 4) return 100;
   }
 
+
+  const [selectedStatus, setSelectedStatus] = useState(''); // Estado para armazenar a opção selecionada
+
+  // Função para lidar com a mudança no select
+  const handleSelectChange = (event: any) => {
+    const selectedValue = event.target.value;
+    setSelectedStatus(selectedValue); // Atualize o estado com a opção selecionada
+    handleSearch(selectedValue); // Chame a função handleSearch com o valor selecionado
+  };
+
+ 
 
 
 
@@ -101,15 +126,33 @@ export default function Orders() {
     return <></>
   }
 
+  
+
   return (
     <>
       <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         <PageTitleDefault title="Chamados" />
         <BarSearch onSearch={handleSearch} />
-        {dataUser?.user?.type === 'condominium'  && (
+        
+        <div className="flex flex-1 max-[600px]:w-full relative">
+      <select
+        id="status"
+        className="relative ml-20 mr-12 max-[600px]:ml-0 block w-[1px] min-w-0 h-12 flex-auto rounded-[16px] border border-gray-300 bg-white bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-gray-400 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none "
+        onChange={handleSelectChange}
+        value={selectedStatus} // Defina o valor do select com base no estado
+      >
+        <option selected value="">Status/todos</option>
+        
+        {statusData.map((status) => (
+          <option key={status.id} value={status.name}>
+            {status.name.charAt(0).toUpperCase() + status.name.slice(1)}
+          </option>
+        ))}
+      </select>
+    </div>
+        {dataUser?.user?.type === 'condominium' && (
           <ButtonAddLink route="order/new" label="Novo Chamado" />
         )}
-
       </div>
       <div className="flex justify-between items-center w-full p-2 mim-h-screen">
         <div className="w-full">
@@ -182,8 +225,8 @@ export default function Orders() {
                                 <StarIcon
                                   key={value}
                                   className={`h-5 w-5 inline-block ${value <= parseFloat(item.evaluation?.score || 0)
-                                      ? 'text-yellow-400'
-                                      : 'text-gray-300'
+                                    ? 'text-yellow-400'
+                                    : 'text-gray-300'
                                     }`}
                                 />
                               ))
