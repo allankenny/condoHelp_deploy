@@ -59,7 +59,6 @@ export default function Users() {
 const handleSearch = async (query:any) => {
   try {
     let url = `${environment.apiUrl}/search/user`;
-
     const response = await axios.post(url, { query });
     setUserData(response.data); 
   } catch (error) {
