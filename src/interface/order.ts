@@ -5,6 +5,7 @@ import TownhouseDocument from './townhouse';
 interface OrderDocument{
     evaluation: any;
     id: string;
+    name:string;
     description: string;
     obs: string;
     value: string;
