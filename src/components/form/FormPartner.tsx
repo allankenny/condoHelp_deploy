@@ -71,7 +71,7 @@ export default function FormPartner() {
       };
       await axios.post(`${environment.apiUrl}/partner/save`, data);
       resetFormPartner();
-      alert('Dados salvos com sucesso! Aguarde, seu cadastro esta aguardando aprovação.');
+      alert('Dados salvos com sucesso!');
     } catch (error) {
       console.log(error);
       alert('Ocorreu um erro ao enviar os dados.');
@@ -131,6 +131,26 @@ export default function FormPartner() {
       setFormDataPartner((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
   };
+
+  useEffect(() => {
+    const fetchCepData = async (cep: any) => {
+      try {
+        const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+        setFormDataPartner((prevState) => ({
+          ...prevState,
+          address: response.data.logradouro,
+          address_neighborhood: response.data.bairro,
+          address_city: response.data.localidade,
+          address_state: response.data.uf
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (formDataPartner.zip.length === 9) {
+      fetchCepData(formDataPartner.zip);
+    }
+  }, [formDataPartner.zip]);
 
   function handleFileChange(event: any) {
     const file = event.target.files[0];

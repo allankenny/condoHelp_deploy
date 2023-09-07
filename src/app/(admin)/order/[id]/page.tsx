@@ -239,17 +239,17 @@ export default function Order({ params }: ParamsProps) {
 	useEffect(() => {
 		const orderStatusId = parseInt(formData.order_status_id);
 
-		if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type === 'condominium' ) {
+		if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type !== 'partner' ) {
 			setPartnerInput(true);
 
-		} else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type === 'condominium') {
+		} else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type !== 'partner') {
 			setPartnerInput(true);
 			setShowValueInit(false);
 			setShowValueFinal(true);
 			setPictureInput(true);
 			setValueButton(false);
 
-		} else if (!isNaN(orderStatusId) && orderStatusId >= 3 && dataUser?.user?.type === 'condominium') {
+		} else if (!isNaN(orderStatusId) && orderStatusId >= 3 && dataUser?.user?.type !== 'partner') {
 			setPartnerInput(true);
 			setShowValueInit(false);
 			setShowValueFinal(true);
