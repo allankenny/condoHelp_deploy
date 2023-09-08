@@ -190,21 +190,19 @@ export default function Order({ params }: ParamsProps) {
 				const response = await axios.post(`${environment.apiUrl}/order/save`, data);
 				setShowMsgButton(true);
 			} else {
-				const formattedValue = formData.value.replace('.', '').replace(',', '.'); // Remove a vírgula
-
-				const numericValue = parseFloat(formattedValue);
-
 				let data = {
 					...formData,
 					order_status_id: orderStatusId,
-					value: numericValue
 				};
-
+			
 				// Adiciona a propriedade score somente se o order_status_id for igual a 4
 				if (orderStatusId === 4) {
 					data = { ...data, score: rating };
 				} else {
-					data = { ...data, partner_id: selectPartner };
+					const formattedValue = formData.value.replace('.', '').replace(',', '.'); // Remove a vírgula
+					const numericValue = parseFloat(formattedValue);
+					data.value = numericValue.toString();
+					data = { ...data, partner_id: selectPartner.toString() };
 				}
 				await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
 				console.log(data);
