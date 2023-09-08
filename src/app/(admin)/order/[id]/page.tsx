@@ -82,6 +82,7 @@ export default function Order({ params }: ParamsProps) {
 
 	const insertImage = async (file:File) => {
     setUploading(true);
+		console.log(file);
     let randomName = createId();
     let newFile = ref(storage, randomName);
     let upload = await uploadBytes(newFile, file);
@@ -89,10 +90,9 @@ export default function Order({ params }: ParamsProps) {
     let arrayImages = imagesUrl;
     arrayImages?.push(imageUrl);
     setImagesUrl(arrayImages);
-		setTimeout(() => {
+		setTimeout(()=>{
 			setUploading(false);
-		}, 3000);
-		console.log(imagesUrl);
+		}, 4000)
   }
 
   const removeImage = async (file:string) => {
@@ -249,7 +249,9 @@ export default function Order({ params }: ParamsProps) {
 
 					const response = await axios.get(`${environment.apiUrl}/order/${params.id}`);
 					setOrderData(response.data);
-					setImagesUrl(response.data.images);
+					if(response.data.images){
+						setImagesUrl(response.data.images);
+					}
 					console.log('retornoooo', response.data.images)
 				} catch (error) {
 					console.log(error);
