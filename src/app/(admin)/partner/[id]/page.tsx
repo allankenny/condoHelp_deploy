@@ -9,6 +9,10 @@ import PartnerDocument from "../../../../interface/partner";
 import AreaDocument from "../../../../interface/area";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { useSession } from 'next-auth/react';
+import { storage } from '../../../../libs/firebase';
+import { v4 as createId} from 'uuid';
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import Link from 'next/link';
 interface ParamsProps {
   params: {
     id: string;
@@ -19,6 +23,8 @@ export default function Partner({ params }: ParamsProps) {
   const { data: session, status } = useSession({
     required: true,
   })
+
+  const [file, setFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     legal_name: "",
@@ -38,7 +44,8 @@ export default function Partner({ params }: ParamsProps) {
     service_area_id: "",
     user_id: "",
     password: "",
-    password2: ""
+    password2: "",
+    logo: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -81,7 +88,35 @@ export default function Partner({ params }: ParamsProps) {
 
   function handleFileChange(event: any) {
     const file = event.target.files[0];
-    // Faça algo com o arquivo selecionado pelo usuário
+    if(['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)){
+      if(formData.logo?.length > 0){
+        removeImage(formData.logo); 
+      }
+      setFile(file);
+      insertImage(file);
+    }else{
+      alert("Formato inválido");
+    }
+  }
+
+  const insertImage = async (file:File) => {
+    let randomName = createId()
+    let newFile = ref(storage, randomName)
+    let upload = await uploadBytes(newFile, file);
+    let imageUrl = await getDownloadURL(upload.ref);
+    setFormData((prevFormData) => ({ ...prevFormData, ['logo']: imageUrl }));
+  }
+
+  const removeImage = async (file:string) => {
+    let imageRef = ref(storage, file);
+    await deleteObject(imageRef).then(() => {
+      setFile(null);
+      setFormData((prevFormData) => ({ ...prevFormData, ['logo']: '' }));
+      console.log('Imagem deletada com sucesso!');
+    }).catch((error) => {
+      console.log(error)
+      alert('Erro ao deletar imagem');
+    });
   }
 
   const resetForm = () => {
@@ -103,7 +138,8 @@ export default function Partner({ params }: ParamsProps) {
       service_area_id: "",
       user_id: "",
       password: "",
-      password2: ""
+      password2: "",
+      logo: "",
     });
   };
 
@@ -127,7 +163,6 @@ export default function Partner({ params }: ParamsProps) {
     }
   }, [formData.zip]);
 
-
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (
@@ -143,35 +178,37 @@ export default function Partner({ params }: ParamsProps) {
       alert("As senhas não coincidem.");
       return;
     }
+
     try {
       // Remover caracteres não numéricos do CNPJ, phone, cellphone e zip
       const cnpj = formData.cnpj.replace(/\D/g, '');
       const phone = formData.phone.replace(/\D/g, '');
       const cellphone = formData.cellphone.replace(/\D/g, '');
       const zip = formData.zip.replace(/\D/g, '');
-
+  
       // Criar um novo objeto com os dados do formulário e os valores sem formatação
       const { password2, ...data } = {
         ...formData,
         cnpj,
         phone,
         cellphone,
-        zip
+        zip,
       };
+
       console.log('dados enviados', data);
       if (params.id === 'new') {
         if (
           formData.password === "" ||
           (formData.service_area_id || []).length === 0
         ) {
-          alert("Por favor, preencha todos os campos !");
+          alert("Por favor, preencha todos os campos!");
           return;
         }
         await axios.post(`${environment.apiUrl}/partner/save`, data);
       } else {
         await axios.put(`${environment.apiUrl}/partner/update/${params.id}`, data);
-
       }
+
       resetForm();
       alert('Dados salvos com sucesso!');
       window.history.back();
@@ -192,7 +229,6 @@ export default function Partner({ params }: ParamsProps) {
           const { service_areas, ...restData } = response.data;
           setPartnerData(restData);
           setServiceAreasData(service_areas);
-          console.log('retornooooo',service_areas);  
         } catch (error) {
           console.log(error);
         }
@@ -310,7 +346,7 @@ export default function Partner({ params }: ParamsProps) {
             <div className="md:col-span-3">
               <label htmlFor="logo">Logo</label>
               <div className="flex">
-                <input type="text" name="logo" id="logo" className="h-10 border mt-1 rounded-tl-md rounded-bl-md px-4 w-full bg-gray-50" placeholder="Carregar Arquivo" onChange={handleChange} />
+                <input type="text" name="logo" id="logo" className="h-10 border mt-1 rounded-tl-md rounded-bl-md px-4 w-full bg-gray-50" placeholder="Carregar Arquivo" value={file?.name} />
                 <button className="h-10 border mt-1 rounded-tr-md rounded-br-md px-4 bg-gray-50" onClick={() => {
                   const fileInput = document.getElementById('fileInput');
                   if (fileInput) {
@@ -319,6 +355,31 @@ export default function Partner({ params }: ParamsProps) {
                 }}>Procurar</button>
               </div>
               <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
+            </div>
+            <div className="flex items-center justify-center w-full">
+              {formData.logo?.length > 0 && (
+                <div className='flex mt-4 gap-2'>
+                  <div
+                    className='flex flex-col items-center'
+                  >
+                    <picture >
+                      <img
+                        className="object-cover h-48 w-96 rounded-lg"
+                        src={formData.logo}
+                        alt=""
+                      />
+                    </picture>
+                    <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={()=>removeImage(formData.logo)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16"> 
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
+                        </path> 
+                        <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" fill="white">
+                        </path> 
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="md:col-span-5">
               <label htmlFor="service_area_id">Área de Serviço</label>

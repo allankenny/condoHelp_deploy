@@ -21,7 +21,8 @@ interface PartnerDocument{
     service_area_id?: string;
     user_id?: string;
     user: UserDocument,
-    average_score: any
+    average_score: any,
+    logo: string
 }
 
 export default PartnerDocument;

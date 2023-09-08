@@ -18,7 +18,7 @@ interface TownhouseDocument{
     address_city?: string;
     valid_at?: string;
     user_id?: string;
-    logo?: File;
+    logo?: string;
     user: UserDocument
 }
 export default TownhouseDocument;
