@@ -21,6 +21,7 @@ import { ref, getDownloadURL, listAll, uploadBytes, deleteObject } from 'firebas
 import { storage } from '../../../../libs/firebase';
 import { v4 as createId} from 'uuid';
 import { AiOutlineLoading } from "react-icons/ai";
+import { string } from "yup";
 interface ParamsProps {
 	params: {
 		id: string;
@@ -63,7 +64,7 @@ export default function Order({ params }: ParamsProps) {
 	const dataUser = session?.user as UserData;
   const [uploading, setUploading] = useState(false)
 	const [file, setFile] = useState<File[] | null>(null);
-  const [imagesUrl, setImagesUrl] = useState<String[]>([]);
+  const [imagesUrl, setImagesUrl] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const onDrop = useCallback((files: File[]) => {
@@ -74,20 +75,24 @@ export default function Order({ params }: ParamsProps) {
     onDrop,
     accept: {
       'image/jpeg': [],
+      'image/jpg': [],
       'image/png': []
     }
   });
 
 	const insertImage = async (file:File) => {
-    setUploading(true)
-    let randomName = createId()
-    let newFile = ref(storage, randomName)
+    setUploading(true);
+    let randomName = createId();
+    let newFile = ref(storage, randomName);
     let upload = await uploadBytes(newFile, file);
     let imageUrl = await getDownloadURL(upload.ref);
     let arrayImages = imagesUrl;
     arrayImages?.push(imageUrl);
     setImagesUrl(arrayImages);
-    setUploading(false)
+		setTimeout(() => {
+			setUploading(false);
+		}, 3000);
+		console.log(imagesUrl);
   }
 
   const removeImage = async (file:string) => {
@@ -100,9 +105,9 @@ export default function Order({ params }: ParamsProps) {
       console.log('Imagem deletada com sucesso!');
 			setUploading(false);
     }).catch((error) => {
-      console.log(error)
+      console.log(error);
       alert('Erro ao deletar imagem');
-			setUploading(false)
+			setUploading(false);
     });
   }
 
@@ -218,7 +223,8 @@ export default function Order({ params }: ParamsProps) {
 		try {
 			let data = {
 				...formData,
-				order_status_id: orderStatusId,
+				order_status_id: orderStatusId,	
+				images: imagesUrl
 			};
 			console.log('dados do backend', data);
 			await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
@@ -551,7 +557,7 @@ export default function Order({ params }: ParamsProps) {
           
           <div className="flex items-center justify-center w-full">
 						{imagesUrl.length > 0 && (
-							<div className='flex mt-4 flex-wrap'>
+							<div className='flex mt-4 flex-wrap w-full'>
 								{imagesUrl.map((item:any)=>(
 									<div key={Math.random()}
 										className='flex flex-col w-1/5 items-center p-1'
@@ -576,15 +582,12 @@ export default function Order({ params }: ParamsProps) {
 							</div>
 						)}
           </div>
-
 				</div>
-				<div className={`md:col-span-5 text-right mt-5  ${showPictureButton ? 'block' : 'hidden'}`} >
-					<div className="inline-flex items-end gap-3 ">
-						<ButtonCancel route="order" label="Cancelar" />
-						<ButtonAddLink route="" label='Enviar Imagens' onClick={(event) => handleSubmitImage(event, 3)} />
-
+					<div className={`md:col-span-5 text-right mt-5  ${showPictureButton ? 'block' : 'hidden'}`} >
+						<div className="inline-flex items-end gap-3 ">
+							<ButtonAddLink route="" label='Enviar Imagens' onClick={(event) => handleSubmitImage(event, 3)} />
+						</div>
 					</div>
-				</div>
 			</div>
 
 			<div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showDivAvaluation ? 'block' : 'hidden'}`}>

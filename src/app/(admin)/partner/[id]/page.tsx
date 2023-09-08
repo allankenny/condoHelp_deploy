@@ -87,6 +87,7 @@ export default function Partner({ params }: ParamsProps) {
   };
 
   function handleFileChange(event: any) {
+    console.log('AQUI');
     const file = event.target.files[0];
     if(['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)){
       if(formData.logo?.length > 0){
@@ -100,18 +101,19 @@ export default function Partner({ params }: ParamsProps) {
   }
 
   const insertImage = async (file:File) => {
-    let randomName = createId()
-    let newFile = ref(storage, randomName)
+    let randomName = createId();
+    let newFile = ref(storage, randomName);
     let upload = await uploadBytes(newFile, file);
     let imageUrl = await getDownloadURL(upload.ref);
     setFormData((prevFormData) => ({ ...prevFormData, ['logo']: imageUrl }));
   }
 
   const removeImage = async (file:string) => {
+    console.log('AQUI');
     let imageRef = ref(storage, file);
+    setFormData((prevFormData) => ({ ...prevFormData, ['logo']: '' }));
     await deleteObject(imageRef).then(() => {
       setFile(null);
-      setFormData((prevFormData) => ({ ...prevFormData, ['logo']: '' }));
       console.log('Imagem deletada com sucesso!');
     }).catch((error) => {
       console.log(error)
@@ -227,6 +229,7 @@ export default function Partner({ params }: ParamsProps) {
           
           const response = await axios.get(`${environment.apiUrl}/partner/${params.id}`); 
           const { service_areas, ...restData } = response.data;
+          console.log(restData);
           setPartnerData(restData);
           setServiceAreasData(service_areas);
         } catch (error) {
@@ -357,7 +360,7 @@ export default function Partner({ params }: ParamsProps) {
               <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
             </div>
             <div className="flex items-center justify-center w-full">
-              {formData.logo?.length > 0 && (
+              {formData.logo && formData.logo.length > 0 && (
                 <div className='flex mt-4 gap-2'>
                   <div
                     className='flex flex-col items-center'

@@ -200,9 +200,9 @@ export default function Townhouse({ params }: ParamsProps) {
 
   const removeImage = async (file:string) => {
     let imageRef = ref(storage, file);
+    setFormData((prevFormData) => ({ ...prevFormData, ['logo']: '' }));
     await deleteObject(imageRef).then(() => {
       setFile(null);
-      setFormData((prevFormData) => ({ ...prevFormData, ['logo']: '' }));
       console.log('Imagem deletada com sucesso!');
     }).catch((error) => {
       console.log(error)
@@ -337,7 +337,7 @@ export default function Townhouse({ params }: ParamsProps) {
               <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
             </div>
             <div className="flex items-center justify-center w-full">
-              {formData.logo?.length > 0 && (
+              {formData.logo && formData.logo.length > 0 && (
                 <div className='flex mt-4 gap-2'>
                   <div
                     className='flex flex-col items-center'

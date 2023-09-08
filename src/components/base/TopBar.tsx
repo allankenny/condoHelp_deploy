@@ -39,6 +39,7 @@ export default function TopBar() {
   // const dataUser = session.user?.user;
 
   const dataUser = session?.user as UserData;
+  console.log(dataUser);
 
   return (
     <div className="bg-gray-100 w-full h-16 flex justify-between items-center transition-all z-10">
