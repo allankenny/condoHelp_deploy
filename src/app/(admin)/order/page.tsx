@@ -15,9 +15,6 @@ import { useSession } from 'next-auth/react';
 import Pagination from '@/components/Paginate';
 import UserData from '@/interface/userData';
 
-
-
-
 export default function Orders() {
   const { data: session, status } = useSession({
     required: true,
@@ -33,8 +30,6 @@ export default function Orders() {
   // const dataUser = session?.user?.user;
   // const dataUserProfile = session?.user?.profile;
   const dataUser = session?.user as UserData;
-
-
 
   const handleSearch = async (query: any) => {
     try {
@@ -56,8 +51,6 @@ export default function Orders() {
     }
   };
 
-
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -65,11 +58,9 @@ export default function Orders() {
 
         if (dataUser.profile?.id) {
           url += `/${dataUser.profile.id}`;
-        }
-        
+        }        
         const response = await axios.get(url);
         setOrderData(response.data);
-
         
       } catch (error) {
         console.error('Error fetching order data:', error);
@@ -111,10 +102,6 @@ export default function Orders() {
     handleSearch(selectedValue); // Chame a função handleSearch com o valor selecionado
   };
 
- 
-
-
-
   // let filteredData = orderData;
   // if (dataUser.type === 'parceiro') {
   //   filteredData = orderData.filter(item => (item.partner_id === dataUserProfile.id || item.partner_id === null) && item.service_area_id === dataUserProfile.service_area_id);
@@ -125,8 +112,6 @@ export default function Orders() {
   if (status === "loading") {
     return <></>
   }
-
-  
 
   return (
     <>
@@ -181,7 +166,7 @@ export default function Orders() {
                             {item.condominium!.logo && (
                               <img src={item.condominium!.logo}
                                 alt="Logo 1"
-                                className=" rounded h-10 w-10 drop-shadow-lg mr-2"
+                                className=" rounded h-10 w-10 drop-shadow-lg mr-2 object-contain"
                               />
                             )}
                             <span className=" uppercase">{item.condominium!.name}</span>

@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import { PageSubTitle } from "../../../../components/PageSubTitle";
@@ -16,6 +16,11 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import UserData from "@/interface/userData";
 import PartnerDocument from "@/interface/partner";
+import { useDropzone } from 'react-dropzone';
+import { ref, getDownloadURL, listAll, uploadBytes, deleteObject } from 'firebase/storage';
+import { storage } from '../../../../libs/firebase';
+import { v4 as createId} from 'uuid';
+import { AiOutlineLoading } from "react-icons/ai";
 interface ParamsProps {
 	params: {
 		id: string;
@@ -56,13 +61,70 @@ export default function Order({ params }: ParamsProps) {
 	// const dataUser = session?.user?.user;
 	// const dataUserProfile = session?.user?.profile;
 	const dataUser = session?.user as UserData;
+  const [uploading, setUploading] = useState(false)
+	const [file, setFile] = useState<File[] | null>(null);
+  const [imagesUrl, setImagesUrl] = useState<String[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [itsOk, setItsOk] = useState(false);
 
+  const onDrop = useCallback((files: File[]) => {
+    setFile(files);
+  },[]);
+
+  const dropzone = useDropzone({
+    onDrop,
+    accept: {
+      'image/jpeg': [],
+      'image/png': []
+    }
+  });
+
+	const insertImage = async (file:File) => {
+    setUploading(true)
+    let randomName = createId()
+    let newFile = ref(storage, randomName)
+    let upload = await uploadBytes(newFile, file);
+    let imageUrl = await getDownloadURL(upload.ref);
+    let arrayImages = imagesUrl;
+    arrayImages?.push(imageUrl);
+    setImagesUrl(arrayImages);
+    setUploading(false)
+  }
+
+  const removeImage = async (file:string) => {
+		setUploading(true);
+    let imageRef = ref(storage, file);
+    await deleteObject(imageRef).then(() => {
+      let actualArray = imagesUrl;
+      let arrayImage = actualArray.filter(photo => photo != file);
+      setImagesUrl(arrayImage);
+      console.log('Imagem deletada com sucesso!');
+			setUploading(false);
+    }).catch((error) => {
+      console.log(error)
+      alert('Erro ao deletar imagem');
+			setUploading(false)
+    });
+  }
+
+	useEffect(()=>{
+    const handleImages = async () => {
+			console.log('uploading images')
+			file?.map((image: any)=>{
+				if(['image/jpeg', 'image/jpg', 'image/png'].includes(image.type)){
+					insertImage(image)
+				}else{
+					alert('Tipo de arquivo não permitido');
+				}
+			})
+    }
+    handleImages();
+  },[file]);
 
 	const handleChange = (event: any) => {
 		const { name, value } = event.target;
 		setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
 	};
-
 
 	const fetchAreas = async () => {
 		try {
@@ -73,9 +135,6 @@ export default function Order({ params }: ParamsProps) {
 		}
 	};
 
-
-
-
 	const fetchPartners = async () => {
 		try {
 			const response = await axios.get(`${environment.apiUrl}/order/show/showPartnerOrder`);
@@ -84,9 +143,6 @@ export default function Order({ params }: ParamsProps) {
 			console.error(error);
 		}
 	};
-
-
-
 
 	useEffect(() => {
 		fetchAreas();
@@ -109,7 +165,6 @@ export default function Order({ params }: ParamsProps) {
 			},
 		});
 	};
-
 
 	const handleSubmit = async (event: any, orderStatusId: Number) => {
 		event.preventDefault();
@@ -141,7 +196,6 @@ export default function Order({ params }: ParamsProps) {
 					value: numericValue
 				};
 
-
 				// Adiciona a propriedade score somente se o order_status_id for igual a 4
 				if (orderStatusId === 4) {
 					data = { ...data, score: rating };
@@ -160,20 +214,13 @@ export default function Order({ params }: ParamsProps) {
 
 	}
 
-
 	const handleSubmitImage = async (event: any, orderStatusId: Number) => {
-
 		event.preventDefault();
-
 		try {
-
 			let data = {
 				...formData,
 				order_status_id: orderStatusId,
 			};
-
-
-
 			console.log('dados do backend', data);
 			await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
 			console.log(data);
@@ -186,9 +233,6 @@ export default function Order({ params }: ParamsProps) {
 		}
 
 	}
-
-
-
 
 	useEffect(() => {
 		if (params.id !== 'new') {
@@ -208,9 +252,6 @@ export default function Order({ params }: ParamsProps) {
 			fetchData();
 		}
 	}, [])
-
-
-	
 
 	useEffect(() => {
 		if (orderData) {
@@ -233,9 +274,6 @@ export default function Order({ params }: ParamsProps) {
 	const [showDivAvaluation, setDivAvaluation] = useState(false);
 	const [showPictureButton, setShowPictureButton] = useState(true);
 	
-	
-
-
 	useEffect(() => {
 		const orderStatusId = parseInt(formData.order_status_id);
 
@@ -261,7 +299,6 @@ export default function Order({ params }: ParamsProps) {
 		
 	}, [formData.order_status_id]);
 
-
 	useEffect(() => {
 		if (dataUser?.user?.type === 'partner') {
 			setPictureInput(false);
@@ -278,11 +315,9 @@ export default function Order({ params }: ParamsProps) {
 		}
 	}
 
-
 	const clearImages = () => {
 		setImages([]);
 	};
-
 
 	const handleChangeValue = (event: any) => {
 		const { name, value } = event.target;
@@ -304,9 +339,6 @@ export default function Order({ params }: ParamsProps) {
 		handleChange(event);
 		setShowDescription(true);
 	};
-
-
-
 
 	const formatCurrency = (value: any) => {
 		// Converte o valor numérico para uma string formatada em moeda
@@ -393,8 +425,6 @@ export default function Order({ params }: ParamsProps) {
 								<li><strong>Síndico:</strong> {orderData && orderData.condominium ? orderData.condominium.admin_name.toUpperCase() : 'condomínio'}</li>
 								<li><strong>Contato:</strong> {orderData && orderData.condominium ? orderData.condominium.responsible_name.toUpperCase() : 'condomínio'}</li>
 							</ul>
-
-
 
 							<div className="md:col-span-5 text-center mt-10">
 
@@ -499,48 +529,54 @@ export default function Order({ params }: ParamsProps) {
 					<label htmlFor="obs" className="font-bold text-lg text-gray-400">
 						Adicione fotos do serviço prestado
 					</label>
-					<div className="md:col-span-5 text-center mt-10">
-						<label
-							htmlFor="imageInput"
-							className="btn btn-primary bg-transparent hover:bg-blue-400 text-blue-400 font-semibold hover:text-white py-3 p-3 border-2 border-blue-400 hover:border-transparent rounded cursor-pointer"
-						>
-							Imagens <CameraIcon className="h-8 w-8 inline-block" />
+					
+					<div className="flex items-center justify-center w-full">
+            <label {...dropzone.getRootProps()} htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Clique para procurar</span> ou arraste e solte os aquivos aqui.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG(MAX. 800x400px)</p>
+                </div>
+                <input {...dropzone.getInputProps()} id="dropzone-file" type="file" className="hidden" />
+            </label>
+          </div>
 
-						</label>
-						<label
-							htmlFor=""
-							className="btn btn-primary ml-5 bg-transparent hover:bg-blue-400 text-blue-400 font-semibold hover:text-white py-3 p-3 border-2 border-blue-400 hover:border-transparent rounded cursor-pointer" onClick={clearImages}
-						>
-							Limpar  <ArrowPathIcon className="h-8 w-8 inline-block" />
-
-						</label>
-						<input
-							type="file"
-							id="imageInput"
-							className="hidden"
-							onChange={handleImageChange}
-							multiple
-						/>
-					</div>
-					<div className="flex flex-wrap justify-center">
-						{[...Array(10)].map((_, index) => (
-							<div
-								key={index}
-								className="w-48 h-48 m-4 mt-10 border-2 rounded-lg border-dotted border-blue-400 flex items-center justify-center"
-							>
-								{images[index] ? (
-									<img
-										src={URL.createObjectURL(images[index])}
-										alt={`Preview ${index + 1}`}
-										className="max-w-full max-h-full"
-									/>
-								) : (
-									<PlusIcon className="h-8 w-8 inline-block text-blue-400" />
-								)}
-							</div>
-						))}
-					</div>
-
+					{uploading && (
+            <div className="flex items-center justify-center w-full h-16 mt-3">
+              <AiOutlineLoading className="animate-spin text-cyan-700" size={20} />
+              <span className="text-cyan-700">Caregando...</span>  
+            </div>
+          )}
+          
+          <div className="flex items-center justify-center w-full">
+              {imagesUrl.length > 0 && (
+                <div className='flex mt-4 flex-wrap'>
+                  {imagesUrl.map((item:any)=>(
+                    <div key={Math.random()}
+                      className='flex flex-col w-1/5 items-center p-1'
+                    >
+                      <picture className="w-full">
+                        <img
+                          className="object-cover h-48 w-full rounded-lg"
+                          src={item}
+                          alt=""
+                        />
+                      </picture>
+                      <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={()=>removeImage(item)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16"> 
+                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
+                          </path> 
+                          <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" fill="white">
+                          </path> 
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+          </div>
 
 				</div>
 				<div className={`md:col-span-5 text-right mt-5  ${showPictureButton ? 'block' : 'hidden'}`} >
@@ -587,8 +623,6 @@ export default function Order({ params }: ParamsProps) {
 					</div>
 				</div>
 			</div>
-
-
 		</>
 	);
 }
