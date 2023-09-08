@@ -15,8 +15,9 @@ import AreaDocument from "../interface/area";
 import axios from "axios";
 import { environment } from "../environment/environment";
 import TownhouseDocument from "../interface/townhouse";
-import FormTownhouse from "../components/form/FormTownhouse";
+import FormTownhouse from  "../components/form/FormTownhouse";
 import FormPartner from "../components/form/FormPartner";
+import { FiArrowLeft } from "react-icons/fi";
 
 export default function Login() {
   const router = useRouter();
@@ -180,7 +181,9 @@ export default function Login() {
             <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
             <FormPartner />
             <div className="flex justify-between items-center mt-4">
-              <button className="text-sm hover:text-blue-500 cursor-pointer" onClick={() => backLogin()}>Voltar</button>
+              <button className="flex items-center text-sm hover:text-blue-500 cursor-pointer text-zinc-400" onClick={() => backLogin()}>
+               <FiArrowLeft /> Voltar
+              </button>
             </div>
           </div>
         )}
@@ -199,7 +202,9 @@ export default function Login() {
             <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
             <FormTownhouse />
             <div className="flex justify-between items-center mt-4">
-              <button className="text-sm hover:text-blue-500 cursor-pointer" onClick={() => backLogin()}>Voltar</button>
+              <button className="flex items-center text-sm hover:text-blue-500 cursor-pointer text-zinc-400" onClick={() => backLogin()}>
+               <FiArrowLeft /> Voltar
+              </button>
             </div>
           </div>
         )}

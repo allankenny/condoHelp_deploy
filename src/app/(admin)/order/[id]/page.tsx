@@ -65,7 +65,6 @@ export default function Order({ params }: ParamsProps) {
 	const [file, setFile] = useState<File[] | null>(null);
   const [imagesUrl, setImagesUrl] = useState<String[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [itsOk, setItsOk] = useState(false);
 
   const onDrop = useCallback((files: File[]) => {
     setFile(files);
@@ -308,7 +307,7 @@ export default function Order({ params }: ParamsProps) {
 		}
 	}, [])
 
-	function handleImageChange(event: any) {
+	function handleFileChange(event: any) {
 		if (event.target.files) {
 			const files = Array.from(event.target.files) as File[];
 			setImages([...images, ...files]);
@@ -439,7 +438,7 @@ export default function Order({ params }: ParamsProps) {
 									type="file"
 									id="docInput"
 									className="hidden"
-									onChange={handleImageChange}
+									onChange={handleFileChange}
 									multiple
 								/>
 							</div>
@@ -551,31 +550,31 @@ export default function Order({ params }: ParamsProps) {
           )}
           
           <div className="flex items-center justify-center w-full">
-              {imagesUrl.length > 0 && (
-                <div className='flex mt-4 flex-wrap'>
-                  {imagesUrl.map((item:any)=>(
-                    <div key={Math.random()}
-                      className='flex flex-col w-1/5 items-center p-1'
-                    >
-                      <picture className="w-full">
-                        <img
-                          className="object-cover h-48 w-full rounded-lg"
-                          src={item}
-                          alt=""
-                        />
-                      </picture>
-                      <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={()=>removeImage(item)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16"> 
-                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
-                          </path> 
-                          <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" fill="white">
-                          </path> 
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+						{imagesUrl.length > 0 && (
+							<div className='flex mt-4 flex-wrap'>
+								{imagesUrl.map((item:any)=>(
+									<div key={Math.random()}
+										className='flex flex-col w-1/5 items-center p-1'
+									>
+										<picture className="w-full">
+											<img
+												className="object-cover h-48 w-full rounded-lg"
+												src={item}
+												alt=""
+											/>
+										</picture>
+										<button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={()=>removeImage(item)}>
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16"> 
+												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
+												</path> 
+												<path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" fill="white">
+												</path> 
+											</svg>
+										</button>
+									</div>
+								))}
+							</div>
+						)}
           </div>
 
 				</div>
