@@ -249,7 +249,8 @@ export default function Order({ params }: ParamsProps) {
 
 					const response = await axios.get(`${environment.apiUrl}/order/${params.id}`);
 					setOrderData(response.data);
-					console.log('retornoooo', response.data)
+					setImagesUrl(response.data.images);
+					console.log('retornoooo', response.data.images)
 				} catch (error) {
 					console.log(error);
 				}
@@ -556,7 +557,7 @@ export default function Order({ params }: ParamsProps) {
           )}
           
           <div className="flex items-center justify-center w-full">
-						{imagesUrl.length > 0 && (
+						{imagesUrl && imagesUrl.length > 0 && (
 							<div className='flex mt-4 flex-wrap w-full'>
 								{imagesUrl.map((item:any)=>(
 									<div key={Math.random()}

@@ -28,6 +28,22 @@ export default function TopBar() {
   const { data: session, status } = useSession({
     required: true,
   })
+  const [logo, setLogo] = useState('/user.png');
+  const dataUser = session?.user as UserData;
+
+
+  useEffect(() => {
+    // Verifique se dataUser.profile tem algum dado e se dataUser.profile.logo está definido
+    if (dataUser?.profile && dataUser.profile.logo) {
+      // Se sim, atualize o estado com o valor de dataUser.profile.logo
+      setLogo(dataUser.profile.logo);
+    } else {
+      // Se não, defina o estado com a imagem padrão
+      setLogo('/user.png');
+    }
+  }, [dataUser]);
+  
+
   if (status === "loading") {
     return <></>
   }
@@ -38,8 +54,13 @@ export default function TopBar() {
   // const dataUserProfile = session.user.profile;
   // const dataUser = session.user?.user;
 
-  const dataUser = session?.user as UserData;
-  console.log(dataUser);
+ 
+  
+   
+
+  
+
+  
 
   return (
     <div className="bg-gray-100 w-full h-16 flex justify-between items-center transition-all z-10">
@@ -202,9 +223,9 @@ export default function TopBar() {
             <Menu.Button className="inline-flex w-full justify-center items-center">
               <picture>
                 <img
-                  src="/man-smiling.jpg"
+                  src={logo}
                   className="rounded-full h-8 md:mr-4 border-2 border-white shadow-sm"
-                  alt="profile picture"
+                  alt="logo"
                 />
               </picture>
 
