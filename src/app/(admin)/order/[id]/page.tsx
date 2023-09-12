@@ -205,7 +205,6 @@ export default function Order({ params }: ParamsProps) {
 					data = { ...data, partner_id: selectPartner.toString() };
 				}
 				await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
-				console.log(data);
 				window.history.back();
 			}
 			resetForm();
@@ -224,7 +223,6 @@ export default function Order({ params }: ParamsProps) {
 				order_status_id: orderStatusId,	
 				images: imagesUrl
 			};
-			console.log('dados do backend', data);
 			await axios.put(`${environment.apiUrl}/order/update/${params.id}`, data);
 			console.log(data);
 			window.history.back();
@@ -250,7 +248,6 @@ export default function Order({ params }: ParamsProps) {
 					if(response.data.images){
 						setImagesUrl(response.data.images);
 					}
-					console.log('retornoooo', response.data.images)
 				} catch (error) {
 					console.log(error);
 				}
@@ -279,6 +276,8 @@ export default function Order({ params }: ParamsProps) {
 	const [showValueFinal, setShowValueFinal] = useState(false);
 	const [showDivAvaluation, setDivAvaluation] = useState(false);
 	const [showPictureButton, setShowPictureButton] = useState(true);
+	const [showBtnFinal, setShowBtnFinal] = useState(false);
+
 	
 	useEffect(() => {
 		const orderStatusId = parseInt(formData.order_status_id);
@@ -293,7 +292,7 @@ export default function Order({ params }: ParamsProps) {
 			setPictureInput(true);
 			setValueButton(false);
 
-		} else if (!isNaN(orderStatusId) && orderStatusId >= 3 && dataUser?.user?.type !== 'partner') {
+		} else if (!isNaN(orderStatusId) && orderStatusId == 3 && dataUser?.user?.type !== 'partner') {
 			setPartnerInput(true);
 			setShowValueInit(false);
 			setShowValueFinal(true);
@@ -301,18 +300,57 @@ export default function Order({ params }: ParamsProps) {
 			setDivAvaluation(true);
 			setShowPictureButton(false);
 			setValueButton(false);
+			setShowBtnFinal(true);
+		} else if (!isNaN(orderStatusId) && orderStatusId == 4 && dataUser?.user?.type !== 'partner') {
+			
+			setPartnerInput(true);
+			setShowValueInit(false);
+			setShowValueFinal(true);
+			setPictureInput(true);
+			setDivAvaluation(true);
+			setShowPictureButton(false);
+			setValueButton(false);
+			setShowBtnFinal(false);
+			console.log('chegou');
+		} else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
+			if (orderStatusId == 1 || orderStatusId == 2 || orderStatusId == 3) {
+				setPictureInput(false);
+				setValueButton(false);
+				setPartnerInput(false);
+				setShowUpBudget(true);
+			} else if (orderStatusId == 4) {
+				setPartnerInput(true);
+				setShowValueInit(false);
+				setShowValueFinal(true);
+				setPictureInput(true);
+				setDivAvaluation(true);
+				setShowPictureButton(false);
+				setValueButton(false);
+				setShowBtnFinal(false);
+			}
 		}
 		
 	}, [formData.order_status_id]);
 
-	useEffect(() => {
-		if (dataUser?.user?.type === 'partner') {
-			setPictureInput(false);
-			setValueButton(false);
-			setPartnerInput(false);
-			setShowUpBudget(true);
-		}
-	}, [])
+	// useEffect(() => {
+
+	// 	const orderStatusId = parseInt(formData.order_status_id);
+		
+	// 	if ( dataUser?.user?.type == 'partner' && orderStatusId == 1 ) {
+	// 		setPictureInput(false);
+	// 		setValueButton(false);
+	// 		setPartnerInput(false);
+	// 		setShowUpBudget(true);
+	// 	} else if ( dataUser?.user?.type == 'partner' && !isNaN(orderStatusId) && orderStatusId == 4) {
+	// 		setPartnerInput(true);
+	// 		setShowValueInit(false);
+	// 		setShowValueFinal(true);
+	// 		setPictureInput(true);
+	// 		setDivAvaluation(true);
+	// 		setShowPictureButton(false);
+	// 		setValueButton(false);
+	// 	} 
+	// }, [formData.order_status_id])
 
 	function handleFileChange(event: any) {
 		if (event.target.files) {
@@ -622,7 +660,9 @@ export default function Order({ params }: ParamsProps) {
 				<div className="md:col-span-5 text-right " >
 					<div className="inline-flex items-end gap-3 mt-5">
 						<ButtonCancel route="order" label="Cancelar" />
-						<ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
+						<div className={` ${showBtnFinal ? 'block' : 'hidden'}`}>
+							<ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
+						</div>
 					</div>
 				</div>
 			</div>
