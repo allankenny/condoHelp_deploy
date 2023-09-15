@@ -3,6 +3,9 @@ import StatusDocument from './statusOrder';
 import TownhouseDocument from './townhouse';
 
 interface OrderDocument{
+	map(arg0: (image: string | undefined, index: import("react").Key | null | undefined) => import("react").JSX.Element): import("react").ReactNode;
+	length: number;
+    images: string | undefined;
     evaluation: any;
     id: string;
     name:string;

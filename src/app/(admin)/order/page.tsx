@@ -58,10 +58,10 @@ export default function Orders() {
 
         if (dataUser.profile?.id) {
           url += `/${dataUser.profile.id}`;
-        }        
+        }
         const response = await axios.get(url);
         setOrderData(response.data);
-        
+
       } catch (error) {
         console.error('Error fetching order data:', error);
         // Handle the error as needed, such as displaying a message to the user.
@@ -72,17 +72,17 @@ export default function Orders() {
   }, [dataUser]);
 
   const fetchStatus = async () => {
-		try {
-			const response = await axios.get(`${environment.apiUrl}/statusOrder/list`);
-			setStatus(response.data);
-		} catch (error) {
-			console.error(error);
-		}
-	};
+    try {
+      const response = await axios.get(`${environment.apiUrl}/statusOrder/list`);
+      setStatus(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-		fetchStatus();
-	}, []);
+    fetchStatus();
+  }, []);
 
   function getWidth(status: any) {
     if (status === 5) return 0;
@@ -118,23 +118,23 @@ export default function Orders() {
       <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         <PageTitleDefault title="Chamados" />
         <BarSearch onSearch={handleSearch} />
-        
+
         <div className="flex flex-1 max-[600px]:w-full relative">
-      <select
-        id="status"
-        className="relative ml-20 mr-12 max-[600px]:ml-0 block w-[1px] min-w-0 h-12 flex-auto rounded-[16px] border border-gray-300 bg-white bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-gray-400 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none "
-        onChange={handleSelectChange}
-        value={selectedStatus} // Defina o valor do select com base no estado
-      >
-        <option selected value="">Status/todos</option>
-        
-        {statusData.map((status) => (
-          <option key={status.id} value={status.name}>
-            {status.name.charAt(0).toUpperCase() + status.name.slice(1)}
-          </option>
-        ))}
-      </select>
-    </div>
+          <select
+            id="status"
+            className="relative ml-20 mr-12 max-[600px]:ml-0 block w-[1px] min-w-0 h-12 flex-auto rounded-[16px] border border-gray-300 bg-white bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-gray-400 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none "
+            onChange={handleSelectChange}
+            value={selectedStatus} // Defina o valor do select com base no estado
+          >
+            <option selected value="">Status/todos</option>
+
+            {statusData.map((status) => (
+              <option key={status.id} value={status.name}>
+                {status.name.charAt(0).toUpperCase() + status.name.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
         {dataUser?.user?.type === 'condominium' && (
           <ButtonAddLink route="order/new" label="Novo Chamado" />
         )}
@@ -174,7 +174,19 @@ export default function Orders() {
                         </td>
 
 
-                        <td className="whitespace-nowrap px-6 py-2  max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' : item.partner.name}</td>
+                        <td className="whitespace-nowrap px-6 py-2  max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' :
+                          <div className="flex justify-start items-center ">
+                            {item.partner!.logo && (
+                              <img src={item.partner!.logo}
+                                alt="Logo 1"
+                                className=" rounded h-10 w-10 drop-shadow-lg mr-2 object-contain"
+                              />
+                            )}
+                            <span className=" uppercase">{item.partner!.name}</span>
+                          </div>}
+                        </td>
+
+
                         <td className="whitespace-nowrap py-2 max-[600px]:hidden max-[600px]:px-1" >
                           <div className="h-4 w-full rounded-full bg-gray-200 dark:bg-gray-200 ">
                             <div className="h-4 rounded-full flex justify-center items-center align-middle bg-blue-500"
