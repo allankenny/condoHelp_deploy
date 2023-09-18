@@ -253,10 +253,12 @@ export default function Order({ params }: ParamsProps) {
       event.preventDefault();
       try {
          const dataDoc = {
+            ...formData,
             budget: formData.budget,
             id: formData.id,
             partner_id: dataUser.profile.id
          };
+         
          await axios.post(`${environment.apiUrl}/budget/save`, dataDoc);
          window.history.back();
          resetForm();
