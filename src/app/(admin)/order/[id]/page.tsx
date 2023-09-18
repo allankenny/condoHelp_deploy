@@ -257,7 +257,7 @@ export default function Order({ params }: ParamsProps) {
             id: formData.id,
             partner_id: dataUser.profile.id
          };
-         await axios.post(`${environment.apiUrl}/budget/save/`, dataDoc);
+         await axios.post(`${environment.apiUrl}/budget/save`, dataDoc);
          window.history.back();
          resetForm();
       } catch (error) {
