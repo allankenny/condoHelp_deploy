@@ -15,8 +15,12 @@ export default  function Areas() {
     required: true,
   })
   
-  
-  const [termData, setTermData] = useState([]);
+  interface Term {
+    id: number;
+    term_description: string;
+    type: string;
+  }
+  const [termData, setTermData] = useState<Term[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios(`${environment.apiUrl}/term/list`);
