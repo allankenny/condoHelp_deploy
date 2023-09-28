@@ -20,6 +20,7 @@ import {
   ExclamationTriangleIcon,
   Cog6ToothIcon,
   WrenchScrewdriverIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 
 export default function Sidebar() {
@@ -234,6 +235,20 @@ export default function Sidebar() {
                           </div>
                           <div>
                             <p>Status Chamado</p>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                    <li className="rounded-md px-2 py-1 mx-0 text-white hover:bg-blue-100 hover:text-blue-500 ">
+                      <Link href="/term">
+                        <div
+                          className=" py-1 mx-1 pr-4 pl-1 text-center cursor-pointer flex items-center transition-colors  "
+                        >
+                          <div className="mr-2">
+                            <DocumentTextIcon className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p>Termos</p>
                           </div>
                         </div>
                       </Link>

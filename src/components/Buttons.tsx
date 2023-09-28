@@ -54,7 +54,23 @@ export function ButtonCancel(props:ButtonCancelProps){
 }
 
 
+interface ButtonTermProps{
+  route: string,
+  label: string,
+  action?: any,
+  onClick?: (event: any) => Promise<void> | void, // permitir funções que retornam void
+}
 
+
+export function ButtonTerm(props:ButtonTermProps){
+  return (
+    <div className="flex w-auto max-[600px]:w-full">
+      <Link href={`/${props.route}`} >
+      <button className="rounded-full max-[600px]:w-full bg-white px-10 py-3 text-gray-400 border border-gray-300 hover:bg-gray-300 hover:text-white" onClick={props.onClick}>{props.label}</button>
+      </Link>
+    </div>
+  );
+}
 
 
 

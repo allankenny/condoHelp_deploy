@@ -182,7 +182,7 @@ export default function Login() {
             <FormPartner />
             <div className="flex justify-between items-center mt-4">
               <button className="flex items-center text-sm hover:text-blue-500 cursor-pointer text-zinc-400" onClick={() => backLogin()}>
-               <FiArrowLeft /> Voltar
+               <FiArrowLeft /> Sair
               </button>
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function Login() {
             <FormTownhouse />
             <div className="flex justify-between items-center mt-4">
               <button className="flex items-center text-sm hover:text-blue-500 cursor-pointer text-zinc-400" onClick={() => backLogin()}>
-               <FiArrowLeft /> Voltar
+               <FiArrowLeft /> Sair
               </button>
             </div>
           </div>

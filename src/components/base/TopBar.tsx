@@ -17,6 +17,7 @@ import {
   UserIcon,
   BuildingOfficeIcon,
   MegaphoneIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
@@ -205,6 +206,19 @@ export default function TopBar() {
                           <ExclamationTriangleIcon className="h-5 w-5" />
                         </div>
                         <h1>Status Chamado</h1>
+                      </div>
+                    </Link>
+                  </div>
+                  <div className="p-1" >
+                    <Link
+                      href="/term"
+                      className="flex w-full text-white rounded-[12px] p-1 text-sx group transition-colors items-center"
+                    >
+                      <div className=" py-1 mx-1 pr-4 pl-1  text-center cursor-pointer flex items-center transition-colors ">
+                        <div className="mr-2">
+                          <DocumentTextIcon className="h-5 w-5" />
+                        </div>
+                        <h1>Termos</h1>
                       </div>
                     </Link>
                   </div>

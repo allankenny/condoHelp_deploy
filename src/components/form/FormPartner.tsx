@@ -2,7 +2,7 @@
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import { useState, useEffect } from "react";
-import { ButtonAddLink, ButtonCancel } from "../../components/Buttons";
+import { ButtonAddLink, ButtonCancel, ButtonConfirm, ButtonTerm } from "../../components/Buttons";
 import { environment } from "../../environment/environment";
 import TownhouseDocument from "../../interface/townhouse";
 import { EyeIcon } from "@heroicons/react/24/solid";
@@ -10,7 +10,11 @@ import AreaDocument from '../../interface/area';
 
 export default function FormPartner() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const [showForm, setShowForm] = useState(true);
+  const [showTerm, setShowTerm] = useState(false);
   const [areasData, setAreas] = useState<AreaDocument[]>([]);
+  const [termData, setTermData] = useState({ term_description: '' });
   const [formDataPartner, setFormDataPartner] = useState({
     legal_name: "",
     name: "",
@@ -69,6 +73,7 @@ export default function FormPartner() {
         cellphone,
         zip
       };
+      console.log('dados partner', data);
       await axios.post(`${environment.apiUrl}/partner/save`, data);
       resetFormPartner();
       alert('Dados salvos com sucesso!');
@@ -101,6 +106,24 @@ export default function FormPartner() {
     });
   };
 
+
+
+
+
+  const fetchTermData = async () => {
+    try {
+
+      const response = await axios.get(`${environment.apiUrl}/term/list/partnerTerm`);
+      setTermData(response.data);
+      console.log('retorno termo', response.data);
+    } catch (error) {
+      console.log(error);
+      alert('Ocorreu um erro.');
+    }
+  };
+
+
+
   const fetchAreas = async () => {
     try {
       const response = await axios.get(`${environment.apiUrl}/area/list`);
@@ -112,6 +135,7 @@ export default function FormPartner() {
 
   useEffect(() => {
     fetchAreas();
+    fetchTermData();
   }, []);
 
   const handleChange = (event: any) => {
@@ -157,6 +181,25 @@ export default function FormPartner() {
     // Faça algo com o arquivo selecionado pelo usuário
   }
 
+  const acceptTerm = () => {
+    setTimeout(() => {
+      setShowTerm(false);
+      setShowForm(true);
+      setShowSubmitButton(true);
+    }, 500);
+  };
+
+  const backForm = () => {
+    setShowTerm(false);
+    setShowForm(true);
+  };
+
+  const handleShowTermPartner = async (event: any) => {
+    setShowForm(false);
+    setShowTerm(true);
+
+  }
+
 
   const handleToggleShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -167,9 +210,46 @@ export default function FormPartner() {
     alert('A senha deve ter no mínimo 8 dígitos!')
   }
 
+
   return (
-    <div className="grid col-1 rounded-[16px] bg-white drop-shadow-md p-10">
-      <div className="lg:col-span-2">
+    <div className="grid col-1 rounded-[16px] bg-white drop-shadow-md pb-10 pr-10 pl-10">
+      <div className={`md:col-span-2 ${showTerm ? 'block' : 'hidden'}`}>
+        <div className="md:col-span-5">
+          <label htmlFor="name" className='text-center'>Termos e condições de uso.</label>
+          <textarea
+            name="term_description"
+            id="term_description"
+            className="h-80 border mt-1 rounded p-3 w-full bg-gray-50 uppercase text-[11px]"
+            value={termData.term_description}
+            disabled
+          />
+        </div>
+        <div className="flex items-center">
+          <input
+            className="mr-2 mt-[1.1rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-blue-500 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-blue-500 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-blue-500 checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-blue-500 dark:checked:after:bg-blue-500 dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+            onChange={(e) => {
+              if (e.target.checked) {
+                acceptTerm();
+              }
+            }}
+          />
+          <label
+            className="inline-block pl-[0.15rem] hover:cursor-pointer mt-[1.1rem]"
+            htmlFor="flexSwitchCheckDefault"
+          >
+            Li e aceito os termos e condições.
+          </label>
+        </div>
+        <div className='md:col-span-5 mt-[1.1rem] flex justify-end'>
+          <ButtonTerm route="" label="Voltar para tela de cadastro" onClick={backForm} />
+        </div>
+
+      </div>
+
+      <div className={`md:col-span-2 ${showForm ? 'block' : 'hidden'}`}>
         <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
           <div className="md:col-span-3">
             <label htmlFor="legal_name">Razão Social</label>
@@ -270,6 +350,7 @@ export default function FormPartner() {
                 <div key={area.id} className="flex items-center mr-4 mb-2">
                   <input
                     type="checkbox"
+                    id="service_area_id"
                     name="service_area_id"
                     value={area.id}
                     onChange={handleChange}
@@ -281,7 +362,15 @@ export default function FormPartner() {
             </div>
           </div>
 
-          <div className="md:col-span-5 text-right">
+
+
+          <div className="md:col-span-5 mt-5 flex flex-col items-center justify-center">
+            <ButtonTerm route="" label='Termos e condições de uso' onClick={handleShowTermPartner} />
+            <span className="text-[11px] text-gray-400">*Faça o aceite dos termos e condições para liberação do cadastro.</span>
+          </div>
+
+
+          <div className={`md:col-span-5 text-right  ${showSubmitButton ? 'block' : 'hidden'}`}>
             <div className="inline-flex items-end gap-3 mt-5">
               <ButtonCancel route="" label="Cancelar" />
               <ButtonAddLink route="partner" label='Cadastrar' onClick={handleSubmitPartner} />
