@@ -18,6 +18,7 @@ import {
   Legend,
 } from 'chart.js'
 import { PageSubTitle } from "@/components/PageSubTitle";
+import { ButtonAddLink } from "@/components/Buttons";
 
 ChartJS.register(
   CategoryScale,
@@ -35,10 +36,12 @@ export default function Dashboard() {
   const [totalEvaluation, setTotalEvaluation] = useState(0);
   const [showMsgButton, setShowMsgButton] = useState(false);
   const [showDashboard, setDashboard] = useState(true);
+  const [showTerm, setShowTerm ] = useState(false);
+  const [termData, setTermData] = useState({ term_description: '' });
   const { data: session, status } = useSession({
     required: true,
   })
-
+  
   const data: any = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
@@ -67,24 +70,85 @@ export default function Dashboard() {
   };
 
   const dataUser = session?.user as UserData;
+  
+
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const checkbox = document.getElementById("flexSwitchCheckDefault") as HTMLInputElement;
+    if (checkbox && !checkbox.checked) {
+      alert("Você deve aceitar os termos antes de continuar.");
+      return;
+    }
+    try {
+      const data = {
+        term_id : dataUser?.term,
+        id : dataUser?.profile?.id
+      }; 
+
+      if (dataUser?.user.type === 'partner') {
+        await axios.put(`${environment.apiUrl}/term/refresh/partner`, data);
+        
+      } else if (dataUser?.user.type === 'condominium') {
+        await axios.put(`${environment.apiUrl}/term/refresh/condominium`, data);
+      }
+
+      
+      
+      
+      alert('Termo aceito!');
+    } catch (error) {
+      console.log(error);
+      alert('Ocorreu um erro ao enviar os dados.');
+    }
+  }
 
   useEffect(() => {
-    // Sua lógica existente para buscar dados de dashboard...
-
-    // Verificar se o status é 'pendente' e definir showMsgButton e dashboard
+    
     if (dataUser?.user.status === 'pendente') {
       setShowMsgButton(true);
       setDashboard(false);
+    } 
+
+    if ( dataUser?.user.type !== 'admin' ){
+      if (dataUser?.profile?.term_id !== dataUser?.term) {
+        setShowTerm(true);
+        setDashboard(false);
+      }
     }
   }, [dataUser]);
 
+  
 
-  // if(session){
-  //    setDataUser(session?.user);
-  // }
 
-  // const dataUser = session?.user?.user;
-  // const dataUserProfile = session?.user?.profile;
+
+
+
+
+
+
+  useEffect(() => {
+    const fetchTermData = async () => {
+      try {
+        
+        
+        if (dataUser?.user.type === 'partner') {
+          const response = await axios.get(`${environment.apiUrl}/term/list/partnerTerm`);
+          setTermData(response.data);
+        } else if (dataUser?.user.type === 'condominium') {
+          const response = await axios.get(`${environment.apiUrl}/term/list/townhouseTerm`);
+          setTermData(response.data);
+        }
+        
+        
+      } catch (error) {
+        console.log(error);
+        alert('Ocorreu um erro.');
+      }
+    };
+    fetchTermData();
+  }, [dataUser]);
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,7 +193,42 @@ export default function Dashboard() {
 
   return (
     <>
-    
+    <div className={`mx-auto max-w-screen-md rounded-[16px] bg-white drop-shadow-md p-5 mt-5 mb-5 transition-all duration-700 ${showTerm ? 'block' : 'hidden'}`}>
+        <div className="md:col-span-5">
+          <label htmlFor="name" className='text-center'>Termos e condições de uso.</label>
+          <textarea
+            name="term_description"
+            id="term_description"
+            className="h-80 border mt-1 rounded p-3 w-full bg-gray-50 uppercase text-[11px]"
+            value={termData.term_description}
+            disabled
+          />
+        </div>
+        <div className="flex items-center">
+          <input
+            className="mr-2 mt-[1.1rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-blue-500 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-blue-500 checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-blue-500 checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-blue-500 dark:checked:after:bg-blue-500 dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+            // onChange={(e) => {
+            //   if (e.target.checked) {
+            //     acceptTerm();
+            //   }
+            // }}
+          />
+          <label
+            className="inline-block pl-[0.15rem] hover:cursor-pointer mt-[1.1rem]"
+            htmlFor="flexSwitchCheckDefault"
+          >
+            Li e aceito os termos e condições.
+          </label>
+        </div>
+        <div className="md:col-span-5 text-right ">
+          <div className="inline-flex items-end gap-3 mt-5">
+            <ButtonAddLink route="partner" label='Aceitar' onClick={handleSubmit}  />
+          </div>
+        </div>
+      </div>
 
      <div className={`grid col-1 rounded-[ 16px] bg-white drop-shadow-md p-5 mt-5 mb-5 transition-all duration-700 ${showMsgButton ? 'block' : 'hidden'}`}>
         <div className="flex justify-center items-center m-2 text-center font-bold">

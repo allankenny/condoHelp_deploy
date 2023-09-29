@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { HiMenuAlt3 } from "react-icons/hi";
@@ -30,12 +30,18 @@ export default function Sidebar() {
   })
 
 
+  
+
+  const dataUser = session?.user as UserData;
+  useEffect(() => {
+    console.log('tetseee',dataUser?.term);
+   
+
+  }, [dataUser]);
+
   if (status === "loading") {
     return <></>
   }
-
-  const dataUser = session?.user as UserData;
-
 
   return (
     <>
@@ -83,7 +89,7 @@ export default function Sidebar() {
             </h2>
           </Link>
 
-          {dataUser.user.status !== 'pendente' && (
+          {(dataUser.user.status !== 'pendente' && dataUser?.profile?.term_id === dataUser?.term) && (
             <>
           <Link
             href="/order"

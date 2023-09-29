@@ -39,6 +39,12 @@ export default function FormPartner() {
 
   const handleSubmitPartner = async (event: any) => {
     event.preventDefault();
+
+    const checkbox = document.getElementById("flexSwitchCheckDefault") as HTMLInputElement;
+    if (checkbox && !checkbox.checked) {
+      alert("Você deve aceitar os termos antes de continuar.");
+      return;
+    }
     if (
       formDataPartner.contact_name === "" ||
       formDataPartner.name === "" ||

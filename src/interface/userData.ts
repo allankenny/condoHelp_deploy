@@ -4,7 +4,8 @@ interface UserData {
   name: string;
   email: string;
   type: string; 
-  profile:any
+  profile:any;
+  term:any
 }
 
 export default UserData;
