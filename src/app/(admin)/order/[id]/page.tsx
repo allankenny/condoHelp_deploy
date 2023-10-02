@@ -8,7 +8,7 @@ import { ButtonAddLink, ButtonCancel } from "../../../../components/Buttons";
 import AreaDocument from "../../../../interface/area";
 import OrderDocument from "../../../../interface/order";
 import { environment } from "../../../../environment/environment";
-import { ArrowPathIcon, ArrowUpTrayIcon, CameraIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
+import { ArrowPathIcon, ArrowUpTrayIcon, CameraIcon, DocumentTextIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../utils/authOptions";
 import { redirect } from "next/navigation";
@@ -557,16 +557,17 @@ export default function Order({ params }: ParamsProps) {
                                              {orderImageComdominium && orderImageComdominium.map((item, index) => (
                                                 <tr key={index}
                                                 className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
-                                                   <td className="whitespace-nowrap px-3 py-2 uppercase">{item?.partner.name}</td>
+                                                   <td className="whitespace-nowrap px-3 text-center py-2 uppercase">{item?.partner.name}</td>
                                                    <td className="whitespace-nowrap px-3 py-2">
                                                       <div key={index} className='flex flex-col items-center'>
                                                          <picture>
                                                             <a href={item.images} download target="_blank" rel="noopener noreferrer">
-                                                               <img
+                                                               {/* <img
                                                                   className=" rounded h-10 w-10 drop-shadow-lg mr-2 object-contain"
                                                                   src={item.images}
                                                                   alt="Orçamento"
-                                                               />
+                                                               /> */}
+                                                               <DocumentTextIcon className="h-8 w-8 text-gray-400" />
                                                             </a>
                                                          </picture>
                                                       </div>
@@ -618,9 +619,9 @@ export default function Order({ params }: ParamsProps) {
                               >
                                  <picture >
                                     <img
-                                       className="object-cover h-48 w-96 rounded-lg"
+                                       className="object-cover h-48 w-96 rounded-lg text-gray-400 text-center text-[20px]"
                                        src={formData.budget}
-                                       alt=""
+                                       alt="Orçamento PDF"
                                     />
                                  </picture>
                                  <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={() => removeImageDoc(formData.budget)}>

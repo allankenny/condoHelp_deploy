@@ -88,58 +88,30 @@ export default function Dashboard() {
 
       if (dataUser?.user.type === 'partner') {
         await axios.put(`${environment.apiUrl}/term/refresh/partner`, data);
-        
+        window.location.reload();
       } else if (dataUser?.user.type === 'condominium') {
         await axios.put(`${environment.apiUrl}/term/refresh/condominium`, data);
+        window.location.reload();
       }
-
-      
-      
-      
-      alert('Termo aceito!');
     } catch (error) {
       console.log(error);
       alert('Ocorreu um erro ao enviar os dados.');
     }
   }
 
-  useEffect(() => {
-    
-    if (dataUser?.user.status === 'pendente') {
-      setShowMsgButton(true);
-      setDashboard(false);
-    } 
-
-    if ( dataUser?.user.type !== 'admin' ){
-      if (dataUser?.profile?.term_id !== dataUser?.term) {
-        setShowTerm(true);
-        setDashboard(false);
-      }
-    }
-  }, [dataUser]);
 
   
-
-
-
-
-
-
-
-
+  
   useEffect(() => {
     const fetchTermData = async () => {
       try {
-        
-        
         if (dataUser?.user.type === 'partner') {
           const response = await axios.get(`${environment.apiUrl}/term/list/partnerTerm`);
           setTermData(response.data);
         } else if (dataUser?.user.type === 'condominium') {
           const response = await axios.get(`${environment.apiUrl}/term/list/townhouseTerm`);
           setTermData(response.data);
-        }
-        
+        }    
         
       } catch (error) {
         console.log(error);
@@ -148,8 +120,52 @@ export default function Dashboard() {
     };
     fetchTermData();
   }, [dataUser]);
- 
-
+  
+  
+  
+  
+  
+  
+  
+  useEffect(() => {
+    const fetchDataUsers = async () => {
+      try {
+        
+          if ( dataUser?.user.type === 'partner' ){
+            const response = await axios.get(`${environment.apiUrl}/partner/${dataUser?.profile?.id}`);
+            if (response.data.term_id !== dataUser?.term) {
+              setShowTerm(true);
+              setDashboard(false);
+            }
+          } else if ( dataUser?.user.type === 'condominium' ){
+            const response = await axios.get(`${environment.apiUrl}/townhouse/${dataUser?.profile?.id}`);
+            if (response.data.term_id !== dataUser?.term) {
+              setShowTerm(true);
+              setDashboard(false);
+            }
+          }
+        
+      } catch (error) {
+        console.log(error);
+        alert('Ocorreu um erro ao atualizar as views do dashboard.');
+      }
+    };
+    fetchDataUsers();
+  }, [dataUser]);
+  
+  
+  
+  
+  useEffect(() => {    
+    if (dataUser?.user.status === 'pendente') {
+      setShowMsgButton(true);
+      setDashboard(false);
+    } 
+    
+  }, [dataUser]);
+  
+  
+  
   useEffect(() => {
     const fetchData = async () => {
       console.log(session);
@@ -163,8 +179,6 @@ export default function Dashboard() {
         } else {
           response = await axios(`${environment.apiUrl}/dashboard/data`)
         }
-
-
         setTotalChamados(response.data.totalChamados);
         setTotalValue(response.data.totalValue);
         setTotalEvaluation(response.data.totalEvaluation);

@@ -89,7 +89,7 @@ export default function Sidebar() {
             </h2>
           </Link>
 
-          {(dataUser.user.status !== 'pendente' && dataUser?.profile?.term_id === dataUser?.term) && (
+          {dataUser.user.status !== 'pendente' && (
             <>
           <Link
             href="/order"
