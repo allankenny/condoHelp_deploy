@@ -4,7 +4,7 @@ import axios from 'axios';
 import InputMask from 'react-input-mask';
 import { PageSubTitle } from "../../../../components/PageSubTitle";
 import { PageTitleDefault } from "../../../../components/PageTitle";
-import { ButtonAddLink, ButtonCancel } from "../../../../components/Buttons";
+import { ButtonAddLink, ButtonCancel, Spinner } from "../../../../components/Buttons";
 import AreaDocument from "../../../../interface/area";
 import OrderDocument from "../../../../interface/order";
 import { environment } from "../../../../environment/environment";
@@ -382,11 +382,17 @@ export default function Order({ params }: ParamsProps) {
          setValueButton(false);
          setShowBtnFinal(false);
       } else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
-         if (orderStatusId == 1 || orderStatusId == 2 || orderStatusId == 3) {
-            setPictureInput(false);
+         if (orderStatusId == 1 || orderStatusId == 2 ) {
+            // setPictureInput(true);
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
+         } else if ( orderStatusId == 3){
+            setPictureInput(true);
+            setValueButton(false);
+            setPartnerInput(false);
+            setShowUpBudget(true);
+
          } else if (orderStatusId == 4) {
             setPartnerInput(true);
             setShowValueInit(false);
@@ -415,15 +421,16 @@ export default function Order({ params }: ParamsProps) {
       }
    }
 
-
-
+   
    const insertImageDoc = async (file: File) => {
+      setIsLoading(true); // Inicia o carregamento
       let randomName = createId();
       let newFile = ref(storage, randomName);
       let upload = await uploadBytes(newFile, file);
       let imageUrl = await getDownloadURL(upload.ref);
       setFormData((prevFormData) => ({ ...prevFormData, ['budget']: imageUrl }));
       setShowBtnDoc(true);
+      setIsLoading(false); // Termina o carregamento
    }
 
    const removeImageDoc = async (file: string) => {
@@ -596,20 +603,23 @@ export default function Order({ params }: ParamsProps) {
                         <li><strong>Síndico:</strong> {orderData && orderData.condominium ? orderData.condominium.admin_name.toUpperCase() : 'condomínio'}</li>
                         <li><strong>Contato:</strong> {orderData && orderData.condominium ? orderData.condominium.responsible_name.toUpperCase() : 'condomínio'}</li>
                      </ul>
-
+                     <div className={`md:col-span-5 mb-[-25px]  ${isLoading ? 'block' : 'hidden'}`} >
+                        <Spinner />
+                     </div>
                      <div className="md:col-span-5 text-center mt-10">
                         <label
                            htmlFor="docInput"
                            className="btn btn-primary  bg-transparent hover:bg-blue-400 text-blue-400 font-semibold hover:text-white  p-3 border-2 border-blue-400 hover:border-transparent rounded cursor-pointer"
 
                         >
-                           Carregar Orçamento  <ArrowUpTrayIcon className="h-8 w-8 inline-block" />
+                           Carregar Orçamento <ArrowUpTrayIcon className="h-8 w-8 inline-block" />
                         </label>
 
-
+                        
 
                         <input type="file" id="docInput" className="hidden" onChange={handleFileChange} />
                      </div>
+                     
 
                      <div className="flex items-center justify-center w-full">
                         {formData.budget && formData.budget.length > 0 && (
@@ -617,13 +627,17 @@ export default function Order({ params }: ParamsProps) {
                               <div
                                  className='flex flex-col items-center'
                               >
-                                 <picture >
-                                    <img
+                                 <div >
+                                    {/* <img
                                        className="object-cover h-48 w-96 rounded-lg text-gray-400 text-center text-[20px]"
                                        src={formData.budget}
                                        alt="Orçamento PDF"
-                                    />
-                                 </picture>
+                                    /> */}
+                                    <a href={formData.budget} download target="_blank" rel="noopener noreferrer">
+                                       <DocumentTextIcon className="h-[100px] w-[100px] text-gray-400" />
+                                    </a>
+                                    
+                                 </div>
                                  <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={() => removeImageDoc(formData.budget)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16">
                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
@@ -646,11 +660,7 @@ export default function Order({ params }: ParamsProps) {
                                  <div key={index} className='flex flex-col items-center'>
                                     <picture>
                                        <a href={image} download target="_blank" rel="noopener noreferrer">
-                                          <img
-                                             className="object-cover h-48 w-96 rounded-lg"
-                                             src={image}
-                                             alt=""
-                                          />
+                                       <DocumentTextIcon className="h-[100px] w-[100px] text-gray-400" />
                                        </a>
                                     </picture>
                                  </div>
@@ -780,7 +790,7 @@ export default function Order({ params }: ParamsProps) {
                {uploading && (
                   <div className="flex items-center justify-center w-full h-16 mt-3">
                      <AiOutlineLoading className="animate-spin text-cyan-700" size={20} />
-                     <span className="text-cyan-700">Caregando...</span>
+                     <span className="text-cyan-700">Carregando...</span>
                   </div>
                )}
 
