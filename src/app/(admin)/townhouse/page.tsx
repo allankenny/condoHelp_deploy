@@ -51,10 +51,8 @@ export default function Townhouses() {
       // Encontrar o item pelo ID
       const item = townhouseData.find((item) => item.id === id) as TownhouseDocument; 
   
-      const currentStatus = item?.user?.status;
-
-      // Se currentStatus for undefined, interrompa a execução da função
-      if (!currentStatus) return;
+      // Verificar o valor atual da coluna status
+      const currentStatus = item.user.status;
   
       // Definir o novo valor da coluna status
       const newStatus = currentStatus === 'ativo' ? 'inativo' : 'ativo';
