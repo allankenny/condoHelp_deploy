@@ -142,7 +142,6 @@ export default function Townhouse({ params }: ParamsProps) {
         zip
       };
 
-      console.log(data);
       if (params.id === 'new') {
         if (formData.password === "") {
           alert("Por favor, preencha todos os campos !");
@@ -190,7 +189,6 @@ export default function Townhouse({ params }: ParamsProps) {
   }
 
   const insertImage = async (file:File) => {
-    console.log(file);
     let randomName = createId()
     let newFile = ref(storage, randomName)
     let upload = await uploadBytes(newFile, file);

@@ -43,7 +43,7 @@ export default function Orders() {
         url = `${environment.apiUrl}/search/admin/order`;
       }
 
-      console.log('dados pesquisa', query);
+      
       const response = await axios.post(url, { query });
       setOrderData(response.data);
     } catch (error) {

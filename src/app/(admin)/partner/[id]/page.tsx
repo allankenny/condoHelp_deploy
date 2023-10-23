@@ -87,7 +87,7 @@ export default function Partner({ params }: ParamsProps) {
   };
 
   function handleFileChange(event: any) {
-    console.log('AQUI');
+    
     const file = event.target.files[0];
     if(['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)){
       if(formData.logo?.length > 0){
@@ -109,7 +109,7 @@ export default function Partner({ params }: ParamsProps) {
   }
 
   const removeImage = async (file:string) => {
-    console.log('AQUI');
+    
     let imageRef = ref(storage, file);
     setFormData((prevFormData) => ({ ...prevFormData, ['logo']: '' }));
     await deleteObject(imageRef).then(() => {
@@ -197,7 +197,7 @@ export default function Partner({ params }: ParamsProps) {
         zip,
       };
 
-      console.log('dados enviados', data);
+      
       if (params.id === 'new') {
         if (
           formData.password === "" ||
@@ -229,7 +229,7 @@ export default function Partner({ params }: ParamsProps) {
           
           const response = await axios.get(`${environment.apiUrl}/partner/${params.id}`); 
           const { service_areas, ...restData } = response.data;
-          console.log(restData);
+          
           setPartnerData(restData);
           setServiceAreasData(service_areas);
         } catch (error) {

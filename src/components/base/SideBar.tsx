@@ -33,11 +33,7 @@ export default function Sidebar() {
   
 
   const dataUser = session?.user as UserData;
-  useEffect(() => {
-    console.log('tetseee',dataUser?.term);
-   
-
-  }, [dataUser]);
+  
 
   if (status === "loading") {
     return <></>
