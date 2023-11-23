@@ -22,7 +22,7 @@ export default function Orders() {
    })
 
 
-// const [orderData, setOrderData] = useState<OrderDocument[]>([]);
+   // const [orderData, setOrderData] = useState<OrderDocument[]>([]);
    const [orderData, setOrderData] = useState({
       data: [],
       current_page: 1,
@@ -323,9 +323,7 @@ export default function Orders() {
             </button>
          </div> */}
 
-         <Pagination orderData={orderData} handlePageChange={handlePageChange} />
-
-
+         {orderData.last_page > 1 && <Pagination orderData={orderData} handlePageChange={handlePageChange} />}
 
       </>
    )

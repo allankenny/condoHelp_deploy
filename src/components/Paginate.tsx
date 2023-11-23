@@ -12,7 +12,7 @@ const PaginationButton = ({ page, currentPage, handlePageChange }: PaginationBut
     key={page}
     onClick={() => handlePageChange(page)}
     disabled={currentPage === page}
-    className={`mx-1 px-3 py-1 text-white rounded-[12px] ${currentPage === page ? 'bg-blue-700' : 'bg-blue-500 hover:bg-blue-700'} disabled:opacity-50 disabled:cursor-not-allowed`}
+    className={`mx-1 px-3 py-1 text-white rounded-[12px] ${currentPage === page ? 'bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} disabled:opacity-50 disabled:cursor-not-allowed`}
   >
     {page}
   </button>
@@ -37,9 +37,9 @@ const Pagination = ({ orderData, handlePageChange }: PaginationProps) => {
       <button
         onClick={() => handlePageChange(orderData.current_page - 1)}
         disabled={orderData.current_page === 1}
-        className="px-2 py-1 mr-2 text-white bg-blue-500 rounded-[12px] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-2 py-1 mr-2 text-white bg-blue-600 rounded-[12px] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronDoubleLeftIcon className="h-5 w-5 hover:text-blue-500" />
+        <ChevronDoubleLeftIcon className="h-5 w-5 " />
       </button>
 
       {pages.map(page => (
@@ -54,9 +54,9 @@ const Pagination = ({ orderData, handlePageChange }: PaginationProps) => {
       <button
         onClick={() => handlePageChange(orderData.current_page + 1)}
         disabled={orderData.current_page === orderData.last_page}
-        className="px-2 py-1 ml-2 text-white bg-blue-500 rounded-[12px] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-2 py-1 ml-2 text-white bg-blue-600 rounded-[12px] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronDoubleRightIcon className="h-5 w-5 hover:text-blue-500" />
+        <ChevronDoubleRightIcon className="h-5 w-5 " />
       </button>
     </div>
   );
