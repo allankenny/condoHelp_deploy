@@ -29,35 +29,51 @@ export default function Orders() {
       last_page: 1,
    });
 
+   const [searchData, setSearchData] = useState(null);
+
    const [statusData, setStatus] = useState<OrderDocument[]>([]);
 
-   //  if(session){
-   //     setDataUser(session?.user);
-   //  }
 
-   // const dataUser = session?.user?.user;
-   // const dataUserProfile = session?.user?.profile;
    const dataUser = session?.user as UserData;
 
    const handleSearch = async (query: any) => {
       try {
-         let url;
-
-         if (dataUser.user.type === 'condominium') {
-            url = `${environment.apiUrl}/search/condominium/order/${dataUser.profile.id}`;
-         } else if (dataUser.user.type === 'partner') {
-            url = `${environment.apiUrl}/search/partner/order/${dataUser.profile.id}`;
-         } else {
-            url = `${environment.apiUrl}/search/admin/order`;
-         }
-
-
-         const response = await axios.post(url, { query });
-         setOrderData(response.data);
+          let url;
+  
+          if (dataUser.user.type === 'condominium') {
+              url = `${environment.apiUrl}/search/condominium/order/${dataUser.profile.id}`;
+          } else if (dataUser.user.type === 'partner') {
+              url = `${environment.apiUrl}/search/partner/order/${dataUser.profile.id}`;
+          } else {
+              url = `${environment.apiUrl}/search/admin/order`;
+          }
+  
+          const response = await axios.post(url, { query });
+          setSearchData(response.data);  // Atualize searchData em vez de orderData
       } catch (error) {
-         console.error('Erro ao realizar a pesquisa:', error);
+          console.error('Erro ao realizar a pesquisa:', error);
       }
-   };
+  };
+
+   // const handleSearch = async (query: any) => {
+   //    try {
+   //       let url;
+
+   //       if (dataUser.user.type === 'condominium') {
+   //          url = `${environment.apiUrl}/search/condominium/order/${dataUser.profile.id}`;
+   //       } else if (dataUser.user.type === 'partner') {
+   //          url = `${environment.apiUrl}/search/partner/order/${dataUser.profile.id}`;
+   //       } else {
+   //          url = `${environment.apiUrl}/search/admin/order`;
+   //       }
+
+
+   //       const response = await axios.post(url, { query });
+   //       setOrderData(response.data);
+   //    } catch (error) {
+   //       console.error('Erro ao realizar a pesquisa:', error);
+   //    }
+   // };
 
 
 
@@ -102,6 +118,7 @@ export default function Orders() {
 
       fetchData(orderData.current_page);  // Passe o número da página atual para fetchData
    }, [dataUser, orderData.current_page]);  // Atualize sempre que a página atual ou dataUser mudar
+   
 
    const handlePageChange = (newPage: number) => {
       setOrderData(prevData => ({ ...prevData, current_page: newPage }));
@@ -155,7 +172,7 @@ export default function Orders() {
 
    return (
       <>
-         <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
+         <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
             <PageTitleDefault title="Chamados" />
             <BarSearch onSearch={handleSearch} />
 
@@ -196,7 +213,7 @@ export default function Orders() {
                            </tr>
                         </thead>
                         <tbody>
-                           {orderData.data && orderData.data.map((item: any, index: any) => {
+                           {(searchData ? searchData : orderData.data).map((item: any, index: any) => {
                               return (
                                  <tr key={index}
                                     className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">

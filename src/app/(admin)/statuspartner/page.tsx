@@ -12,7 +12,7 @@ export default function StatusPartner() {
   // }
   return (
     <>
-      <div className="flex justify-between items-center h-20 mb-5" >
+      <div className="flex justify-between items-center h-20 " >
         <PageTitleDefault title="Status do Parceiro" />
         <BarSearch />
         <ButtonAddLink route="user/add" label="Novo Usuário" />

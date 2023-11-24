@@ -83,7 +83,7 @@ export default function Townhouses() {
   }
   return (
     <>
-     <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
+     <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         {/* <p className="text-gray-700 text-3xl font-bold">Usuários</p> */}
         <PageTitleDefault title="Condomínio" />
         <BarSearch onSearch={handleSearch} />

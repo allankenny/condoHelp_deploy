@@ -46,7 +46,7 @@ export default  function Areas() {
 
   return (
     <>
-      <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto mb-5 flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
+      <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         <PageTitleDefault title="Termos" />
         <BarSearch onSearch={handleSearch} />
         <ButtonAddLink route="term/new" label="Novo Termo" />
