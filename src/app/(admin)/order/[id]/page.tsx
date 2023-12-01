@@ -75,7 +75,7 @@ export default function Order({ params }: ParamsProps) {
    const [showValueInit, setShowValueInit] = useState(true);
    const [showValueFinal, setShowValueFinal] = useState(false);
    const [showDivAvaluation, setDivAvaluation] = useState(false);
-   const [showPictureButton, setShowPictureButton] = useState(true);
+   const [showPictureButton, setShowPictureButton] = useState(false);
    const [showBtnFinal, setShowBtnFinal] = useState(false);
    const [showImageComdomimiun, setShowImageComdomimiun] = useState(false);
 
@@ -302,9 +302,9 @@ export default function Order({ params }: ParamsProps) {
                }
                const response = await axios.get(url);
                setOrderImagePartner(response.data);
-               if (response.data.images) {
-                  setImagesUrl(response.data.images);
-               }
+               // if (response.data.images) {
+               //    setImagesUrl(response.data.images);
+               // }
             } catch (error) {
                console.log(error);
             }
@@ -360,6 +360,7 @@ export default function Order({ params }: ParamsProps) {
          setShowValueFinal(true);
          setPictureInput(true);
          setValueButton(false);
+         setShowPictureButton(true);
          setShowImageComdomimiun(true);
       } else if (!isNaN(orderStatusId) && orderStatusId == 3 && dataUser?.user?.type !== 'partner') {
          setPartnerInput(true);
@@ -367,7 +368,7 @@ export default function Order({ params }: ParamsProps) {
          setShowValueFinal(true);
          setPictureInput(true);
          setDivAvaluation(true);
-         setShowPictureButton(false);
+         setShowPictureButton(true);
          setValueButton(false);
          setShowBtnFinal(true);
          setShowImageComdomimiun(true);
@@ -378,21 +379,22 @@ export default function Order({ params }: ParamsProps) {
          setShowValueFinal(true);
          setPictureInput(true);
          setDivAvaluation(true);
-         setShowPictureButton(false);
          setValueButton(false);
          setShowBtnFinal(false);
       } else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
-         if (orderStatusId == 1 || orderStatusId == 2 ) {
-            // setPictureInput(true);
+         if (orderStatusId == 1) {
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
+         } else if ( orderStatusId == 2){
+            setPictureInput(true);
+            setShowPictureButton(true);
          } else if ( orderStatusId == 3){
             setPictureInput(true);
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
-
+            setShowPictureButton(true);
          } else if (orderStatusId == 4) {
             setPartnerInput(true);
             setShowValueInit(false);
@@ -429,7 +431,7 @@ export default function Order({ params }: ParamsProps) {
       let upload = await uploadBytes(newFile, file);
       let imageUrl = await getDownloadURL(upload.ref);
       setFormData((prevFormData) => ({ ...prevFormData, ['budget']: imageUrl }));
-      setShowBtnDoc(true);
+      setShowBtnDoc(true); 
       setIsLoading(false); // Termina o carregamento
    }
 
@@ -822,7 +824,7 @@ export default function Order({ params }: ParamsProps) {
                   )}
                </div>
             </div>
-            <div className={`md:col-span-5 text-right mt-5  ${showPictureButton ? 'block' : 'hidden'}`} >
+            <div className={`md:col-span-5 text-right mt-5  ${showPictureButton && (imagesUrl && imagesUrl.length > 0) ? 'block' : 'hidden'}`}>
                <div className="inline-flex items-end gap-3 ">
                   <ButtonAddLink route="" label='Enviar Imagens' onClick={(event) => handleSubmitImage(event, 3)} />
                </div>
@@ -859,7 +861,7 @@ export default function Order({ params }: ParamsProps) {
 
             <div className="md:col-span-5 text-right " >
                <div className="inline-flex items-end gap-3 mt-5">
-                  <ButtonCancel route="order" label="Cancelar" />
+                  <ButtonCancel route="order" label="Voltar" />
                   <div className={` ${showBtnFinal ? 'block' : 'hidden'}`}>
                      <ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
                   </div>
