@@ -283,7 +283,7 @@ export default function FormPartner() {
           </div>
           <div className="md:col-span-5">
             <label htmlFor="email">Email</label>
-            <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formDataPartner.email} onChange={handleChange} />
+            <input type="text" name="email" id="email" autoComplete="off" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formDataPartner.email} onChange={handleChange} />
           </div>
           <div className="md:col-span-2">
             <label htmlFor="password">Senha <span className="text-[10px] italic text-zinc-500"> mínimo de 8 digitos</span></label>
