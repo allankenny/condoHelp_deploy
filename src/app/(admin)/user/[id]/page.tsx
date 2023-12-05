@@ -129,6 +129,9 @@ export default function User({params}:ParamsProps) {
               <label htmlFor="name">Nome Completo</label>
               <input type="text" name="name" id="name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" value={formData.name} onChange={handleChange}/>
             </div>
+            <div style={{display: 'none'}}>
+              <input type="password" id="hiddenPassword" autoComplete="new-password" />
+            </div>
 
             <div className="md:col-span-3">
               <label htmlFor="email">Email</label>
