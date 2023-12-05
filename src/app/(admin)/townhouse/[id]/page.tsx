@@ -258,6 +258,9 @@ export default function Townhouse({ params }: ParamsProps) {
               <label htmlFor="responsible_name">Encarregado</label>
               <input type="text" name="responsible_name" id="responsible_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" value={formData.responsible_name} placeholder="" onChange={handleChange} />
             </div>
+            <div style={{display: 'none'}}>
+              <input type="password" id="hiddenPassword" autoComplete="new-password" />
+            </div>
             <div className="md:col-span-3">
               <label htmlFor="email">Email</label>
               <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} autoComplete="off" onChange={handleChange} />

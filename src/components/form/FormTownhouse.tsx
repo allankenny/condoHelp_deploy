@@ -263,6 +263,9 @@ export default function FormTownhouse() {
             <label htmlFor="responsible_name">Encarregado</label>
             <input type="text" name="responsible_name" id="responsible_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" value={formData.responsible_name} placeholder="" onChange={handleChangeTownhouse} />
           </div>
+          <div style={{display: 'none'}}>
+              <input type="password" id="hiddenPassword" autoComplete="new-password" />
+          </div>
           <div className="md:col-span-5">
             <label htmlFor="email">Email</label>
             <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} autoComplete="off" onChange={handleChangeTownhouse} />
@@ -316,7 +319,7 @@ export default function FormTownhouse() {
             <label htmlFor="address_state">UF</label>
             <input type="text" name="address_state" id="address_state" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" placeholder="" value={formData.address_state} onChange={handleChangeTownhouse} />
           </div>
-          <div className="md:col-span-2">
+          <div className="md:col-span-5">
             <label htmlFor="address_city">Cidade</label>
             <input type="text" name="address_city" id="address_city" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" placeholder="" value={formData.address_city} onChange={handleChangeTownhouse} />
           </div>
@@ -325,20 +328,6 @@ export default function FormTownhouse() {
 
 
           <input type="hidden" name="user_id" id="user_id" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="" value={formData.user_id} onChange={handleChangeTownhouse} />
-
-          <div className="md:col-span-3">
-            <label htmlFor="logo">Logo</label>
-            <div className="flex">
-              <input type="text" name="logo" id="logo" className="h-10 border mt-1 rounded-tl-md rounded-bl-md px-4 w-full bg-gray-50" placeholder="Carregar Arquivo" onChange={handleChangeTownhouse} />
-              <button className="h-10 border mt-1 rounded-tr-md rounded-br-md px-4 bg-gray-50" onClick={() => {
-                const fileInput = document.getElementById('fileInput');
-                if (fileInput) {
-                  fileInput.click();
-                }
-              }}>Procurar</button>
-            </div>
-            <input type="file" id="fileInput" className="hidden" onChange={handleFileChangeTownhouse} />
-          </div>
 
           <div className="md:col-span-5 mt-5 flex flex-col items-center justify-center">
             <ButtonTerm route="" label='Termos e condições de uso' onClick={handleShowTermTownhouse} />

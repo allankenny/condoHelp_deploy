@@ -291,6 +291,9 @@ export default function Partner({ params }: ParamsProps) {
               <label htmlFor="contact_name">Nome Contato</label>
               <input type="text" name="contact_name" id="contact_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" placeholder="" value={formData.contact_name} onChange={handleChange} />
             </div>
+            <div style={{display: 'none'}}>
+              <input type="password" id="hiddenPassword" autoComplete="new-password" />
+            </div>
             <div className="md:col-span-3">
               <label htmlFor="email">Email</label>
               <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} onChange={handleChange} />

@@ -281,6 +281,9 @@ export default function FormPartner() {
             <label htmlFor="contact_name">Nome Contato</label>
             <input type="text" name="contact_name" id="contact_name" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" placeholder="" value={formDataPartner.contact_name} onChange={handleChange} />
           </div>
+          <div style={{display: 'none'}}>
+              <input type="password" id="hiddenPassword" autoComplete="new-password" />
+            </div>
           <div className="md:col-span-5">
             <label htmlFor="email">Email</label>
             <input type="text" name="email" id="email" autoComplete="nope" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formDataPartner.email} onChange={handleChange} />
@@ -332,23 +335,11 @@ export default function FormPartner() {
             <label htmlFor="address_state">UF</label>
             <input type="text" name="address_state" id="address_state" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" placeholder="" value={formDataPartner.address_state} onChange={handleChange} />
           </div>
-          <div className="md:col-span-2">
+          <div className="md:col-span-5">
             <label htmlFor="address_city">Cidade</label>
             <input type="text" name="address_city" id="address_city" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 uppercase" placeholder="" value={formDataPartner.address_city} onChange={handleChange} />
           </div>
-          <div className="md:col-span-3">
-            <label htmlFor="logo">Logo</label>
-            <div className="flex">
-              <input type="text" name="logo" id="logo" className="h-10 border mt-1 rounded-tl-md rounded-bl-md px-4 w-full bg-gray-50" placeholder="Carregar Arquivo" onChange={handleChange} />
-              <button className="h-10 border mt-1 rounded-tr-md rounded-br-md px-4 bg-gray-50" onClick={() => {
-                const fileInput = document.getElementById('fileInput');
-                if (fileInput) {
-                  fileInput.click();
-                }
-              }}>Procurar</button>
-            </div>
-            <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
-          </div>
+          
           <div className="md:col-span-5">
             <label htmlFor="service_area_id">Área de Serviço</label>
             <div className="flex flex-wrap">
