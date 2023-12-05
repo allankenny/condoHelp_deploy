@@ -7,7 +7,11 @@ import { environment } from "../../environment/environment";
 import TownhouseDocument from "../../interface/townhouse";
 import { EyeIcon } from "@heroicons/react/24/solid";
 
-export default function FormTownhouse() {
+interface FormTownhouseProps {
+  backLogin: () => void; // Define o tipo da função backLogin
+}
+
+export default function FormTownhouse({ backLogin }: FormTownhouseProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
@@ -147,6 +151,7 @@ export default function FormTownhouse() {
       await axios.post(`${environment.apiUrl}/townhouse/save`, data);
       resetForm();
       alert('Dados salvos com sucesso!');
+      backLogin();
     } catch (error) {
       console.log(error);
       alert('Ocorreu um erro ao enviar os dados.');

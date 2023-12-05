@@ -179,7 +179,7 @@ export default function Login() {
 
             <h1 className="text-gray-800 font-bold text-2xl mb-1">Cadastro de Parceiro</h1>
             <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
-            <FormPartner />
+            <FormPartner backLogin={backLogin} />
             <div className="flex justify-between items-center mt-4">
               <button className="flex items-center text-sm hover:text-blue-500 cursor-pointer text-zinc-400" onClick={() => backLogin()}>
                <FiArrowLeft /> Sair
@@ -200,7 +200,7 @@ export default function Login() {
             </div>
             <h1 className="text-gray-800 font-bold text-2xl mb-1">Cadastro de Condomínio</h1>
             <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
-            <FormTownhouse />
+            <FormTownhouse backLogin={backLogin} />
             <div className="flex justify-between items-center mt-4">
               <button className="flex items-center text-sm hover:text-blue-500 cursor-pointer text-zinc-400" onClick={() => backLogin()}>
                <FiArrowLeft /> Sair

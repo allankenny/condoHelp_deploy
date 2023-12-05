@@ -8,7 +8,11 @@ import TownhouseDocument from "../../interface/townhouse";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import AreaDocument from '../../interface/area';
 
-export default function FormPartner() {
+interface FormPartnerProps {
+  backLogin: () => void; // Define o tipo da função backLogin
+}
+
+export default function FormPartner({ backLogin }: FormPartnerProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
   const [showForm, setShowForm] = useState(true);
@@ -79,10 +83,11 @@ export default function FormPartner() {
         cellphone,
         zip
       };
-      console.log('dados partner', data);
+      
       await axios.post(`${environment.apiUrl}/partner/save`, data);
       resetFormPartner();
       alert('Dados salvos com sucesso!');
+      backLogin();
     } catch (error) {
       console.log(error);
       alert('Ocorreu um erro ao enviar os dados.');
