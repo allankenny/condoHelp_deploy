@@ -78,6 +78,7 @@ export default function Order({ params }: ParamsProps) {
    const [showPictureButton, setShowPictureButton] = useState(false);
    const [showBtnFinal, setShowBtnFinal] = useState(false);
    const [showImageComdomimiun, setShowImageComdomimiun] = useState(false);
+   const [ showRemoveButton, setShowRemoveButton] = useState(true);
 
    const onDrop = useCallback((files: File[]) => {
       setFile(files);
@@ -381,6 +382,7 @@ export default function Order({ params }: ParamsProps) {
          setDivAvaluation(true);
          setValueButton(false);
          setShowBtnFinal(false);
+         setShowRemoveButton(false);
       } else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
          if (orderStatusId == 1) {
             setValueButton(false);
@@ -404,6 +406,7 @@ export default function Order({ params }: ParamsProps) {
             setShowPictureButton(false);
             setValueButton(false);
             setShowBtnFinal(false);
+            setShowRemoveButton(false);
          }
       }
 
@@ -810,7 +813,7 @@ export default function Order({ params }: ParamsProps) {
                                     alt=""
                                  />
                               </picture>
-                              <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={() => removeImage(item)}>
+                              <button className={`mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg ${showRemoveButton ? 'block' : 'hidden'} `} onClick={() => removeImage(item)} >
                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
                                     </path>
