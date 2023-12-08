@@ -19,4 +19,4 @@ const environmentPRD = {
   baseUrl: (isProduction ? `${urlPRD}` : `${urlDEV}`),
 };
 
-export const environment = environmentDEV;
+export const environment = environmentPRD;
