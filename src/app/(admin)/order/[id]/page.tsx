@@ -807,11 +807,13 @@ export default function Order({ params }: ParamsProps) {
                               className='flex flex-col w-1/5 items-center p-1'
                            >
                               <picture className="w-full">
-                                 <img
-                                    className="object-cover h-48 w-full rounded-lg"
-                                    src={item}
-                                    alt=""
-                                 />
+                                 <a href={item} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                       className="object-cover h-48 w-full rounded-lg"
+                                       src={item}
+                                       alt=""
+                                    />
+                                 </a>
                               </picture>
                               <button className={`mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg ${showRemoveButton ? 'block' : 'hidden'} `} onClick={() => removeImage(item)} >
                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16">
