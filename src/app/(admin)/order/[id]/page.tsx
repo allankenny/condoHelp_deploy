@@ -44,6 +44,7 @@ export default function Order({ params }: ParamsProps) {
       order_status_id: "",
       score: 0,
       partner_id: "",
+      images: [],
       evaluation: {
          comment: "",
          score: 0, // Aqui você define a propriedade 'score'
@@ -138,7 +139,7 @@ export default function Order({ params }: ParamsProps) {
       handleImages();
    }, [file]);
 
-   const handleChange = (event: any) => {
+  const handleChange = (event: any) => {
       const { name, value } = event.target;
       setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
    };
@@ -178,6 +179,7 @@ export default function Order({ params }: ParamsProps) {
          comment: "",
          score: 0,
          partner_id: "",
+         images: [],
          evaluation: {
             comment: "",
             score: 0, // Aqui você define a propriedade 'score'
@@ -187,16 +189,13 @@ export default function Order({ params }: ParamsProps) {
 
    const handleSubmit = async (event: any, orderStatusId: Number) => {
       event.preventDefault();
-      if (
-         formData.service_area_id === "" ||
-         formData.description === ""
-      ) {
+      if (formData.service_area_id === "" || formData.description === "") {
          alert("Por favor, selecione um serviço!");
          return;
       }
       try {
          if (params.id === 'new') {
-            const { comment, score, evaluation, value, budget, ...formDataWithoutColuns } = formData;
+            const { comment, score, evaluation, value, budget, images, ...formDataWithoutColuns } = formData;
 
             const data = {
                ...formDataWithoutColuns,
@@ -353,26 +352,28 @@ export default function Order({ params }: ParamsProps) {
       const orderStatusId = parseInt(formData.order_status_id);
 
       if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type !== 'partner') {
-         setPartnerInput(true);
+         setShowMsgButton(true);
 
       } else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type !== 'partner') {
          setPartnerInput(true);
-         setShowValueInit(false);
-         setShowValueFinal(true);
-         setPictureInput(true);
-         setValueButton(false);
-         setShowPictureButton(true);
-         setShowImageComdomimiun(true);
+        
       } else if (!isNaN(orderStatusId) && orderStatusId == 3 && dataUser?.user?.type !== 'partner') {
+        
          setPartnerInput(true);
          setShowValueInit(false);
          setShowValueFinal(true);
          setPictureInput(true);
-         setDivAvaluation(true);
          setShowPictureButton(true);
          setValueButton(false);
-         setShowBtnFinal(true);
+         setShowBtnFinal(false);
          setShowImageComdomimiun(true);
+
+         if (formData.images && formData.images.length !== 0){
+            setDivAvaluation(true);
+         } else {
+            setDivAvaluation(false);
+         }
+          
       } else if (!isNaN(orderStatusId) && orderStatusId == 4 && dataUser?.user?.type !== 'partner') {
          setShowImageComdomimiun(false);
          setPartnerInput(true);
@@ -383,14 +384,19 @@ export default function Order({ params }: ParamsProps) {
          setValueButton(false);
          setShowBtnFinal(false);
          setShowRemoveButton(false);
+
+          
       } else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
          if (orderStatusId == 1) {
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
          } else if ( orderStatusId == 2){
-            setPictureInput(true);
-            setShowPictureButton(true);
+            // setPictureInput(true);
+            // setShowPictureButton(true);
+            setValueButton(false);
+            setPartnerInput(false);
+            setShowUpBudget(true);
          } else if ( orderStatusId == 3){
             setPictureInput(true);
             setValueButton(false);
@@ -495,6 +501,15 @@ export default function Order({ params }: ParamsProps) {
       handleChange(event);
       setShowSubmitButton(event.target.value.length >= 5);
    };
+
+   const handleStarClick = (value: any) => {
+      setRating(value);
+      if (value > 0) {
+        setShowBtnFinal(true);
+      } else {
+        setShowBtnFinal(false);
+      }
+    };
 
 
    if (status === "loading") {
@@ -722,14 +737,6 @@ export default function Order({ params }: ParamsProps) {
                   value={formData.partner_id} // Define o valor selecionado no <select>
                >
                   <option value="" >selecione... </option>
-                  {/* {partnersData.filter((partner) =>
-                     partner.service_areas.some((area: any) => area.id === formData.service_area_id)
-                  )
-                     .map((partner) => (
-                        <option className="uppercase" key={partner.id} value={partner.id}>
-                           {partner.name}
-                        </option>
-                     ))} */}
 
                {orderImageComdominium &&
                   orderImageComdominium.map((item, index) => (
@@ -768,7 +775,7 @@ export default function Order({ params }: ParamsProps) {
             <div className={`md:col-span-5 text-right  ${showValueButton ? 'block' : 'hidden'}`} >
                <div className="inline-flex items-end gap-3 mt-5">
                   <ButtonCancel route="order" label="Cancelar" />
-                  <ButtonAddLink route="" label='Confirmar Valores' onClick={(event) => handleSubmit(event, 2)} />
+                  <ButtonAddLink route="" label='Confirmar Valores' onClick={(event) => handleSubmit(event, 3)} />
                </div>
             </div>
          </div>
@@ -780,7 +787,7 @@ export default function Order({ params }: ParamsProps) {
                </label>
 
                <div className="flex items-center justify-center w-full">
-                  <label {...dropzone.getRootProps()} htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50">
+                  <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50">
                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
@@ -847,7 +854,7 @@ export default function Order({ params }: ParamsProps) {
                         key={value}
                         className={`h-8 w-8 inline-block cursor-pointer ${value <= rating ? 'text-yellow-400' : ''
                            }`}
-                        onClick={() => setRating(value)}
+                           onClick={() => handleStarClick(value)}
                      />
                   ))}
                </div>
