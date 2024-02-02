@@ -97,7 +97,7 @@ if(status === "loading"){
                         <tr key={index}
                           className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
                           <td className="whitespace-nowrap px-6 py-2 uppercase">{item.name}</td>
-                          <td className="whitespace-nowrap px-6 py-2">{item.email}</td>
+                          <td className="whitespace-nowrap px-6 py-2 lowercase">{item.email}</td>
                           <td className="whitespace-nowrap px-6 py-2 uppercase text-center">
                             {item.type === 'partner' ? 'PARCEIRO' : 
                             item.type === 'admin' ? 'ADMINISTRADOR' : 

@@ -67,6 +67,8 @@ export default function Order({ params }: ParamsProps) {
    const [orderImageComdominium, setOrderImageComdominium] = useState<OrderDocument[]>([]);
    const [showUpBudget, setShowUpBudget] = useState(false);
    const [showDescription, setShowDescription] = useState(true);
+   const [showPictureInputDesc, setShowPictureInputDesc] = useState(true);
+   const [showPictureInputDescImg, setShowPictureInputDescImg] = useState(true);
    const [showSubmitButton, setShowSubmitButton] = useState(false);
    const [showBtnDoc, setShowBtnDoc] = useState(false);
    const [showMsgButton, setShowMsgButton] = useState(false);
@@ -195,14 +197,16 @@ export default function Order({ params }: ParamsProps) {
       }
       try {
          if (params.id === 'new') {
-            const { comment, score, evaluation, value, budget, images, ...formDataWithoutColuns } = formData;
+            const { comment, score, evaluation, value, budget, ...formDataWithoutColuns } = formData;
 
             const data = {
                ...formDataWithoutColuns,
                condominium_id: dataUser.profile.id,
+               images: imagesUrl
             };
             const response = await axios.post(`${environment.apiUrl}/order/save`, data);
             setShowMsgButton(true);
+            setShowSubmitButton(false);
          } else {
             let data = {
                ...formData,
@@ -354,6 +358,7 @@ export default function Order({ params }: ParamsProps) {
       if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type !== 'partner') {
          setShowMsgButton(true);
 
+
       } else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type !== 'partner') {
          setPartnerInput(true);
         
@@ -367,7 +372,7 @@ export default function Order({ params }: ParamsProps) {
          setValueButton(false);
          setShowBtnFinal(false);
          setShowImageComdomimiun(true);
-
+         setShowPictureInputDesc(false);
          if (formData.images && formData.images.length !== 0){
             setDivAvaluation(true);
          } else {
@@ -384,25 +389,32 @@ export default function Order({ params }: ParamsProps) {
          setValueButton(false);
          setShowBtnFinal(false);
          setShowRemoveButton(false);
-
+         setShowPictureInputDesc(false);
           
       } else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
          if (orderStatusId == 1) {
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
+            setShowRemoveButton(false);
+            setShowPictureInputDescImg(false);
          } else if ( orderStatusId == 2){
             // setPictureInput(true);
             // setShowPictureButton(true);
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
+            setShowRemoveButton(false);
+            setShowPictureInputDescImg(false);
          } else if ( orderStatusId == 3){
             setPictureInput(true);
             setValueButton(false);
             setPartnerInput(false);
             setShowUpBudget(true);
             setShowPictureButton(true);
+            setShowRemoveButton(false);
+            setShowPictureInputDesc(false);
+            setShowPictureInputDescImg(false);
          } else if (orderStatusId == 4) {
             setPartnerInput(true);
             setShowValueInit(false);
@@ -413,6 +425,8 @@ export default function Order({ params }: ParamsProps) {
             setValueButton(false);
             setShowBtnFinal(false);
             setShowRemoveButton(false);
+            setShowPictureInputDesc(false);
+            setShowPictureInputDescImg(false);
          }
       }
 
@@ -521,7 +535,7 @@ export default function Order({ params }: ParamsProps) {
          <div className="flex justify-between items-center h-10 mb-5">
             <PageTitleDefault title="Chamados" />
          </div>
-
+         
          <div className="grid col-1 rounded-[16px] bg-white drop-shadow-md p-10">
             <div className="lg:col-span-2">
                <div className=" mb-3 text-center font-bold">
@@ -562,6 +576,66 @@ export default function Order({ params }: ParamsProps) {
                         onChange={handleDescriptionChange}
                         disabled={params.id !== 'new'}
                      />
+                  </div>
+
+                  <div className={`md:col-span-5 mt-0 rounded-[16px] bg-white  ${showPictureInputDesc ? 'block' : 'hidden'}`}>
+                     <div className="md:col-span-5 text-center mt-3">
+                        <label htmlFor="obs" className="font-bold text-lg text-gray-400">
+                        {dataUser.user.type === 'partner' ? 'Imagens do serviço a ser executado' : 'Adicionar imagens referente ao chamado'}
+                           
+                        </label>
+
+                        <div className={`flex items-center justify-center w-full mt-3  ${showPictureInputDescImg ? 'block' : 'hidden'}` }>
+                           <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50">
+                              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                 <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                 </svg>
+                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Clique para procurar</span> ou arraste e solte os aquivos aqui.</p>
+                                 <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG(MAX. 800x400px)</p>
+                              </div>
+                              <input {...dropzone.getInputProps()} id="dropzone-file" type="file" className="hidden" />
+                           </label>
+                        </div>
+
+                        {uploading && (
+                           <div className="flex items-center justify-center w-full h-16 mt-3">
+                              <AiOutlineLoading className="animate-spin text-cyan-700" size={20} />
+                              <span className="text-cyan-700">Carregando aguarde...</span>
+                           </div>
+                        )}
+
+                        <div className="flex items-center justify-center w-full">
+                           {imagesUrl && imagesUrl.length > 0 && (
+                              <div className='flex mt-4 flex-wrap w-full'>
+                                 {imagesUrl.map((item: any) => (
+                                    <div key={Math.random()}
+                                       className='flex flex-col w-1/5 items-center p-1'
+                                    >
+                                       <picture className="w-full">
+                                          <a href={item} target="_blank" rel="noopener noreferrer">
+                                             <img
+                                                className="object-cover h-48 w-full rounded-lg"
+                                                src={item}
+                                                alt=""
+                                             />
+                                          </a>
+                                       </picture>
+                                       <button className={`mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg ${showRemoveButton ? 'block' : 'hidden'} `} onClick={() => removeImage(item)} >
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16">
+                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
+                                             </path>
+                                             <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" fill="white">
+                                             </path>
+                                          </svg>
+                                       </button>
+                                    </div>
+                                 ))}
+                              </div>
+                           )}
+                        </div>
+                     </div>
+                    
                   </div>
 
                   <div className="md:col-span-5 text-center">
@@ -638,6 +712,7 @@ export default function Order({ params }: ParamsProps) {
                         
 
                         <input type="file" id="docInput" className="hidden" onChange={handleFileChange} />
+                        
                      </div>
                      
 
@@ -668,6 +743,7 @@ export default function Order({ params }: ParamsProps) {
                                  </button>
                               </div>
                            </div>
+                           
                         )}
 
                      </div>
@@ -690,7 +766,7 @@ export default function Order({ params }: ParamsProps) {
 
                      </div>
 
-
+                     <div  className=" md:col-span-5 mt-6 text-gray-400"><span className="mt-5 text-gray-400">*Se for preciso atualizar orçamento, carregue a imagem/PDF novamente.</span></div>
                      <div className={`md:col-span-5 text-right mt-5  ${showBtnDoc ? 'block' : 'hidden'}`} >
                         <div className="inline-flex items-end gap-3 ">
                            <ButtonCancel route="order" label="Cancelar" />
@@ -713,21 +789,19 @@ export default function Order({ params }: ParamsProps) {
                         <ButtonCancel route="order" label="Cancelar" />
                      </div>
                   </div>
-
+                  <div className={` md:col-span-5 text-right rounded-[16px] bg-blue-500  drop-shadow-md p-2 mt-2 mb-0 transition-all duration-900 ${showMsgButton ? 'block' : 'hidden'} text-white text-lg`}>
+                     <div className="flex justify-center items-center m-2 text-center font-bold ">
+                        <span>Aguarde, estamos te conectando a um de nossos parceiros.</span>
+                     </div>
+                  </div>
                </div>
-            </div>
-         </div>
-
-         <div className={`grid col-1 rounded-[16px] bg-white drop-shadow-md p-5 mt-5 mb-5 transition-all duration-700 ${showMsgButton ? 'block' : 'hidden'}`}>
-            <div className="flex justify-center items-center m-2 text-center font-bold">
-               <PageSubTitle subtitle="Aguarde, estamos te conectando a um de nossos parceiros." />
             </div>
          </div>
 
          <div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showPartnerInput ? 'block' : 'hidden'}`}>
             <div className="md:col-span-5 text-center mb-3">
                <label htmlFor="selectPartner" className="font-bold text-lg text-gray-400">
-                  Selecione o parceiro
+                  Selecione o parceiro 
                </label>
                <select
                   name="selectPartner"
@@ -802,7 +876,7 @@ export default function Order({ params }: ParamsProps) {
                {uploading && (
                   <div className="flex items-center justify-center w-full h-16 mt-3">
                      <AiOutlineLoading className="animate-spin text-cyan-700" size={20} />
-                     <span className="text-cyan-700">Carregando...</span>
+                     <span className="text-cyan-700">Carregando aguarde...</span>
                   </div>
                )}
 
