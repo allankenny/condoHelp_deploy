@@ -3,7 +3,7 @@ import axios from 'axios';
 import Link from 'next/link'
 import { useState, useEffect } from "react";
 import BarSearch from "../../../components/BarSearch"
-import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, PencilSquareIcon, StarIcon } from "@heroicons/react/24/solid";
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, PencilSquareIcon, StarIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { PageTitleDefault } from "../../../components/PageTitle";
 import { ButtonAddLink } from "../../../components/Buttons";
 import { environment } from "../../../environment/environment";
@@ -97,27 +97,45 @@ export default function Orders() {
    //    fetchData();
    //  }, [dataUser]);
 
-   useEffect(() => {
-      async function fetchData(page: number) {
-         try {
-            let url = `${environment.apiUrl}/order/list/${dataUser.user.id}`;
 
-            if (dataUser.profile?.id) {
-               url += `/${dataUser.profile.id}`;
-            }
-            url += `?page=${page}`;  // Adicione o número da página à URL
 
-            const response = await axios.get(url);
-            setOrderData(response.data);  // Atualize o estado com os novos dados
+   
+   async function fetchData(page: number) {
+      try {
+         let url = `${environment.apiUrl}/order/list/${dataUser.user.id}`;
 
-         } catch (error) {
-            console.error('Error fetching order data:', error);
-            // Handle the error as needed, such as displaying a message to the user.
+         if (dataUser.profile?.id) {
+            url += `/${dataUser.profile.id}`;
          }
-      }
+         url += `?page=${page}`;  // Adicione o número da página à URL
 
+         const response = await axios.get(url);
+         setOrderData(response.data);  // Atualize o estado com os novos dados
+
+      } catch (error) {
+         console.error('Error fetching order data:', error);
+         
+      }
+   }
+
+   useEffect(() => {
       fetchData(orderData.current_page);  // Passe o número da página atual para fetchData
-   }, [dataUser, orderData.current_page]);  // Atualize sempre que a página atual ou dataUser mudar
+    }, [dataUser, orderData.current_page]);  // Atualize sempre que a página atual ou dataUser mudar
+
+
+   async function handleCancelOrder(id: any) {
+      try {
+      
+        // Perguntar ao usuário se ele realmente deseja mudar o status do parceiro
+        if (confirm(`Realmente quer cancelar o chamado ${id} ?`)) {
+          // Enviar uma requisição PUT para a API para atualizar o registro
+            await axios.put(`${environment.apiUrl}/order/updateStatusOrder/${id}`);
+            fetchData(orderData.current_page);
+        } 
+      } catch (error) {
+        console.log(error);
+      }
+    }
    
 
    const handlePageChange = (newPage: number) => {
@@ -142,7 +160,7 @@ export default function Orders() {
    }, []);
 
    function getWidth(status: any) {
-      if (status === 5) return 0;
+      if (status.id === 5) return 100;
       if (status.id === 1) return 25;
       if (status.id === 2) return 50;
       if (status.id === 3) return 75;
@@ -290,12 +308,16 @@ export default function Orders() {
                                        </div>
                                     </td>
 
-                                    <td className="py-3 text-right gap-4 pr-6">
-                                       <div className="flex justify-end items-center align-middle gap-3">
+                                    <td className=" ">
+                                       <div className="flex justify-center items-center  gap-3">
                                           <Link href={`/order/${item.id}`}>
-                                             <PencilSquareIcon className="h-5 w-5 hover:text-blue-500" />
+                                             <PencilSquareIcon className="h-5 w-5 hover:text-blue-500 " title="Acompanhar Chamado"/>
                                           </Link>
 
+                                          {dataUser?.user?.type === 'admin' && (
+                                             <XMarkIcon className="h-5 w-5 hover:text-blue-500 cursor-pointer " title="Cancelar" onClick={() => handleCancelOrder(item.id)} />
+                                          )}
+                                          
                                        </div>
                                     </td>
                                  </tr>

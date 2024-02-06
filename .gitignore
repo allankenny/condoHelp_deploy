@@ -9,3 +9,5 @@ false/
 dist
 build
 public_html
+.env
+src/environment/environment.ts
