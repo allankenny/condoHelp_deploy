@@ -387,7 +387,7 @@ export default function Partner({ params }: ParamsProps) {
                 </div>
               )}
             </div>
-            <div className="md:col-span-5">
+            <div className="md:col-span-5 hidden">
               <label htmlFor="service_area_id">Área de Serviço</label>
               <div className="flex flex-wrap">
                 {areasData.filter(area => area.status === 'ativo').map((area) => (

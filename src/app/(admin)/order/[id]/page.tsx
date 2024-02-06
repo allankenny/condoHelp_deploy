@@ -63,6 +63,7 @@ export default function Order({ params }: ParamsProps) {
    const [fileDoc, setFileDoc] = useState<File | null>(null);
    const [imagesUrl, setImagesUrl] = useState<string[]>([]);
    const [isLoading, setIsLoading] = useState(false);
+   const [isLoading2, setIsLoading2] = useState(false);
    const [orderImagePartner, setOrderImagePartner] = useState<OrderDocument>();
    const [orderImageComdominium, setOrderImageComdominium] = useState<OrderDocument[]>([]);
    const [showUpBudget, setShowUpBudget] = useState(false);
@@ -80,6 +81,7 @@ export default function Order({ params }: ParamsProps) {
    const [showDivAvaluation, setDivAvaluation] = useState(false);
    const [showPictureButton, setShowPictureButton] = useState(false);
    const [showBtnFinal, setShowBtnFinal] = useState(false);
+   const [showDivBtnFinal, setShowDivBtnFinal] = useState(true);
    const [showImageComdomimiun, setShowImageComdomimiun] = useState(false);
    const [ showRemoveButton, setShowRemoveButton] = useState(true);
 
@@ -92,7 +94,8 @@ export default function Order({ params }: ParamsProps) {
       accept: {
          'image/jpeg': [],
          'image/jpg': [],
-         'image/png': []
+         'image/png': [],
+         'application/pdf': []
       }
    });
 
@@ -131,7 +134,7 @@ export default function Order({ params }: ParamsProps) {
       const handleImages = async () => {
          console.log('uploading images')
          file?.map((image: any) => {
-            if (['image/jpeg', 'image/jpg', 'image/png'].includes(image.type)) {
+            if (['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'].includes(image.type)) {
                insertImage(image)
             } else {
                alert('Tipo de arquivo não permitido');
@@ -195,6 +198,8 @@ export default function Order({ params }: ParamsProps) {
          alert("Por favor, selecione um serviço!");
          return;
       }
+      setShowSubmitButton(false);
+      setIsLoading2(true);
       try {
          if (params.id === 'new') {
             const { comment, score, evaluation, value, budget, ...formDataWithoutColuns } = formData;
@@ -205,8 +210,9 @@ export default function Order({ params }: ParamsProps) {
                images: imagesUrl
             };
             const response = await axios.post(`${environment.apiUrl}/order/save`, data);
+            setIsLoading2(false);
             setShowMsgButton(true);
-            setShowSubmitButton(false);
+            
          } else {
             let data = {
                ...formData,
@@ -355,14 +361,29 @@ export default function Order({ params }: ParamsProps) {
    useEffect(() => {
       const orderStatusId = parseInt(formData.order_status_id);
 
-      if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type !== 'partner') {
+      if (!isNaN(orderStatusId) && orderStatusId >= 1 && dataUser?.user?.type == 'admin') {
+         setShowMsgButton(false);
+         setPartnerInput(true);
+         setShowPictureButton(true);
+         setShowImageComdomimiun(false);
+         setShowValueInit(false);
+         setShowValueFinal(true);
+         setPictureInput(true);
+         setDivAvaluation(true);
+         setValueButton(false);
+         setShowDivBtnFinal(false);
+         setShowRemoveButton(false);
+         setShowPictureInputDesc(false);
+         setShowPictureButton(false);
+         
+      } else if (!isNaN(orderStatusId) && orderStatusId == 1 && dataUser?.user?.type == 'condominium') {
          setShowMsgButton(true);
 
 
-      } else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type !== 'partner') {
+      } else if (!isNaN(orderStatusId) && orderStatusId == 2 && dataUser?.user?.type == 'condominium') {
          setPartnerInput(true);
         
-      } else if (!isNaN(orderStatusId) && orderStatusId == 3 && dataUser?.user?.type !== 'partner') {
+      } else if (!isNaN(orderStatusId) && orderStatusId == 3 && dataUser?.user?.type == 'condominium') {
         
          setPartnerInput(true);
          setShowValueInit(false);
@@ -379,7 +400,7 @@ export default function Order({ params }: ParamsProps) {
             setDivAvaluation(false);
          }
           
-      } else if (!isNaN(orderStatusId) && orderStatusId == 4 && dataUser?.user?.type !== 'partner') {
+      } else if (!isNaN(orderStatusId) && orderStatusId == 4 && dataUser?.user?.type == 'condominium') {
          setShowImageComdomimiun(false);
          setPartnerInput(true);
          setShowValueInit(false);
@@ -390,7 +411,7 @@ export default function Order({ params }: ParamsProps) {
          setShowBtnFinal(false);
          setShowRemoveButton(false);
          setShowPictureInputDesc(false);
-          
+         setShowDivBtnFinal(false);
       } else if (dataUser?.user?.type == 'partner' && !isNaN(orderStatusId)) {
          if (orderStatusId == 1) {
             setValueButton(false);
@@ -733,7 +754,7 @@ export default function Order({ params }: ParamsProps) {
                                     </a>
                                     
                                  </div>
-                                 <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg' onClick={() => removeImageDoc(formData.budget)}>
+                                 <button className='mt-2 bg-rose-500 p-2 text-white hover:bg-rose-600 rounded-lg hidden' onClick={() => removeImageDoc(formData.budget)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fff" className="bi bi-trash" viewBox="0 0 16 16">
                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" fill="white">
                                        </path>
@@ -766,7 +787,7 @@ export default function Order({ params }: ParamsProps) {
 
                      </div>
 
-                     <div  className=" md:col-span-5 mt-6 text-gray-400"><span className="mt-5 text-gray-400">*Se for preciso atualizar orçamento, carregue a imagem/PDF novamente.</span></div>
+                     <div  className=" md:col-span-5 mt-6 text-gray-400"><span className="mt-5 text-gray-400">*Se for preciso atualizar orçamento, carregue o arquivo novamente e clique em Enviar Imagem/PDF.</span></div>
                      <div className={`md:col-span-5 text-right mt-5  ${showBtnDoc ? 'block' : 'hidden'}`} >
                         <div className="inline-flex items-end gap-3 ">
                            <ButtonCancel route="order" label="Cancelar" />
@@ -775,11 +796,14 @@ export default function Order({ params }: ParamsProps) {
                      </div>
                   </div>
 
+                  <div className={`md:col-span-5 mb-[-25px]  ${isLoading2 ? 'block' : 'hidden'}`} >
+                        <Spinner />
+                  </div>
 
                   <div className={`md:col-span-5 text-right  ${showSubmitButton ? 'block' : 'hidden'}`} >
                      <div className="flex w-full flex-row max-[600px]:flex-col items-end max-[600px]:items-center gap-3 mt-5">
                         <div className="flex w-auto max-[600px]:w-full">
-
+                           
                            {/* <Link href={''} className="w-full"> */}
                            <button className="rounded-full w-full bg-blue-500 px-10 py-3 text-white hover:bg-blue-600" onClick={(event) => handleSubmit(event, 1)}>Solicitar Orçamento</button>
                            {/* </Link> */}
@@ -892,7 +916,7 @@ export default function Order({ params }: ParamsProps) {
                                     <img
                                        className="object-cover h-48 w-full rounded-lg"
                                        src={item}
-                                       alt=""
+                                       alt="PDF"
                                     />
                                  </a>
                               </picture>
@@ -948,8 +972,10 @@ export default function Order({ params }: ParamsProps) {
             <div className="md:col-span-5 text-right " >
                <div className="inline-flex items-end gap-3 mt-5">
                   <ButtonCancel route="order" label="Voltar" />
-                  <div className={` ${showBtnFinal ? 'block' : 'hidden'}`}>
-                     <ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
+                  <div className={` ${showDivBtnFinal ? 'block' : 'hidden'}`}>
+                     <div className={` ${showBtnFinal ? 'block' : 'hidden'}`}>
+                        <ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
+                     </div>
                   </div>
                </div>
             </div>
