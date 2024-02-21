@@ -21,6 +21,7 @@ import { ref, getDownloadURL, listAll, uploadBytes, deleteObject } from 'firebas
 import { storage } from '../../../../libs/firebase';
 import { v4 as createId } from 'uuid';
 import { AiOutlineLoading } from "react-icons/ai";
+import { AxiosError } from 'axios';
 import { string } from "yup";
 interface ParamsProps {
    params: {
@@ -202,14 +203,14 @@ export default function Order({ params }: ParamsProps) {
       setIsLoading2(true);
       try {
          if (params.id === 'new') {
-            const { comment, score, evaluation, value, budget, images, ...formDataWithoutColuns } = formData;
+            const { comment, score, evaluation, value, budget, ...formDataWithoutColuns } = formData;
 
             const data = {
                ...formDataWithoutColuns,
-               condominium_id: dataUser.profile.id
-              
+               condominium_id: dataUser.profile.id,
+               images: imagesUrl
             };
-            const response = await axios.post(`${environment.apiUrl}/order/save`, data);
+            await axios.post(`${environment.apiUrl}/order/save`, data);
             setIsLoading2(false);
             setShowMsgButton(true);
             
@@ -233,8 +234,15 @@ export default function Order({ params }: ParamsProps) {
          }
          resetForm();
       } catch (error) {
-         alert('Ocorreu um erro!');
-         console.error(error);
+         const axiosError = error as AxiosError;
+         if (axiosError.response && axiosError.response.status === 403) {
+             // Trate o erro CORS aqui
+             console.error('Erro CORS: ' + axiosError.message);
+         } else {
+             // Trate outros erros aqui
+             alert('Ocorreu um erro!');
+             console.error(axiosError);
+         }
       }
 
    }
