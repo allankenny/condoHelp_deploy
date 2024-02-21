@@ -202,12 +202,12 @@ export default function Order({ params }: ParamsProps) {
       setIsLoading2(true);
       try {
          if (params.id === 'new') {
-            const { comment, score, evaluation, value, budget, ...formDataWithoutColuns } = formData;
+            const { comment, score, evaluation, value, budget, images, ...formDataWithoutColuns } = formData;
 
             const data = {
                ...formDataWithoutColuns,
-               condominium_id: dataUser.profile.id,
-               images: imagesUrl
+               condominium_id: dataUser.profile.id
+              
             };
             const response = await axios.post(`${environment.apiUrl}/order/save`, data);
             setIsLoading2(false);
