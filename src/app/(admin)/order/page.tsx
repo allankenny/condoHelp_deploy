@@ -314,7 +314,7 @@ export default function Orders() {
                                              <PencilSquareIcon className="h-5 w-5 hover:text-blue-500 " title="Acompanhar Chamado"/>
                                           </Link>
 
-                                          {dataUser?.user?.type === 'admin' && (
+                                          {dataUser?.user?.type !== 'partner' && (
                                              <XMarkIcon className="h-5 w-5 hover:text-blue-500 cursor-pointer " title="Cancelar" onClick={() => handleCancelOrder(item.id)} />
                                           )}
                                           
