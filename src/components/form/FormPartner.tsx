@@ -43,6 +43,7 @@ export default function FormPartner({ backLogin }: FormPartnerProps) {
 
   const handleSubmitPartner = async (event: any) => {
     event.preventDefault();
+    setShowSubmitButton(false);
 
     const checkbox = document.getElementById("flexSwitchCheckDefault") as HTMLInputElement;
     if (checkbox && !checkbox.checked) {
@@ -90,6 +91,7 @@ export default function FormPartner({ backLogin }: FormPartnerProps) {
       backLogin();
     } catch (error) {
       console.log(error);
+      setShowSubmitButton(true);
       alert('Ocorreu um erro ao enviar os dados.');
     }
   }
