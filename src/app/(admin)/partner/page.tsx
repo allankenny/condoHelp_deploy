@@ -92,6 +92,16 @@ export default function Partners() {
     return stars;
   }
 
+
+  
+
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const handleSelectChange = (event: any) => {
+    const selectedValue = event.target.value;
+    setSelectedStatus(selectedValue); // Atualize o estado com a opção selecionada
+    handleSearch(selectedValue); // Chame a função handleSearch com o valor selecionado
+  };
+
   if (status === "loading") {
     return <></>
   }
@@ -102,6 +112,21 @@ export default function Partners() {
       <div className="flex w-full justify-between items-center h-20 max-[600px]:h-auto flex-row max-[600px]:flex-col max-[600px]:gap-2 " >
         <PageTitleDefault title="Parceiros" />
         <BarSearch onSearch={handleSearch} />
+
+        <div className="flex flex-1 max-[600px]:w-full relative">
+            <select
+              id="status"
+              className="relative ml-20 mr-12 max-[600px]:ml-0 block w-[1px] min-w-0 h-12 flex-auto rounded-[16px] border border-gray-300 bg-white bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-gray-400 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none "
+              onChange={handleSelectChange}
+              value={selectedStatus} // Defina o valor do select com base no estado
+            >
+              <option selected value="">Status/todos</option>
+              <option value="ativo">Ativo</option>
+              <option value="inativo">Inativo</option>
+              <option value="pendente">Pendente</option>
+            </select>
+        </div>
+
         <ButtonAddLink route="partner/new" label="Novo Parceiro" />
       </div>
 
