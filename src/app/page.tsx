@@ -86,10 +86,7 @@ export default function Login() {
             <button type="submit" className="block bg-white text-blue-600 mt-4 py-2 px-4 rounded-2xl font-bold mb-2">Saiba mais...</button>
           </Link>
         </div>
-        {/* <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-      <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-      <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-      <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div> */}
+       
       </div>
       <div className="flex md:w-1/2 justify-center  items-center bg-white sm:items-center flex-col h-screen">
 
@@ -107,7 +104,7 @@ export default function Login() {
             <form className="bg-white"
               onSubmit={handleSubmit(submitForm)}
             >
-              <h1 className="text-gray-800 font-bold text-2xl mb-1">Ola!</h1>
+              <h1 className="text-gray-800 font-bold text-2xl mb-1">Olá!</h1>
               <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
 
               <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
@@ -159,8 +156,9 @@ export default function Login() {
               </button>
             </form>
             <div className="flex justify-between items-center mt-4">
-              <button className="text-sm hover:text-blue-500 cursor-pointer p-2 border rounded-2xl" onClick={() => setShowFormUserPartner(true)}>Cadastrar Parceiro</button>
+             
               <button className="text-sm hover:text-blue-500 cursor-pointer p-2 border rounded-2xl" onClick={() => setShowFormUserTownhouse(true)}>Cadastrar Condomínio</button>
+              <button className="text-sm hover:text-blue-500 cursor-pointer p-2 border rounded-2xl" onClick={() => setShowFormUserPartner(true)}>Cadastrar Parceiro</button>
             </div>
           </div>
         )}
