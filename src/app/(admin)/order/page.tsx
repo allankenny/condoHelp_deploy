@@ -54,52 +54,7 @@ export default function Orders() {
           console.error('Erro ao realizar a pesquisa:', error);
       }
   };
-
-   // const handleSearch = async (query: any) => {
-   //    try {
-   //       let url;
-
-   //       if (dataUser.user.type === 'condominium') {
-   //          url = `${environment.apiUrl}/search/condominium/order/${dataUser.profile.id}`;
-   //       } else if (dataUser.user.type === 'partner') {
-   //          url = `${environment.apiUrl}/search/partner/order/${dataUser.profile.id}`;
-   //       } else {
-   //          url = `${environment.apiUrl}/search/admin/order`;
-   //       }
-
-
-   //       const response = await axios.post(url, { query });
-   //       setOrderData(response.data);
-   //    } catch (error) {
-   //       console.error('Erro ao realizar a pesquisa:', error);
-   //    }
-   // };
-
-
-
-   //   useEffect(() => {
-   //    async function fetchData() {
-   //      try {
-   //        let url = `${environment.apiUrl}/order/list/${dataUser.user.id}`;
-
-   //        if (dataUser.profile?.id) {
-   //          url += `/${dataUser.profile.id}`;
-   //        }
-   //        const response = await axios.get(url);
-   //        setOrderData(response.data);
-
-   //      } catch (error) {
-   //        console.error('Error fetching order data:', error);
-   //        // Handle the error as needed, such as displaying a message to the user.
-   //      }
-   //    }
-
-   //    fetchData();
-   //  }, [dataUser]);
-
-
-
-   
+ 
    async function fetchData(page: number) {
       try {
          let url = `${environment.apiUrl}/order/list/${dataUser.user.id}`;
@@ -177,12 +132,7 @@ export default function Orders() {
       handleSearch(selectedValue); // Chame a função handleSearch com o valor selecionado
    };
 
-   // let filteredData = orderData;
-   // if (dataUser.type === 'parceiro') {
-   //   filteredData = orderData.filter(item => (item.partner_id === dataUserProfile.id || item.partner_id === null) && item.service_area_id === dataUserProfile.service_area_id);
-   // } else if  (dataUser.type === 'condominio') {
-   //   filteredData = orderData.filter(item => item.condominium_id === dataUserProfile.id);
-   // }
+   
 
    if (status === "loading") {
       return <></>
@@ -214,14 +164,15 @@ export default function Orders() {
                <ButtonAddLink route="order/new" label="Novo Chamado" />
             )}
          </div>
-         <div className="flex justify-between items-center w-full p-2 mim-h-screen">
+         <div className="flex justify-between items-center w-full p-0 mim-h-screen">
             <div className="w-full">
                <div className="grid gap-4">
-                  <div className="overflow-auto mt-4 w-full bg-white rounded-[16px] drop-shadow-md p-8">
+                  <div className="overflow-auto mt-4 w-full bg-white rounded-[16px] drop-shadow-md p-4">
                      <table className="table-auto w-full text-left text-sm font-light">
                         <thead className="border-b border-gray-300 font-medium">
                            <tr>
                               <th scope="col" className="px-3 py-2">Nº</th>
+                              <th scope="col" className="px-3 py-2">Data</th>
                               <th scope="col" className="px-8 py-2  max-[600px]:hidden max-[600px]:px-1">Condomínio</th>
                               <th scope="col" className="px-6 py-2  max-[600px]:hidden max-[600px]:px-1">Prestador</th>
                               <th scope="col" className="px-6 py-2 text-center  max-[600px]:hidden max-[600px]:px-1">Progresso</th>
@@ -235,34 +186,35 @@ export default function Orders() {
                               return (
                                  <tr key={index}
                                     className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
-                                    <td className="whitespace-nowrap px-3 py-2">{item.id}</td>
-                                    <td className="whitespace-nowrap px-8 py-2  max-[600px]:hidden max-[600px]:px-1">
-                                       <div className="flex justify-start items-center ">
+                                    <td className="whitespace-nowrap text-xs px-3 py-2">{item.id}</td>
+                                    <td className="whitespace-nowrap text-xs px-3 py-2">{item.opened_at}</td>
+                                    <td className=" whitespace-nowrap text-xs px-3 py-2  max-[600px]:hidden max-[600px]:px-1">
+                                       <div className="flex justify-start items-center">
                                           {item.condominium!.logo && (
                                              <img src={item.condominium!.logo}
                                                 alt="Logo 1"
-                                                className=" rounded h-10 w-10 drop-shadow-lg mr-2 object-contain"
+                                                className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span className=" uppercase">{item.condominium!.name}</span>
+                                          <span className=" uppercase max-w-[250px] truncate overflow-hidden text-ellipsis ">{item.condominium!.name}</span>
                                        </div>
                                     </td>
 
 
-                                    <td className="whitespace-nowrap px-6 py-2  max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' :
+                                    <td className="whitespace-nowrap px-3 py-2 text-xs max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' :
                                        <div className="flex justify-start items-center ">
                                           {item.partner!.logo && (
                                              <img src={item.partner!.logo}
                                                 alt="Logo 1"
-                                                className=" rounded h-10 w-10 drop-shadow-lg mr-2 object-contain"
+                                                className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span className=" uppercase">{item.partner!.name}</span>
+                                          <span className=" uppercase max-w-[200px] truncate overflow-hidden text-ellipsis">{item.partner!.name}</span>
                                        </div>}
                                     </td>
 
 
-                                    <td className="whitespace-nowrap py-2 max-[600px]:hidden max-[600px]:px-1" >
+                                    <td className="whitespace-nowrap  py-2 max-[600px]:hidden max-[600px]:px-1" >
                                        <div className="h-4 w-full rounded-full bg-gray-200 dark:bg-gray-200 ">
                                           <div className="h-4 rounded-full flex justify-center items-center align-middle bg-blue-500"
                                              style={{ width: `${getWidth(item.order_status)}%` }}
@@ -272,9 +224,9 @@ export default function Orders() {
                                        </div>
 
                                     </td>
-                                    <td className="whitespace-nowrap w-32 p-12 max-[600px]:px-1  py-2  ">
+                                    <td className="whitespace-nowrap w-32 p-6 max-[600px]:px-1  py-2  ">
                                        <div
-                                          className={`whitespace-nowrap px-5 py-1 rounded  uppercase text-center text-white font-bold ${item.order_status.id == '1'
+                                          className={`whitespace-nowrap px-3 py-2 rounded text-xs uppercase text-center text-white font-bold ${item.order_status.id == '1'
                                              ? "bg-orange-300"
                                              : item.order_status.id == '2'
                                                 ? "bg-blue-300"
@@ -290,7 +242,7 @@ export default function Orders() {
                                           {item.order_status.name}
                                        </div>
                                     </td>
-                                    <td className="whitespace-nowrap px-6 py-2  max-[600px]:px-1">
+                                    <td className="whitespace-nowrap px-3 py-2 text-xs  max-[600px]:px-1">
                                        <div className="text-center text-gray-300">
                                           {item.evaluation ? (
                                              [1, 2, 3, 4, 5].map((value) => (
@@ -330,39 +282,11 @@ export default function Orders() {
             </div>
 
          </div>
-         {/* <div className="flex pl-2">
-            <button
-               onClick={() => handlePageChange(orderData.current_page - 1)}
-               disabled={orderData.current_page === 1}
-               className="px-2 py-1 mr-2 text-white bg-blue-500 rounded-[12px] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-               <ChevronDoubleLeftIcon className="h-5 w-5 hover:text-blue-500" />
-            </button>
-
-            {Array.from({ length: Math.min(4, orderData.last_page) }, (_, i) => orderData.current_page - 2 + i)
-               .filter(page => page >= 1 && page <= orderData.last_page)
-               .map(page => (
-                  <button
-                     key={page}
-                     onClick={() => handlePageChange(page)}
-                     disabled={orderData.current_page === page}
-                     className={`mx-1 px-3 py-1 text-white rounded-[12px] ${orderData.current_page === page ? 'bg-blue-700' : 'bg-blue-500 hover:bg-blue-700'} disabled:opacity-50 disabled:cursor-not-allowed`}
-                  >
-                     {page}
-                  </button>
-               ))
-            }
-
-            <button
-               onClick={() => handlePageChange(orderData.current_page + 1)}
-               disabled={orderData.current_page === orderData.last_page}
-               className="px-2 py-1 ml-2 text-white bg-blue-500 rounded-[12px] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-               <ChevronDoubleRightIcon className="h-5 w-5 hover:text-blue-500" />
-            </button>
-         </div> */}
-
+         
+         {/* pagination                */}
+         <div className="mt-4">
          {orderData.last_page > 1 && <Pagination orderData={orderData} handlePageChange={handlePageChange} />}
+         </div>
 
       </>
    )
