@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useState, useEffect } from "react";
 import { ButtonAddLink } from "../../../components/Buttons"
 import { PageTitleDefault } from "../../../components/PageTitle"
-import { PencilSquareIcon, ExclamationTriangleIcon, StarIcon } from "@heroicons/react/24/solid"
+import {  StarIcon } from "@heroicons/react/24/solid"
+import { PencilSquareIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import { environment } from "../../../environment/environment";
 import PartnerDocument from "../../../interface/partner";
 import { useSession } from "next-auth/react";
@@ -130,15 +131,15 @@ export default function Partners() {
         <ButtonAddLink route="partner/new" label="Novo Parceiro" />
       </div>
 
-      <div className="flex justify-between items-center w-full p-2 mim-h-screen">
+      <div className="flex justify-between items-center w-full p-0 mim-h-screen">
         <div className="w-full">
           <div className="grid gap-4">
-            <div className="overflow-auto mt-4 w-full bg-white rounded-[16px] drop-shadow-md p-8">
+            <div className="overflow-auto mt-4 w-full bg-white rounded-[16px] drop-shadow-md p-4">
               <table className="table-auto w-full text-left text-sm font-light">
                 <thead className="border-b border-gray-300 font-medium">
                   <tr>
                     <th scope="col" className="px-6 py-2">Parceiro</th>
-                    <th scope="col" className="px-6 py-2 max-[600px]:hidden max-[600px]:px-1"></th>
+                    <th scope="col" className="px-6 py-2">Nome contato</th>
                     <th scope="col" className="px-6 py-2 max-[600px]:hidden max-[600px]:px-1">Email</th>
                     <th scope="col" className="px-6 py-2 max-[600px]:hidden max-[600px]:px-1">Telefone</th>
                     <th scope="col" className="px-6 py-2 text-center max-[600px]:hidden max-[600px]:px-1">Avaliação</th>
@@ -150,15 +151,15 @@ export default function Partners() {
                   {partnerData.map((item, index) => (
                     <tr key={index}
                       className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
-                      <td className="whitespace-nowrap px-6 py-2 uppercase">{item.name}</td>
-                      <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">{item.admin_name}</td>
-                      <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1 lowercase">{item.email}</td>
-                      <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
-                      <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">
+                      <td className="whitespace-nowrap px-6 py-2 text-xs uppercase max-w-[250px] truncate overflow-hidden text-ellipsis">{item.name}</td>
+                      <td className="whitespace-nowrap px-6 py-2 uppercase text-xs max-[600px]:hidden max-[600px]:px-1">{item.contact_name}</td>
+                      <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1 lowercase">{item.email}</td>
+                      <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
+                      <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">
                         {renderStarRating(item.average_score)}
                       </td>
                       <td className="whitespace-nowrap px-6 py-2">
-                        <div className={`rounded whitespace-nowrap px-6 py-2 uppercase text-center text-white ${item.user.status === 'ativo' ? 'bg-blue-300 ' :
+                        <div className={`rounded whitespace-nowrap text-xs px-6 py-2 uppercase text-center text-white ${item.user.status === 'ativo' ? 'bg-blue-300 ' :
                             item.user.status === 'pendente' ? 'bg-orange-300 ' :
                               item.user.status === 'inativo' ? 'bg-red-300 ' : ''
                           }`}>{item.user.status}</div>

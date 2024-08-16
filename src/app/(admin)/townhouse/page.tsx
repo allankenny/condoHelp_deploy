@@ -89,10 +89,10 @@ export default function Townhouses() {
         <BarSearch onSearch={handleSearch} />
         <ButtonAddLink route="townhouse/new" label="Novo Condomínio" />
       </div>
-      <div className="flex justify-between items-center w-full p-2 mim-h-screen">
+      <div className="flex justify-between items-center w-full p-0 mim-h-screen">
         <div className="w-full">
           <div className="grid gap-4">
-            <div className="overflow-auto mt-4 w-full bg-white rounded-[16px] drop-shadow-md p-8">
+            <div className="overflow-auto mt-4 w-full bg-white rounded-[16px] drop-shadow-md p-4">
               <table className="table-auto w-full text-left text-sm font-light">
                   <thead className="border-b border-gray-300 font-medium">
                     <tr>
@@ -108,11 +108,11 @@ export default function Townhouses() {
                     {townhouseData.map((item, index) =>(
                         <tr key={index}
                           className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
-                          <td className="whitespace-nowrap px-6 py-2 uppercase">{item.name}</td>
-                          <td className="whitespace-nowrap px-6 py-2 uppercase max-[600px]:hidden max-[600px]:px-1 ">{item.admin_name}</td>
-                          <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1 ">{item.email}</td>
-                          <td className="whitespace-nowrap px-6 py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
-                          <td className="whitespace-nowrap px-6 py-2">
+                          <td className="whitespace-nowrap px-6 text-xs py-2 uppercase max-w-[300px] truncate overflow-hidden text-ellipsis">{item.name}</td>
+                          <td className="whitespace-nowrap px-6 text-xs py-2 uppercase max-[600px]:hidden max-[600px]:px-1 ">{item.admin_name}</td>
+                          <td className="whitespace-nowrap px-6 py-2 text-xs max-[600px]:hidden max-[600px]:px-1 ">{item.email}</td>
+                          <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
+                          <td className="whitespace-nowrap px-6 text-xs py-2">
                             <div className={` rounded whitespace-nowrap px-6 py-2 uppercase text-center ${item.user.status === 'ativo' ? 'bg-blue-300 text-white' : 'bg-red-300 text-white'}`}>{item.user.status}
                             </div>
                           </td>
