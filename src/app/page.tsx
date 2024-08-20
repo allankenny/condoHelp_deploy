@@ -28,7 +28,7 @@ export default function Login() {
     email: yup.string().required("O Campo é obrigatorio!"),
     password: yup
       .string()
-      .min(8, "A senha deve ter no minimo 8 digitos")
+      .min(8, "A senha deve ter no minimo 8 caracteres")
       .required("O Campo é obrigatorio!"),
   });
 

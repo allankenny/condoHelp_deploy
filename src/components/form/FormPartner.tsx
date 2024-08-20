@@ -61,10 +61,6 @@ export default function FormPartner({ backLogin }: FormPartnerProps) {
       alert("Por favor, preencha todos os campos !");
       return;
     }
-    if (formDataPartner.password.length < 8) {
-      alert("A senha deve ter mais que 8 dígitos.");
-      return;
-    }
     if (formDataPartner.password !== formDataPartner.password2) {
       alert("As senhas não coincidem.");
       return;
@@ -219,8 +215,9 @@ export default function FormPartner({ backLogin }: FormPartnerProps) {
   };
 
   const checkPassword = (pass: string) => {
-    console.log(pass.length);
-    alert('A senha deve ter no mínimo 8 dígitos!')
+    if (pass.length < 8) {
+      alert('A senha deve ter no mínimo 8 dígitos!')
+    }
   }
 
 

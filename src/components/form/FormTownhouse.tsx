@@ -118,10 +118,6 @@ export default function FormTownhouse({ backLogin }: FormTownhouseProps) {
       alert("Por favor, preencha todos os campos !");
       return;
     }
-    if (formData.password.length < 8) {
-      alert("A senha deve ter mais que 8 dígitos.");
-      return;
-    }
     if (formData.password !== formData.password2) {
       alert("As senhas não coincidem.");
       return;
@@ -200,8 +196,9 @@ export default function FormTownhouse({ backLogin }: FormTownhouseProps) {
   };
 
   const checkPassword = (pass: string) => {
-    console.log(pass.length);
-    alert('A senha deve ter no mínimo 8 dígitos!')
+    if (pass.length < 8) {
+      alert('A senha deve ter no mínimo 8 dígitos!')
+    }
   }
 
   return (
@@ -276,7 +273,7 @@ export default function FormTownhouse({ backLogin }: FormTownhouseProps) {
             <input type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 lowercase" placeholder="email@email.com" value={formData.email} autoComplete="off" onChange={handleChangeTownhouse} />
           </div>
           <div className="md:col-span-2">
-            <label htmlFor="password">Senha <span className="text-[10px] italic text-zinc-500"> mínimo de 8 digitos</span></label>
+            <label htmlFor="password">Senha <span className="text-[10px] italic text-zinc-500"> *mínimo de 8 dígitos</span></label>
             <input type={showPassword ? "text" : "password"} maxLength={10} minLength={8} name="password" id="password" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" autoComplete="off" onBlur={() => checkPassword(formData.password)} value={formData.password} onChange={handleChangeTownhouse}
             />
           </div>
