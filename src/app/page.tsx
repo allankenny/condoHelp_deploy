@@ -32,30 +32,40 @@ export default function Login() {
       .required("O Campo é obrigatorio!"),
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   const submitForm = async (data: ICredentials) => {
     setIsLoading(true);
+  
     const result = await signIn("credentials", {
       email: data.email,
       password: data.password,
-      redirect: true,
+      redirect: false, // Mudado para false para verificar o resultado antes de redirecionar
       callbackUrl: "/dashboard",
     });
-    setIsLoading(false);
-    requireAuth(result);
-  };
-
   
-  function requireAuth(result: any) {
-    if (result?.url) {
-      console.log('resultado do loginnn', result);
-      return router.replace(`/dashboard`)
-    } else {
-      let message = "Erro ao solicitar a autenticação";
-      if (result?.status === 401) {
-        message = "Usuario ou senha invalido";
-      };
+    setIsLoading(false);
+  
+    if (result?.error) {
+      setErrorMessage("*E-mail ou senha estão incorretos.");
+    } else if (result?.url) {
+      window.location.href = result.url; // Redireciona manualmente se não houver erro
     }
-  }
+  };
+  
+  // function requireAuth(result: any) {
+  //   const router = useRouter(); // Verifique se router está disponível
+  //   if (result?.url) {
+  //     console.log('Resultado do login', result);
+  //     return router.replace(`/dashboard`);
+  //   } else {
+  //     let message = "Erro ao solicitar a autenticação";
+  //     if (result?.status === 302) {
+  //       message = "Usuário ou senha inválidos";
+  //     }
+  //     console.error(message); // Adicionando uma ação para o erro
+  //   }
+  // }
 
   const backLogin = () => {
     setShowFormUserPartner(false);
@@ -106,7 +116,9 @@ export default function Login() {
             >
               <h1 className="text-gray-800 font-bold text-2xl mb-1">Olá!</h1>
               <p className="text-sm font-normal text-gray-600 mb-7">Seja bem vindo.</p>
-
+              {errorMessage && (
+                <p className="text-sm font-bold text-red-400 mb-2">{errorMessage}</p>
+              )}
               <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor">
@@ -116,7 +128,7 @@ export default function Login() {
                 <input
                   className="pl-2 outline-none border-none w-full"
                   type="text"
-                  placeholder="Email"
+                  placeholder="E-mail"
                   {...register("email")}
                 />
               </div>
