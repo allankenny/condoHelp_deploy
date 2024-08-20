@@ -138,27 +138,27 @@ export default function Partners() {
               <table className="table-auto w-full text-left text-sm font-light">
                 <thead className="border-b border-gray-300 font-medium">
                   <tr>
-                    <th scope="col" className="px-6 py-2">Parceiro</th>
-                    <th scope="col" className="px-6 py-2">Nome contato</th>
-                    <th scope="col" className="px-6 py-2 max-[600px]:hidden max-[600px]:px-1">Email</th>
-                    <th scope="col" className="px-6 py-2 max-[600px]:hidden max-[600px]:px-1">Telefone</th>
-                    <th scope="col" className="px-6 py-2 text-center max-[600px]:hidden max-[600px]:px-1">Avaliação</th>
-                    <th scope="col" className="px-6 py-2 text-center">Status</th>
-                    <th scope="col" className="px-6 py-2 text-center">Ações</th>
+                    <th scope="col" className="px-3 py-2">Parceiro</th>
+                    <th scope="col" className="px-3 py-2">Nome contato</th>
+                    <th scope="col" className="px-3 py-2 max-[600px]:hidden max-[600px]:px-1">Email</th>
+                    <th scope="col" className="px-3 py-2 max-[600px]:hidden max-[600px]:px-1">Telefone</th>
+                    <th scope="col" className="px-3 py-2 text-center max-[600px]:hidden max-[600px]:px-1">Avaliação</th>
+                    <th scope="col" className="px-3 py-2 text-center">Status</th>
+                    <th scope="col" className="px-3 py-2 text-center">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {partnerData.map((item, index) => (
                     <tr key={index}
                       className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
-                      <td className="whitespace-nowrap px-6 py-2 text-xs uppercase max-w-[250px] truncate overflow-hidden text-ellipsis">{item.name}</td>
-                      <td className="whitespace-nowrap px-6 py-2 uppercase text-xs max-[600px]:hidden max-[600px]:px-1">{item.contact_name}</td>
-                      <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1 lowercase">{item.email}</td>
-                      <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
-                      <td className="whitespace-nowrap px-6 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">
+                      <td className="whitespace-nowrap px-3 py-2 text-xs uppercase max-w-[250px] truncate overflow-hidden text-ellipsis">{item.name}</td>
+                      <td className="whitespace-nowrap px-3 py-2 uppercase text-xs max-[600px]:hidden max-[600px]:px-1">{item.contact_name}</td>
+                      <td className="whitespace-nowrap px-3 text-xs py-2 max-[600px]:hidden max-[600px]:px-1 lowercase">{item.email}</td>
+                      <td className="whitespace-nowrap px-3 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">{formatPhone(item.phone)}</td>
+                      <td className="whitespace-nowrap px-3 text-xs py-2 max-[600px]:hidden max-[600px]:px-1">
                         {renderStarRating(item.average_score)}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-2">
+                      <td className="whitespace-nowrap px-3 py-2">
                         <div className={`rounded whitespace-nowrap text-xs px-6 py-2 uppercase text-center text-white ${item.user.status === 'ativo' ? 'bg-blue-300 ' :
                             item.user.status === 'pendente' ? 'bg-orange-300 ' :
                               item.user.status === 'inativo' ? 'bg-red-300 ' : ''
