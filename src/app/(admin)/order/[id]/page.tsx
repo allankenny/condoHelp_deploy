@@ -971,7 +971,7 @@ export default function Order({ params }: ParamsProps) {
                <textarea
                   name="comment"
                   id="comment"
-                  className="h-24 border mt-3 rounded p-2 px-4 w-full bg-gray-50 uppercase"
+                  className="h-24 border mt-3 rounded p-2 px-4 w-full bg-gray-50"
                   value={formData.evaluation?.comment}
                   onChange={handleChange}
                />
