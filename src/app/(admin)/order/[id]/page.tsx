@@ -977,13 +977,11 @@ export default function Order({ params }: ParamsProps) {
                />
             </div>
 
-            <div className="md:col-span-5 text-right " >
-               <div className="inline-flex items-end gap-3 mt-5">
-                  <ButtonCancel route="order" label="Voltar" />
-                  <div className={` ${showDivBtnFinal ? 'block' : 'hidden'}`}>
-                     <div className={` ${showBtnFinal ? 'block' : 'hidden'}`}>
-                        <ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
-                     </div>
+            <div className="md:col-span-5 flex items-center justify-between mt-5">
+               <ButtonCancel route="order" label="Voltar" />
+               <div className={` ${showDivBtnFinal ? 'block' : 'hidden'} mx-auto `}>
+                  <div className={` ${showBtnFinal ? 'block' : 'hidden'} ml-[-130px] max-[600px]:ml-0`}>
+                     <ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
                   </div>
                </div>
             </div>
