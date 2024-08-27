@@ -171,8 +171,8 @@ export default function Orders() {
                      <table className="table-auto w-full text-left text-sm font-light">
                         <thead className="border-b border-gray-300 font-medium">
                            <tr>
-                              <th scope="col" className="px-3 py-2">Nº</th>
-                              <th scope="col" className="px-3 py-2">Data</th>
+                              <th scope="col" className="px-1 py-2">Nº</th>
+                              <th scope="col" className="px-2 py-2">Data</th>
                               <th scope="col" className="px-8 py-2  max-[600px]:hidden max-[600px]:px-1">Condomínio</th>
                               <th scope="col" className="px-6 py-2  max-[600px]:hidden max-[600px]:px-1">Prestador</th>
                               <th scope="col" className="px-1 py-2 text-center  max-[600px]:hidden max-[600px]:px-1">Serviço/Área</th>
