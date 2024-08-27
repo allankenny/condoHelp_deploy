@@ -65,7 +65,7 @@ export default function Orders() {
          url += `?page=${page}`;  // Adicione o número da página à URL
 
          const response = await axios.get(url);
-         setOrderData(response.data);  // Atualize o estado com os novos dados
+         setOrderData(response.data);   
 
       } catch (error) {
          console.error('Error fetching order data:', error);
@@ -175,9 +175,10 @@ export default function Orders() {
                               <th scope="col" className="px-3 py-2">Data</th>
                               <th scope="col" className="px-8 py-2  max-[600px]:hidden max-[600px]:px-1">Condomínio</th>
                               <th scope="col" className="px-6 py-2  max-[600px]:hidden max-[600px]:px-1">Prestador</th>
+                              <th scope="col" className="px-1 py-2 text-center  max-[600px]:hidden max-[600px]:px-1">Serviço/Área</th>
                               <th scope="col" className="px-6 py-2 text-center  max-[600px]:hidden max-[600px]:px-1">Progresso</th>
                               <th scope="col" className="px-6 py-2 text-center">Status</th>
-                              <th scope="col" className="px-6 py-2 text-center">Av. Chamado</th>
+                              <th scope="col" className="px-1 py-2 text-center">Av. Chamado</th>
                               <th scope="col" className="px-6 py-2 text-center">Ações</th>
                            </tr>
                         </thead>
@@ -186,8 +187,8 @@ export default function Orders() {
                               return (
                                  <tr key={index}
                                     className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
-                                    <td className="whitespace-nowrap text-xs px-3 py-2">{item.id}</td>
-                                    <td className="whitespace-nowrap text-xs px-3 py-2">{item.opened_at}</td>
+                                    <td className="whitespace-nowrap text-xs px-1 py-1">{item.id}</td>
+                                    <td className="whitespace-nowrap text-xs px-1 py-2">{item.opened_at}</td>
                                     <td className=" whitespace-nowrap text-xs px-3 py-2  max-[600px]:hidden max-[600px]:px-1">
                                        <div className="flex justify-start items-center">
                                           {item.condominium!.logo && (
@@ -196,11 +197,9 @@ export default function Orders() {
                                                 className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span className=" uppercase max-w-[250px] truncate overflow-hidden text-ellipsis ">{item.condominium!.name}</span>
+                                          <span title={item.condominium!.name} className=" uppercase max-w-[170px] truncate overflow-hidden text-ellipsis ">{item.condominium!.name}</span>
                                        </div>
                                     </td>
-
-
                                     <td className="whitespace-nowrap px-3 py-2 text-xs max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' :
                                        <div className="flex justify-start items-center ">
                                           {item.partner!.logo && (
@@ -209,11 +208,15 @@ export default function Orders() {
                                                 className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span className=" uppercase max-w-[200px] truncate overflow-hidden text-ellipsis">{item.partner!.name}</span>
+                                          <span title={item.partner!.name} className=" uppercase max-w-[150px] truncate overflow-hidden text-ellipsis">{item.partner!.name}</span>
                                        </div>}
                                     </td>
-
-
+                                    <td className="whitespace-nowrap px-1  py-2 max-[600px]:hidden max-[600px]:px-1" >
+                                       <div className='text-xs uppercase max-w-[120px] truncate overflow-hidden text-ellipsis'>
+                                          <span title={item.service_area.name}>{item.service_area.name}
+                                          </span>
+                                       </div>
+                                    </td>
                                     <td className="whitespace-nowrap  py-2 max-[600px]:hidden max-[600px]:px-1" >
                                        <div className="h-4 w-full rounded-full bg-gray-200 dark:bg-gray-200 ">
                                           <div className="h-4 rounded-full flex justify-center items-center align-middle bg-blue-500"
