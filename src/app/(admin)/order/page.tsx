@@ -14,6 +14,8 @@ import { redirect } from "next/navigation";
 import { useSession } from 'next-auth/react';
 import Pagination from '@/components/Paginate';
 import UserData from '@/interface/userData';
+import ModalCond from '@/components/ModalCond';
+import ModalPart from '@/components/ModalPart';
 
 
 export default function Orders() {
@@ -30,8 +32,35 @@ export default function Orders() {
    });
 
    const [searchData, setSearchData] = useState(null);
-
+   const [isCondModalOpen, setIsCondModalOpen] = useState(false);
+   const [isPartModalOpen, setIsPartModalOpen] = useState(false);
    const [statusData, setStatus] = useState<OrderDocument[]>([]);
+   const [selectedCondominium, setSelectedCondominium] = useState<any>(null); 
+   const [selectedPartner, setSelectedPartner] = useState<any>(null);
+
+
+
+   function openCondModal(condominiumData: any) {
+      setSelectedCondominium(condominiumData); // Armazena o condomínio selecionado
+      setIsCondModalOpen(true); // Abre o modal
+    }
+    
+  
+    function closeCondModal() {
+      setIsCondModalOpen(false);
+    }
+
+    function openPartModal(partnerData: any) {
+      setSelectedPartner(partnerData); // Armazena o condomínio selecionado
+      setIsPartModalOpen(true); // Abre o modal
+    }
+    
+  
+    function closePartModal() {
+      setIsPartModalOpen(false);
+    }
+
+
 
 
    const dataUser = session?.user as UserData;
@@ -197,7 +226,7 @@ export default function Orders() {
                                                 className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span title={item.condominium!.name} className=" uppercase max-w-[170px] truncate overflow-hidden text-ellipsis ">{item.condominium!.name}</span>
+                                          <span title={item.condominium!.name} className="cursor-pointer uppercase max-w-[170px] truncate overflow-hidden text-ellipsis " onClick={() => openCondModal(item.condominium)} >{item.condominium!.name}</span>
                                        </div>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-2 text-xs max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' :
@@ -208,7 +237,7 @@ export default function Orders() {
                                                 className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span title={item.partner!.name} className=" uppercase max-w-[150px] truncate overflow-hidden text-ellipsis">{item.partner!.name}</span>
+                                          <span title={item.partner!.name} className="cursor-pointer uppercase max-w-[150px] truncate overflow-hidden text-ellipsis"  onClick={() => openPartModal(item.partner)}>{item.partner!.name}</span>
                                        </div>}
                                     </td>
                                     <td className="whitespace-nowrap px-1  py-2 max-[600px]:hidden max-[600px]:px-1" >
@@ -283,14 +312,15 @@ export default function Orders() {
                   </div>
                </div>
             </div>
-
+                           
          </div>
          
          {/* pagination                */}
          <div className="mt-4">
          {orderData.last_page > 1 && <Pagination orderData={orderData} handlePageChange={handlePageChange} />}
          </div>
-
+         <ModalCond isOpen={isCondModalOpen} closeModal={closeCondModal} condominiumData={selectedCondominium}/>
+         <ModalPart isOpen={isPartModalOpen} closeModal={closePartModal} partnerData={selectedPartner}/>
       </>
    )
 }
