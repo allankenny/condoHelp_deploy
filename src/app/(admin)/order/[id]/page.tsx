@@ -8,10 +8,8 @@ import { ButtonAddLink, ButtonCancel, Spinner } from "../../../../components/But
 import AreaDocument from "../../../../interface/area";
 import OrderDocument from "../../../../interface/order";
 import { environment } from "../../../../environment/environment";
-import { ArrowPathIcon, ArrowUpTrayIcon, CameraIcon, DocumentTextIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../utils/authOptions";
-import { redirect } from "next/navigation";
+import { ArrowPathIcon, ArrowUpTrayIcon, CameraIcon, DocumentTextIcon, PrinterIcon, StarIcon } from "@heroicons/react/24/solid";
+import 'public/styles/print.css'; 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import UserData from "@/interface/userData";
@@ -98,7 +96,7 @@ export default function Order({ params }: ParamsProps) {
          'image/png': [],
          'application/pdf': [],
          'application/msword': [],         // Para arquivos .doc
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': []  // Para arquivos .docx
+         'application/vnd.openxmlformats-officedocument.wordprocessingml.document': []  // Para arquivos .docx
       }
    });
 
@@ -571,11 +569,11 @@ export default function Order({ params }: ParamsProps) {
 
    return (
       <>
-         <div className="flex justify-between items-center h-10 mb-5">
+         <div className="flex justify-between items-center h-10 mb-5 no-print">
             <PageTitleDefault title="Chamados" />
          </div>
          
-         <div className="grid col-1 rounded-[16px] bg-white drop-shadow-md p-10">
+         <div className="grid col-1 rounded-[16px] bg-white drop-shadow-md p-10 no-print">
             <div className="lg:col-span-2">
                <div className=" mb-3 text-center font-bold">
                   {dataUser.user.type === 'condominium' ? (
@@ -840,7 +838,7 @@ export default function Order({ params }: ParamsProps) {
             </div>
          </div>
 
-         <div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showPartnerInput ? 'block' : 'hidden'}`}>
+         <div className={`grid col-1 mt-10 rounded-[16px] no-print bg-white drop-shadow-md mb-10 p-10 ${showPartnerInput ? 'block' : 'hidden'}`}>
             <div className="md:col-span-5 text-center mb-3">
                <label htmlFor="selectPartner" className="font-bold text-lg text-gray-400">
                   Selecione o parceiro 
@@ -896,7 +894,7 @@ export default function Order({ params }: ParamsProps) {
             </div>
          </div>
 
-         <div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showPictureInput ? 'block' : 'hidden'}`}>
+         <div className={`grid col-1 mt-10 rounded-[16px] no-print bg-white drop-shadow-md mb-10 p-10 ${showPictureInput ? 'block' : 'hidden'}`}>
             <div className="md:col-span-5 text-center mt-3">
                <label htmlFor="obs" className="font-bold text-lg text-gray-400">
                   Adicione fotos do serviço prestado
@@ -959,9 +957,16 @@ export default function Order({ params }: ParamsProps) {
             </div>
          </div>
 
-         <div className={`grid col-1 mt-10 rounded-[16px] bg-white drop-shadow-md mb-10 p-10 ${showDivAvaluation ? 'block' : 'hidden'}`}>
-            <div className="md:col-span-5 text-center mt-3">
-               <label htmlFor="comment" className="font-bold text-lg text-gray-400">
+         <div className={`grid col-1 mt-10 rounded-[16px] no-print bg-white drop-shadow-md mb-10 p-10 ${showDivAvaluation ? 'block' : 'hidden'}`}>
+
+            <div className="md:col-span-5 flex justify-end max-[650px]:mb-[0px] mb-[-50px] no-print">
+               <button className="z-10 rounded-full max-[600px]:w-full max-[600px]:text-xs  max-[600px]:py-1 max-[600px]:mb-2 bg-white px-5 py-3 text-gray-400 border border-gray-300 hover:bg-gray-300 hover:text-white " onClick={() => window.print()}>
+               Imprimir/PDF <PrinterIcon className="h-6 w-6 inline-block" />
+               </button>
+            </div>
+
+            <div className="md:col-span-5 text-center">
+               <label htmlFor="comment" className="font-bold text-lg text-gray-400 no-print">
                   Avalie o prestador
                </label>
                <div className="md:col-span-5 text-center mt-3 mb-5 text-gray-300  ">
@@ -974,7 +979,7 @@ export default function Order({ params }: ParamsProps) {
                      />
                   ))}
                </div>
-
+               
                <label htmlFor="comment" className=" text-lg text-gray-400">
                   Deixe aqui um comentário
                </label>
@@ -987,8 +992,11 @@ export default function Order({ params }: ParamsProps) {
                />
             </div>
 
-            <div className="md:col-span-5 flex items-center justify-between mt-5">
+            <div className="md:col-span-5 flex items-center justify-between mt-5 no-print">
+               
                <ButtonCancel route="order" label="Voltar" />
+               
+               {/* <PrinterIcon className="h-8 w-8 inline-block cursor-pointer text-gray-500 border-gray-300 "/> */}
                <div className={` ${showDivBtnFinal ? 'block' : 'hidden'} mx-auto `}>
                   <div className={` ${showBtnFinal ? 'block' : 'hidden'} ml-[-130px] max-[600px]:ml-0`}>
                      <ButtonAddLink route="" label='Finalizar Chamado' onClick={(event) => handleSubmit(event, 4)} />
@@ -996,6 +1004,107 @@ export default function Order({ params }: ParamsProps) {
                </div>
             </div>
          </div>
+
+         {/* IMPRESSÃO */}
+         <div className="hidden z-10 max-w-3xl mx-auto rounded-[16px] bg-white shadow-lg p-8 border border-gray-300 border-[2px] print-only">
+            {/* Cabeçalho do Chamado */}
+            <div className=" pb-4 mb-1 flex items-center justify-between">
+               <h2 className="text-2xl font-bold text-gray-700">Chamado Nº {formData.id}</h2>
+               {/* <p className="text-sm text-gray-500">Data abertura: <InputMask mask="9999/99/99" className="border-none bg-transparent text-black-600"  value={orderData?.opened_at} disabled /></p> */} 
+            </div>
+            
+            <div className="mb-[20px] flex items-center justify-between">
+               <div >
+                  <p className="capitalize">
+                     <span className="font-medium">Condo Help Servicos LTDA</span>
+                  </p>
+                  <p className="capitalize text-xs">
+                     <span className="font-medium">52.233.453/0001-61</span>
+                  </p>
+                  <p className="capitalize text-xs">
+                     <span className="font-medium">70714-020 <br /> Setor Comercial Norte Q 4 Bl B, S/N Brasília-DF </span>
+                  </p>
+               </div>
+               <picture className="mt-[-20px]">
+                  <img
+                     className="w-[300px] h-auto"
+                     src="/logo_login_full.png"
+                     alt="condo help"
+                  />
+               </picture>
+            </div>
+               
+            {/* Informações do Solicitante */}
+            <div className="mb-6 border-t">
+               <h3 className="text-lg font-semibold text-gray-600 mb-2 mt-2">Solicitante</h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <p className="capitalize mb-0 ">
+                     <span className="font-medium capitalize">Nome: </span> 
+                     {orderData?.condominium?.name || ""}
+                  </p>
+                  <p className="capitalize">
+                     Cnpj: <InputMask mask="99.999.999/9999-99" className="border-none bg-transparent text-black-600"  value={orderData?.condominium?.cnpj} disabled />
+                  </p>
+                  <p className="capitalize"><span className="font-medium">Endereço:</span> {orderData?.condominium?.address}, Nº {orderData?.condominium?.address_number} {orderData?.condominium?.address_city}-{orderData?.condominium?.address_state} 
+                  </p>
+                  <p className="capitalize"><span className="font-medium">Contato: {orderData?.condominium?.admin_name}</span> </p>
+                  <p><span className="font-medium">Telefone:</span> {orderData?.condominium?.phone}</p>
+                  <p><span className="font-medium">E-mail:</span> {orderData?.condominium?.email}</p>
+               </div>
+            </div>
+
+            {/* Informações do Prestador de Serviços */}
+            <div className="mb-6 border-t ">
+               <h3 className="text-lg font-semibold text-gray-600 mb-2 mt-2">Prestador de Serviços</h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <p className="capitalize"><span className="font-medium capitalize">Nome: {orderImageComdominium[0]?.partner?.name}</span> </p>
+                  <p className="capitalize">
+                     Cnpj: <InputMask mask="99.999.999/9999-99" className="border-none bg-transparent text-black-600"  value={orderImageComdominium[0]?.partner?.cnpj} disabled />
+                  </p>
+                  <p className="capitalize"><span className="font-medium">Endereço:</span> {orderImageComdominium[0]?.partner?.address}, Nº {orderImageComdominium[0]?.partner?.address_number} {orderImageComdominium[0]?.partner?.address_city}-{orderImageComdominium[0]?.partner?.address_state} 
+                  </p>
+                  <p className="capitalize"><span className="font-medium">Contato: {orderImageComdominium[0]?.partner?.contact_name
+                  }</span> </p>
+                  <p><span className="font-medium">Telefone:</span> {orderImageComdominium[0]?.partner?.phone}</p>
+                  <p><span className="font-medium">E-mail:</span> {orderImageComdominium[0]?.partner?.email}</p>
+               </div>
+            </div>
+
+            {/* Detalhes do Chamado */}
+            <div className="mb-6 border-t">
+               <h3 className="text-lg font-semibold text-gray-600 mb-2 mt-2">Detalhes do Chamado</h3>
+               <div className="space-y-2">
+                  <p className="font-medium capitalize" >
+                     <span className="font-medium capitalize">Área de Serviço: </span>
+                     {areasData.find((area) => area.id === formData.service_area_id)?.name || ''}
+                  </p>
+                  <p className="text-center"><span className="font-medium">Descrição do serviço:</span> </p>
+                  <textarea className="capitalize h-24 border mt-3 rounded p-2 px-4 w-full bg-gray-50 "
+                        value={formData.description}
+                     />
+                  <p>
+                     <span className="font-medium">Status: {formData.order_status_id == '1' 
+                        ? 'Aguardando Orçamento' 
+                        : formData.order_status_id == '2' 
+                        ? 'Orçamento Enviado' 
+                        : formData.order_status_id == '3'
+                        ? 'Serviço em Andamento'
+                        : formData.order_status_id == '4' 
+                        ? 'Serviço Finalizado'
+                        : formData.order_status_id == '5'
+                        ? 'Chamado Cancelado': ''} 
+                     </span>
+                  </p>
+                  <p className=" text-right p-2 rounded" ><span className="p-2 rounded border-[1px] border-gray-500 font-medium">Valor: R${formattedValue}</span> </p>
+               </div>
+            </div>
+
+            {/* Rodapé do Chamado */}
+            <div className="border-t pt-0 mt-0 flex justify-between items-center">
+               <p className="text-sm text-gray-500">Gerado automaticamente por CondoHelp</p>
+            </div>
+         </div>
+
       </>
    );
 }

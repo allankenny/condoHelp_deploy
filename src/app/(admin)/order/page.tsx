@@ -218,26 +218,26 @@ export default function Orders() {
                                     className="border-b border-gray-100 transition duration-300 ease-in-out hover:bg-gray-100">
                                     <td className="whitespace-nowrap text-xs px-1 py-1">{item.id}</td>
                                     <td className="whitespace-nowrap text-xs px-1 py-2">{item.opened_at}</td>
-                                    <td className=" whitespace-nowrap text-xs px-3 py-2  max-[600px]:hidden max-[600px]:px-1">
-                                       <div className="flex justify-start items-center">
+                                    <td className=" whitespace-nowrap text-xs px-3 py-2  max-[600px]:hidden max-[600px]:px-1" onClick={() => openCondModal(item.condominium)}>
+                                       <div className="flex justify-start items-center hover:font-bold cursor-pointer">
                                           {item.condominium!.logo && (
                                              <img src={item.condominium!.logo}
                                                 alt="Logo 1"
                                                 className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span title={item.condominium!.name} className="cursor-pointer uppercase max-w-[170px] truncate overflow-hidden text-ellipsis " onClick={() => openCondModal(item.condominium)} >{item.condominium!.name}</span>
+                                          <span title={item.condominium!.name} className=" uppercase max-w-[170px] truncate overflow-hidden text-ellipsis "  >{item.condominium!.name}</span>
                                        </div>
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-2 text-xs max-[600px]:hidden max-[600px]:px-1 uppercase ">{item.partner === null ? 'Conectando a um parceiro' :
-                                       <div className="flex justify-start items-center ">
+                                    <td className="  whitespace-nowrap px-3 py-2 text-xs max-[600px]:hidden max-[600px]:px-1 uppercase " >{item.partner === null ? 'Conectando a um parceiro' :
+                                       <div className="flex justify-start items-center hover:font-bold cursor-pointer " onClick={() => openPartModal(item.partner)}>
                                           {item.partner!.logo && (
                                              <img src={item.partner!.logo}
                                                 alt="Logo 1"
                                                 className=" rounded h-8 w-8 drop-shadow-lg mr-2 object-contain"
                                              />
                                           )}
-                                          <span title={item.partner!.name} className="cursor-pointer uppercase max-w-[150px] truncate overflow-hidden text-ellipsis"  onClick={() => openPartModal(item.partner)}>{item.partner!.name}</span>
+                                          <span title={item.partner!.name} className=" uppercase max-w-[150px] truncate overflow-hidden text-ellipsis"  >{item.partner!.name}</span>
                                        </div>}
                                     </td>
                                     <td className="whitespace-nowrap px-1  py-2 max-[600px]:hidden max-[600px]:px-1" >

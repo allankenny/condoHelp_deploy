@@ -17,7 +17,9 @@ interface OrderDocument{
     order_status:StatusDocument;
     partner_id?: string;
     service_area_id?: string;
-    condominium_id?:string
+    condominium_id?:string;
+    opened_at?: string;
+    admin_name?: string;
 }
 
 export default OrderDocument;

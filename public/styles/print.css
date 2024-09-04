@@ -1,0 +1,16 @@
+@media print {
+   
+    .no-print {
+      display: none;
+    }
+
+    .print-only {
+      width: 800px;
+      position: relative;
+      margin-top: -50px;
+      margin-left: -20px;
+      display: block !important; /* Mostra o elemento apenas na impressão */
+    }
+    
+    
+  }
