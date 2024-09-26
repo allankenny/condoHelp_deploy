@@ -5,7 +5,7 @@
 const isProduction = true;
 const urlDEV = 'http://localhost:8000';
 const urlHML = 'http://localhost:8000';
-const urlPRD = 'http://api.condohelpdf.com.br';
+const urlPRD = 'https://api.condohelpdf.com.br';
 
 const environmentDEV = {
   production: isProduction,
