@@ -2,7 +2,6 @@
 import { useSession } from "next-auth/react";
 import { PageTitleDefault } from "../../../components/PageTitle";
 import { Line } from 'react-chartjs-2';
-import { ArrowPathIcon, CameraIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { environment } from "@/environment/environment";
@@ -33,41 +32,41 @@ ChartJS.register(
 export default function Dashboard() {
   const [totalChamados, setTotalChamados] = useState(0);
   const [valueChart, setValueChart] = useState([]);
-  const [dateChart, setDateChart] = useState([]);
+  const [orderChart, setOrderChart] = useState([]);
   const [totalValue, setTotalValue] = useState(0);
   const [totalEvaluation, setTotalEvaluation] = useState(0);
   const [showMsgButton, setShowMsgButton] = useState(false);
   const [showDashboard, setDashboard] = useState(true);
   const [showTerm, setShowTerm ] = useState(false);
   const [termData, setTermData] = useState({ term_description: '' });
-  const { data: session, status } = useSession({
-    required: true,
-  })
-  
-  const data: any = {
-    labels: dateChart,
+  const { data: session, status } = useSession({required: true,})
+  const currentYear = new Date().getFullYear();
+
+  const dataChart: any = {
+    labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
     datasets: [
       {
-        label: 'Resultados',
+        label: 'Valores',
+        data: valueChart,
+        borderColor: '#4644db', 
+        backgroundColor: '#4644db', 
         fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,192,1)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 10,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 4,
-        pointHitRadius: 10,
-        data: valueChart
-      }
+        cubicInterpolationMode: 'monotone',
+        tension: 0.4,
+        borderCapStyle: 'round', 
+        borderJoinStyle: 'round', 
+    },
+      {
+        label: 'Chamados',
+        data: orderChart,
+        borderColor: '#8b8b8b',
+        backgroundColor: '#8b8b8b', 
+        fill: false,
+        cubicInterpolationMode: 'monotone',
+        tension: 0.4,
+        borderCapStyle: 'round', // Borda arredondada
+        borderJoinStyle: 'round', // Conexão arredondada
+    },
     ]
   };
 
@@ -170,7 +169,6 @@ export default function Dashboard() {
   
   useEffect(() => {
     const fetchData = async () => {
-      console.log(session);
       try {
         let response;
 
@@ -185,7 +183,7 @@ export default function Dashboard() {
         setTotalValue(response.data.totalValue);
         setTotalEvaluation(response.data.totalEvaluation);
         setValueChart(response.data.valueArray);
-        setDateChart(response.data.dateValueArray);
+        setOrderChart(response.data.orderCount);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
         // Handle the error as needed, such as displaying a message to the user.
@@ -281,10 +279,13 @@ export default function Dashboard() {
             </span>
           </div>
         </div>
-        <div className="max-[600px]:w-[0px] ">
+        <div className="max-[600px]:w-[0px]  rounded-[16px] p-4 border-[1px] border-gray-300 shadow-lg ">
+          <div className=" text-right mr-12 text- mb-[-35px] font-bold">
+            <span className="text-[#8b8b8b] text-[1.5em]">{currentYear}</span>
+          </div>
           <div className="grid col-1 rounded-[10px] bg-white h-100  p-2 ">
             <Line
-              data={data}
+              data={dataChart}
               height={60}
             />
           </div>
